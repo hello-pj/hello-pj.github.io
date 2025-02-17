@@ -34,6 +34,14 @@
         }
       }
 
+      // 日付の文字列をローカルタイムゾーンに変換する関数
+      function convertToLocalDateTime(dateStr, timeStr) {
+        const [year, month, day] = dateStr.split('/');
+        const [hour, minute] = timeStr.split(':');
+        const date = new Date(Date.UTC(year, month - 1, day, hour, minute));
+        return date.toISOString().slice(0, 19); // YYYY-MM-DDTHH:MM:SS の形式に変換
+      }
+
       fetchEventData().then(events => {
         console.log('Events to be added to the calendar:', events); // デバッグ用に追加
 
@@ -43,7 +51,7 @@
             console.log('Event data:', event); // デバッグ用に追加
             return {
               title: event.Subject,
-              start: `${event['Start Date']}T${event['Start Time']}`, // 日付と時刻を結合
+              start: convertToLocalDateTime(event['Start Date'], event['Start Time']),
               description: event.Description,
               location: event.Location,
               group: event.Group
