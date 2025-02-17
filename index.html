@@ -22,44 +22,21 @@
       var calendarEl = document.getElementById('calendar');
 
       // JSONデータを取得する関数
-      async function fetchEventData() {
-        try {
-          const response = await fetch('https://script.google.com/macros/s/AKfycbzCDuIKkJEma-dTk0jQ-xOiqdzF3wOH2MIqcvqhWpX-XiBr4dgWbAiuAMD2piksuve5gQ/exec');
-          const events = await response.json();
-          console.log('Fetched events:', events); // デバッグ用に追加
-          return events;
-        } catch (error) {
-          console.error('Error fetching events:', error);
-          return [];
-        }
-      }
-
-      // 日付の文字列をローカルタイムゾーンに変換する関数
-      function convertToLocalDateTime(dateStr, timeStr) {
-        const [year, month, day] = dateStr.split('/');
-        const [hour, minute] = timeStr.split(':');
-        const date = new Date(Date.UTC(year, month - 1, day, hour, minute));
-        return date.toISOString().slice(0, 19); // YYYY-MM-DDTHH:MM:SS の形式に変換
+      function fetchEventData() {
+        return fetch('https://script.google.com/macros/s/AKfycbzCDuIKkJEma-dTk0jQ-xOiqdzF3wOH2MIqcvqhWpX-XiBr4dgWbAiuAMD2piksuve5gQ/exec')
+          .then(response => response.json());
       }
 
       fetchEventData().then(events => {
-        console.log('Events to be added to the calendar:', events); // デバッグ用に追加
-
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
-          events: events.map(event => {
-            console.log('Event data:', event); // デバッグ用に追加
-            return {
-              title: event.Subject,
-              start: convertToLocalDateTime(event['Start Date'], event['Start Time']),
-              description: event.Description,
-              location: event.Location,
-              group: event.Group
-            };
-          }),
-          eventDidMount: function(info) {
-            console.log('Event mounted:', info.event);
-          }
+          events: events.map(event => ({
+            title: event.Subject,
+            start: event['Start Date'],
+            description: event.Description,
+            location: event.Location,
+            group: event.Group
+          }))
         });
 
         calendar.render();
