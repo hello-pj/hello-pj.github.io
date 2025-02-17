@@ -24,19 +24,35 @@
       // JSONデータを取得する関数
       function fetchEventData() {
         return fetch('https://script.google.com/macros/s/AKfycbzCDuIKkJEma-dTk0jQ-xOiqdzF3wOH2MIqcvqhWpX-XiBr4dgWbAiuAMD2piksuve5gQ/exec')
-          .then(response => response.json());
+          .then(response => response.json())
+          .then(events => {
+            console.log('Fetched events:', events); // デバッグ用
+            return events;
+          })
+          .catch(error => {
+            console.error('Error fetching events:', error);
+            return [];
+          });
       }
 
       fetchEventData().then(events => {
+        console.log('Events to be added to the calendar:', events); // デバッグ用
+
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
-          events: events.map(event => ({
-            title: event.Subject,
-            start: event['Start Date'],
-            description: event.Description,
-            location: event.Location,
-            group: event.Group
-          }))
+          events: events.map(event => {
+            console.log('Event data:', event); // デバッグ用
+            return {
+              title: event.Subject,
+              start: event['Start Date'],
+              description: event.Description,
+              location: event.Location,
+              group: event.Group
+            };
+          }),
+          eventDidMount: function(info) {
+            console.log('Event mounted:', info.event); // デバッグ用
+          }
         });
 
         calendar.render();
