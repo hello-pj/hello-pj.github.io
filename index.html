@@ -41,7 +41,7 @@
 
       // JSONデータを取得する関数
       function fetchEventData() {
-        return fetch('https://script.google.com/macros/s/AKfycbwaKee92ZEUH7RJFkmgQDkyjANuaHyftEX5C14Zev1Ze2qbwmuJb8HLhp64VJpqicoEcQ/exec')
+        return fetch('https://script.google.com/macros/s/AKfycbzCElTiuLwqxCynJ9FqsTY2_MSa9iIJC9p6F2IB7Nt24AxfxtvZoi56go52l-Q_7xC7mg/exec')
           .then(response => response.json())
           .then(events => {
             logDebug('Fetched events: ' + JSON.stringify(events)); // デバッグ用
