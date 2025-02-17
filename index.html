@@ -35,15 +35,20 @@
       }
 
       fetchEventData().then(events => {
+        console.log('Events to be added to the calendar:', events); // デバッグ用に追加
+
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
-          events: events.map(event => ({
-            title: event.Subject,
-            start: `${event['Start Date']}T${event['Start Time']}`, // 日付と時刻を結合
-            description: event.Description,
-            location: event.Location,
-            group: event.Group
-          })),
+          events: events.map(event => {
+            console.log('Event data:', event); // デバッグ用に追加
+            return {
+              title: event.Subject,
+              start: `${event['Start Date']}T${event['Start Time']}`, // 日付と時刻を結合
+              description: event.Description,
+              location: event.Location,
+              group: event.Group
+            };
+          }),
           eventDidMount: function(info) {
             console.log('Event mounted:', info.event);
           }
