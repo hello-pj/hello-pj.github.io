@@ -35,6 +35,11 @@ document.addEventListener('DOMContentLoaded', function() {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
+      slotLabelFormat: {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false // 24時間形式
+      },
       events: events,
       eventClick: function(info) {
         eventTitle.textContent = info.event.title;
