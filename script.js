@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var eventLocation = document.getElementById('event-location');
   var eventDescription = document.getElementById('event-description');
   var eventGroup = document.getElementById('event-group');
+  var eventImage = document.getElementById('event-image'); // 画像要素を取得
 
   function fetchEventData() {
     return fetch('https://script.google.com/macros/s/AKfycbxXh9UQzHzgSAxUg8sxAINgapf-XZl-2mIKjbzR0JGqzscrIjBRaG72wgE2MmnQolsKpg/exec')
@@ -47,6 +48,25 @@ document.addEventListener('DOMContentLoaded', function() {
         eventLocation.textContent = info.event.extendedProps.location;
         eventDescription.textContent = info.event.extendedProps.description;
         eventGroup.textContent = info.event.extendedProps.group;
+
+        // グループごとに画像を変更
+        var groupImages = {
+          "モーニング娘。'25": "img/morning_musume_image.jpg",
+          "アンジュルム": "img/angerme_image.jpg",
+          "Juice=Juice": "img/juice_juice_image.jpg",
+          "つばきファクトリー": "img/tsubaki_factory_image.jpg",
+          "BEYOOOOONDS": "img/beyooooonds_image.jpg",
+          "ロージークロニクル": "img/rouge_chronicle_image.jpg",
+          "ハロプロ研修生": "img/hello_project_trainees_image.jpg",
+          "HELLO! PROJECT": "img/hello_project_image.jpg"
+        };
+
+        var imageUrl = groupImages[info.event.extendedProps.group];
+        if (imageUrl) {
+          eventImage.src = imageUrl;
+        } else {
+          eventImage.src = 'img/default_image.jpg'; // デフォルト画像
+        }
       }
     });
     calendar.render();
