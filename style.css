@@ -4,6 +4,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  overflow-x: hidden; /* 横スクロールを防止 */
 }
 
 #container {
@@ -43,7 +44,7 @@ body {
 #event-details img {
   width: 100%;
   height: auto;
-  aspect-ratio: 475 / 310;
+  aspect-ratio: 475 / 310; /* アスペクト比を475 / 310に変更 */
   object-fit: cover; /* アスペクト比を維持しながら表示範囲に収める */
 }
 
@@ -51,11 +52,13 @@ body {
 @media (max-width: 767px) {
   #container {
     flex-direction: column;
+    overflow-x: hidden; /* 横スクロールを防止 */
   }
 
   #calendar-container {
     flex: none;
     width: 100%;
+    overflow-x: hidden; /* 横スクロールを防止 */
   }
 
   #event-details {
