@@ -11,6 +11,7 @@ body {
   display: flex;
   flex: 1;
   height: 100%;
+  overflow-x: hidden; /* 横スクロールを防止 */
 }
 
 /* カレンダーの領域 (PCでは端いっぱいまで広げる) */
