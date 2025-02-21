@@ -44,7 +44,7 @@
         return fetch('https://script.google.com/macros/s/AKfycby6ZlDd-wQ1oMkwJGjyJDa-Z_bPcr97Jbog-3k8mtYiOT-zTN1DnzuE-J6AOpupDF8XQw/exec')
           .then(response => response.json())
           .then(events => {
-            logDebug('Fetched events: ' + JSON.stringify(events)); // デバッグ用
+            logDebug('Fetched events: ' + JSON.stringify(events));
             return events;
           })
           .catch(error => {
@@ -54,22 +54,23 @@
       }
 
       fetchEventData().then(events => {
-        logDebug('Events to be added to the calendar: ' + JSON.stringify(events)); // デバッグ用
+        logDebug('Events to be added to the calendar: ' + JSON.stringify(events));
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
           events: events.map(event => {
-            logDebug('Event data: ' + JSON.stringify(event)); // デバッグ用
+            const startDateTime = event['Start Date'] + 'T' + event['Start Time'];
+            logDebug('Event data: ' + JSON.stringify(event) + ', start: ' + startDateTime);
             return {
               title: event.Subject,
-              start: event['Start Date'] + 'T' + event['Start Time'],
+              start: startDateTime,
               description: event.Description,
               location: event.Location,
               group: event.Group
             };
           }),
           eventDidMount: function(info) {
-            logDebug('Event mounted: ' + JSON.stringify(info.event)); // デバッグ用
+            logDebug('Event mounted: ' + JSON.stringify(info.event));
           }
         });
 
