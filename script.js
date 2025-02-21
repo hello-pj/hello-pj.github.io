@@ -41,7 +41,24 @@ document.addEventListener('DOMContentLoaded', function() {
         minute: '2-digit',
         meridiem: false // 24時間表示に設定
       },
-      events: events,
+      events: events.map(event => {
+        // グループごとにイベントの色を設定
+        var groupColors = {
+          "モーニング娘。'25": "#E80112",
+          "アンジュルム": "#106DB7",
+          "Juice=Juice": "#611A85",
+          "つばきファクトリー": "#F29EC2",
+          "BEYOOOOONDS": "#249849",
+          "ロージークロニクル": "#FFD629",
+          "ハロプロ研修生": "#33D6AD",
+          "HELLO! PROJECT": "#0175C2",
+          "OCHA NORMA": "#F39800"
+        };
+        return {
+          ...event,
+          color: groupColors[event.group] || '#000000' // デフォルト色は黒
+        };
+      }),
       eventClick: function(info) {
         eventTitle.textContent = info.event.title;
         eventDate.textContent = info.event.start.toISOString().split('T')[0];
@@ -59,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
           "ロージークロニクル": "img/rouge_chronicle_image.jpg",
           "ハロプロ研修生": "img/hello_project_trainees_image.jpg",
           "HELLO! PROJECT": "img/hello_project_image.jpg",
-          "OCHA NORMA": "img/ocha_norma_image.jpg"
+          "OCHA NORMA": "img/ocha_norma_image.jpg" // OCHA NORMAを追加
         };
 
         var imageUrl = groupImages[info.event.extendedProps.group];
