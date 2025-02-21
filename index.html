@@ -50,12 +50,11 @@
           .then(events => {
             logDebug('Fetched events: ' + JSON.stringify(events), debugFetchedEventsEl); // デバッグ用
 
-            // Start Date の形式を修正（1日追加）
+            // Start Date を JST に変換
             events.forEach(event => {
-              let startDate = new Date(event['Start Date'].split('T')[0]); // Start Date を Date オブジェクトに変換
-              startDate.setDate(startDate.getDate() + 1); // 1日追加
-              event['Start Date'] = startDate.toISOString().split('T')[0]; // YYYY-MM-DD 形式に戻す
-
+              let utcDate = new Date(event['Start Date']); // UTC時間を取得
+              let jstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000); // JSTに変換 (+9時間)
+              event['Start Date'] = jstDate.toISOString().split('T')[0]; // YYYY-MM-DD 形式に変換
               event['Start Time'] = "T" + event['Start Time'].split('T')[1];
             });
 
