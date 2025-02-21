@@ -26,8 +26,8 @@
   <h1>My FullCalendar</h1>
   <div id='calendar'></div>
   <div id='debugFetchedEvents' class="debug-section"></div>
-  <div id='debugCalendarEvents' class="debug-section"></div>
-  <div id='debugEventData' class="debug-section"></div>
+  <div id='debugCalendarEvents' class="debug-section'></div>
+  <div id='debugEventData' class="debug-section'></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -36,11 +36,17 @@
       var debugCalendarEventsEl = document.getElementById('debugCalendarEvents');
       var debugEventDataEl = document.getElementById('debugEventData');
 
-      // デバッグ情報をページに表示する関数
       function logDebug(message, element) {
         var p = document.createElement('p');
         p.textContent = message;
         element.appendChild(p);
+      }
+
+      // UTCをJSTに変換する関数
+      function convertToJST(dateTimeStr) {
+        var date = new Date(dateTimeStr);
+        var jstDate = new Date(date.getTime() + (9 * 60 * 60 * 1000));
+        return jstDate.toISOString().split('Z')[0];
       }
 
       // JSONデータを取得する関数
@@ -50,10 +56,11 @@
           .then(events => {
             logDebug('Fetched events: ' + JSON.stringify(events), debugFetchedEventsEl); // デバッグ用
 
-            // Start Date の形式を修正
+            // Start Date と Start Time の形式を修正
             events.forEach(event => {
-              event['Start Date'] = event['Start Date'].split('T')[0];
-              event['Start Time'] = "T" + event['Start Time'].split('T')[1];
+              var jstStartDate = convertToJST(event['Start Date']);
+              event['Start Date'] = jstStartDate.split('T')[0];
+              event['Start Time'] = "T" + jstStartDate.split('T')[1];
             });
 
             return events.map(event => ({
