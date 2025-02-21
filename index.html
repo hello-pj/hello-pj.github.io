@@ -10,7 +10,7 @@
       max-width: 900px;
       margin: 0 auto;
     }
-    #debug {
+    .debug-section {
       max-width: 900px;
       margin: 20px auto;
       padding: 10px;
@@ -25,18 +25,22 @@
 
   <h1>My FullCalendar</h1>
   <div id='calendar'></div>
-  <div id='debug'></div>
+  <div id='debugFetchedEvents' class="debug-section"></div>
+  <div id='debugCalendarEvents' class="debug-section"></div>
+  <div id='debugEventData' class="debug-section"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
-      var debugEl = document.getElementById('debug');
+      var debugFetchedEventsEl = document.getElementById('debugFetchedEvents');
+      var debugCalendarEventsEl = document.getElementById('debugCalendarEvents');
+      var debugEventDataEl = document.getElementById('debugEventData');
 
       // デバッグ情報をページに表示する関数
-      function logDebug(message) {
+      function logDebug(message, element) {
         var p = document.createElement('p');
         p.textContent = message;
-        debugEl.appendChild(p);
+        element.appendChild(p);
       }
 
       // JSONデータを取得する関数
@@ -44,22 +48,22 @@
         return fetch('https://script.google.com/macros/s/AKfycbxXh9UQzHzgSAxUg8sxAINgapf-XZl-2mIKjbzR0JGqzscrIjBRaG72wgE2MmnQolsKpg/exec')
           .then(response => response.json())
           .then(events => {
-            logDebug('Fetched events: ' + JSON.stringify(events)); // デバッグ用
+            logDebug('Fetched events: ' + JSON.stringify(events), debugFetchedEventsEl); // デバッグ用
             return events;
           })
           .catch(error => {
-            logDebug('Error fetching events: ' + error);
+            logDebug('Error fetching events: ' + error, debugFetchedEventsEl);
             return [];
           });
       }
 
       fetchEventData().then(events => {
-        logDebug('Events to be added to the calendar: ' + JSON.stringify(events)); // デバッグ用
+        logDebug('Events to be added to the calendar: ' + JSON.stringify(events), debugCalendarEventsEl); // デバッグ用
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
           events: events.map(event => {
-            logDebug('Event data: ' + JSON.stringify(event)); // デバッグ用
+            logDebug('Event data: ' + JSON.stringify(event), debugEventDataEl); // デバッグ用
             return {
               title: event.Subject,
               start: event['Start Date'],
@@ -69,7 +73,7 @@
             };
           }),
           eventDidMount: function(info) {
-            logDebug('Event mounted: ' + JSON.stringify(info.event)); // デバッグ用
+            logDebug('Event mounted: ' + JSON.stringify(info.event), debugEventDataEl); // デバッグ用
           }
         });
 
