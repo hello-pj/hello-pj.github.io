@@ -44,7 +44,7 @@ body {
 #event-details img {
   width: 100%;
   height: auto;
-  aspect-ratio: 440 / 330;
+  aspect-ratio: 475 / 310;
   object-fit: cover; /* アスペクト比を維持しながら表示範囲に収める */
 }
 
