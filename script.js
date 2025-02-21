@@ -29,6 +29,12 @@ document.addEventListener('DOMContentLoaded', function() {
   fetchEventData().then(events => {
     var calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
+      locale: 'ja', // 日本語に設定
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
       events: events,
       eventClick: function(info) {
         eventTitle.textContent = info.event.title;
