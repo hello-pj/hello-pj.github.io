@@ -58,7 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
           "BEYOOOOONDS": "img/beyooooonds_image.jpg",
           "ロージークロニクル": "img/rouge_chronicle_image.jpg",
           "ハロプロ研修生": "img/hello_project_trainees_image.jpg",
-          "HELLO! PROJECT": "img/hello_project_image.jpg"
+          "HELLO! PROJECT": "img/hello_project_image.jpg",
+          "OCHA NORMA": "img/ocha_norma_image.jpg"
         };
 
         var imageUrl = groupImages[info.event.extendedProps.group];
