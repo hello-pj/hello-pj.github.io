@@ -45,13 +45,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // グループごとにイベントの色を設定
         var groupColors = {
           "モーニング娘。'25": "#E80112",
-          "アンジュルム": "#106DB7",
+          "アンジュルム": "#0091D2",
           "Juice=Juice": "#611A85",
           "つばきファクトリー": "#F29EC2",
           "BEYOOOOONDS": "#249849",
           "ロージークロニクル": "#FFD629",
           "ハロプロ研修生": "#33D6AD",
-          "HELLO! PROJECT": "#0175C2",
+          "HELLO! PROJECT": "#035F9F",
           "OCHA NORMA": "#F39800"
         };
         return {
