@@ -25,7 +25,7 @@
 
   <h1>My FullCalendar</h1>
   <div id='calendar'></div>
-  <div id='debugFetchedEvents' class="debug-section"></div>
+  <div id='debugFetchedEvents' class="debug-section'></div>
   <div id='debugCalendarEvents' class="debug-section'></div>
   <div id='debugEventData' class="debug-section'></div>
 
@@ -36,17 +36,11 @@
       var debugCalendarEventsEl = document.getElementById('debugCalendarEvents');
       var debugEventDataEl = document.getElementById('debugEventData');
 
+      // デバッグ情報をページに表示する関数
       function logDebug(message, element) {
         var p = document.createElement('p');
         p.textContent = message;
         element.appendChild(p);
-      }
-
-      // 日付を1日追加する関数
-      function addOneDayToDate(dateTimeStr) {
-        var date = new Date(dateTimeStr);
-        date.setDate(date.getDate() + 1); // 日付を1日追加
-        return date.toISOString();
       }
 
       // JSONデータを取得する関数
@@ -56,16 +50,19 @@
           .then(events => {
             logDebug('Fetched events: ' + JSON.stringify(events), debugFetchedEventsEl); // デバッグ用
 
-            return events.map(event => {
-              var startDate = addOneDayToDate(event['Start Date'] + event['Start Time']);
-              return {
-                title: event.Subject,
-                start: startDate,
-                description: event.Description,
-                location: event.Location,
-                group: event.Group
-              };
+            // Start Date の形式を修正
+            events.forEach(event => {
+              event['Start Date'] = event['Start Date'].split('T')[0];
+              event['Start Time'] = "T" + event['Start Time'].split('T')[1];
             });
+
+            return events.map(event => ({
+              title: event.Subject,
+              start: event['Start Date'] + event['Start Time'],
+              description: event.Description.split('T')[1],
+              location: event.Location,
+              group: event.Group
+            }));
           })
           .catch(error => {
             logDebug('Error fetching events: ' + error, debugFetchedEventsEl);
