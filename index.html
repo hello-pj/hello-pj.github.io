@@ -1,64 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Event Calendar</title>
-  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css' rel='stylesheet' />
-  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js'></script>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       display: flex;
+      height: 100vh;
       font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
     }
+
+    /* カレンダーエリア */
     #calendar-container {
-      width: 70%;
+      flex: 2; /* 左側を広くする */
+      display: flex;
+      flex-direction: column;
       padding: 20px;
+      background: #fff;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
     }
+
+    /* イベント詳細エリア */
     #event-details {
-      width: 30%;
+      flex: 1; /* 右側を狭くする */
       padding: 20px;
-      border-left: 1px solid #ccc;
-      background-color: #f9f9f9;
+      background: #fff;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-y: auto;
+    }
+
+    h1 {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      font-size: 20px;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+
+    #calendar {
+      flex-grow: 1; /* カレンダーを最大化 */
     }
   </style>
 </head>
 <body>
 
+  <!-- カレンダーエリア -->
   <div id="calendar-container">
     <h1>Event Calendar</h1>
-    <div id='calendar'></div>
+    <div id="calendar"></div>
   </div>
-  
+
+  <!-- イベント詳細エリア -->
   <div id="event-details">
     <h2>Event Details</h2>
-    <p><strong>Title:</strong> <span id="event-title"></span></p>
-    <p><strong>Date:</strong> <span id="event-date"></span></p>
-    <p><strong>Location:</strong> <span id="event-location"></span></p>
-    <p><strong>Description:</strong> <span id="event-description"></span></p>
-    <p><strong>Group:</strong> <span id="event-group"></span></p>
+    <p><strong>Title:</strong> <span id="event-title">-</span></p>
+    <p><strong>Date:</strong> <span id="event-date">-</span></p>
+    <p><strong>Location:</strong> <span id="event-location">-</span></p>
+    <p><strong>Description:</strong> <span id="event-description">-</span></p>
+    <p><strong>Group:</strong> <span id="event-group">-</span></p>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
-      var eventTitle = document.getElementById('event-title');
-      var eventDate = document.getElementById('event-date');
-      var eventLocation = document.getElementById('event-location');
-      var eventDescription = document.getElementById('event-description');
-      var eventGroup = document.getElementById('event-group');
+    document.addEventListener("DOMContentLoaded", function () {
+      var calendarEl = document.getElementById("calendar");
+      var eventTitle = document.getElementById("event-title");
+      var eventDate = document.getElementById("event-date");
+      var eventLocation = document.getElementById("event-location");
+      var eventDescription = document.getElementById("event-description");
+      var eventGroup = document.getElementById("event-group");
 
       function fetchEventData() {
-        return fetch('https://script.google.com/macros/s/AKfycbxXh9UQzHzgSAxUg8sxAINgapf-XZl-2mIKjbzR0JGqzscrIjBRaG72wgE2MmnQolsKpg/exec')
+        return fetch("https://script.google.com/macros/s/AKfycbxXh9UQzHzgSAxUg8sxAINgapf-XZl-2mIKjbzR0JGqzscrIjBRaG72wgE2MmnQolsKpg/exec")
           .then(response => response.json())
           .then(events => {
             return events.map(event => {
-              let utcDate = new Date(event['Start Date']);
+              let utcDate = new Date(event["Start Date"]);
               let jstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
-              event['Start Date'] = jstDate.toISOString().split('T')[0];
-              event['Start Time'] = event['Start Time'].split('T')[1];
+              event["Start Date"] = jstDate.toISOString().split("T")[0];
+              event["Start Time"] = event["Start Time"].split("T")[1];
               return {
                 title: event.Subject,
-                start: event['Start Date'] + "T" + event['Start Time'],
+                start: event["Start Date"] + "T" + event["Start Time"],
                 location: event.Location,
                 description: event.Description,
                 group: event.Group
@@ -69,14 +114,14 @@
 
       fetchEventData().then(events => {
         var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
+          initialView: "dayGridMonth",
           events: events,
-          eventClick: function(info) {
+          eventClick: function (info) {
             eventTitle.textContent = info.event.title;
-            eventDate.textContent = info.event.start.toISOString().split('T')[0];
-            eventLocation.textContent = info.event.extendedProps.location;
-            eventDescription.textContent = info.event.extendedProps.description;
-            eventGroup.textContent = info.event.extendedProps.group;
+            eventDate.textContent = info.event.start.toISOString().split("T")[0];
+            eventLocation.textContent = info.event.extendedProps.location || "-";
+            eventDescription.textContent = info.event.extendedProps.description || "-";
+            eventGroup.textContent = info.event.extendedProps.group || "-";
           }
         });
         calendar.render();
