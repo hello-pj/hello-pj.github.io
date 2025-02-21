@@ -49,6 +49,12 @@
           .then(response => response.json())
           .then(events => {
             logDebug('Fetched events: ' + JSON.stringify(events), debugFetchedEventsEl); // デバッグ用
+
+            // Start Date の形式を修正
+            events.forEach(event => {
+              event['Start Date'] = event['Start Date'].replace('.000Z', '');
+            });
+
             return events;
           })
           .catch(error => {
