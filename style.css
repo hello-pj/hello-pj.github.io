@@ -14,10 +14,18 @@ body {
 
 /* カレンダーの領域 (PCでは端いっぱいまで広げる) */
 #calendar-container {
-  flex: 4; /* カレンダーを最大幅に */
-  padding: 20px;
-  padding-right: 0; /* 右の余白をなくす */
-  overflow: auto;
+  flex: 4;
+  padding: 0; /* 余白をなくす */
+  overflow: hidden; /* はみ出し防止 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* カレンダーを container いっぱいに広げる */
+#calendar {
+  width: 100%;
+  height: 100%;
+  flex-grow: 1; /* 高さも親要素いっぱいに広げる */
 }
 
 /* イベント詳細パネル (PCでは固定幅) */
