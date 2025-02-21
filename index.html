@@ -58,22 +58,9 @@
           initialView: 'dayGridMonth',
           events: events.map(event => {
             logDebug('Event data: ' + JSON.stringify(event));
-
-            function convertTimeFormat(timeStr) {
-              if (!timeStr) return "";
-              const match = timeStr.match(/(\d{1,2}):(\d{2})([ap])/);
-              if (!match) return timeStr;
-
-              let hours = parseInt(match[1], 10);
-              const minutes = match[2];
-              const ampm = match[3] === "p" ? "PM" : "AM";
-
-              return `${hours}:${minutes} ${ampm}`;
-            }
-
             return {
               title: event.Subject,
-              start: event['Start Date'] + "T" + convertTimeFormat(event['Start Time']),
+              start: event['Start Date'] + 'T' + event['Start Time'],
               description: event.Description,
               location: event.Location,
               group: event.Group
