@@ -12,9 +12,6 @@ body {
   height: 100%;
 }
 
-
-
-
 /* カレンダーの領域 (PCでは端いっぱいまで広げる) */
 #calendar-container {
   flex: 4;
@@ -40,7 +37,9 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center; /* 子要素を中央に配置 */
 }
+
 #event-details img {
   width: 100%;
   height: auto;
@@ -63,5 +62,6 @@ body {
     width: 100%;
     border-left: none;
     border-top: 1px solid #ccc;
+    align-items: center; /* 子要素を中央に配置 */
   }
 }
