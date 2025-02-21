@@ -32,14 +32,12 @@
       var calendarEl = document.getElementById('calendar');
       var debugEl = document.getElementById('debug');
 
-      // デバッグ情報をページに表示する関数
       function logDebug(message) {
         var p = document.createElement('p');
         p.textContent = message;
         debugEl.appendChild(p);
       }
 
-      // JSONデータを取得する関数
       function fetchEventData() {
         return fetch('https://script.google.com/macros/s/AKfycby6ZlDd-wQ1oMkwJGjyJDa-Z_bPcr97Jbog-3k8mtYiOT-zTN1DnzuE-J6AOpupDF8XQw/exec')
           .then(response => response.json())
