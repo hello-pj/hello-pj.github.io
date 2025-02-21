@@ -39,7 +39,12 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; /* 子要素を中央に配置 */
+  align-items: flex-start; /* テキストを左詰めに配置 */
+}
+
+/* 画像のみ中央揃え */
+#event-image {
+  align-self: center; /* 画像を中央に配置 */
 }
 
 #event-details img {
@@ -66,6 +71,5 @@ body {
     width: 100%;
     border-left: none;
     border-top: 1px solid #ccc;
-    align-items: center; /* 子要素を中央に配置 */
   }
 }
