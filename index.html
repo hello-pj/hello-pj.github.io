@@ -52,9 +52,7 @@
 
             // Start Date の形式を修正
             events.forEach(event => {
-              var date = new Date(event['Start Date']);
-              date.setDate(date.getDate() + 1); // 1日足す
-              event['Start Date'] = date.toISOString().split('T')[0];
+              event['Start Date'] = event['Start Date'].split('T')[0];
               event['Start Time'] = "T" + event['Start Time'].split('T')[1];
             });
 
@@ -77,6 +75,7 @@
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
+          timeZone: 'Asia/Tokyo', // タイムゾーンを設定
           events: events,
           eventDidMount: function(info) {
             logDebug('Event mounted: ' + JSON.stringify(info.event), debugEventDataEl); // デバッグ用
