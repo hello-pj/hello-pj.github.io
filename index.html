@@ -7,11 +7,21 @@
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js'></script>
   <style>
     #calendar {
-      max-width: 900px;
+      max-width: 400px;
       margin: 0 auto;
+      display: inline-block;
+    }
+    #eventDetails {
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      display: inline-block;
+      vertical-align: top;
     }
     .debug-section {
-      max-width: 900px;
+      max-width: 400px;
       margin: 20px auto;
       padding: 10px;
       border: 1px solid #ccc;
@@ -25,6 +35,7 @@
 
   <h1>My FullCalendar</h1>
   <div id='calendar'></div>
+  <div id='eventDetails'></div>
   <div id='debugFetchedEvents' class="debug-section"></div>
   <div id='debugCalendarEvents' class="debug-section"></div>
   <div id='debugEventData' class="debug-section"></div>
@@ -32,23 +43,22 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
+      var eventDetailsEl = document.getElementById('eventDetails');
       var debugFetchedEventsEl = document.getElementById('debugFetchedEvents');
       var debugCalendarEventsEl = document.getElementById('debugCalendarEvents');
       var debugEventDataEl = document.getElementById('debugEventData');
 
-      // デバッグ情報をページに表示する関数
       function logDebug(message, element) {
         var p = document.createElement('p');
         p.textContent = message;
         element.appendChild(p);
       }
 
-      // JSONデータを取得する関数
       function fetchEventData() {
         return fetch('https://script.google.com/macros/s/AKfycbxXh9UQzHzgSAxUg8sxAINgapf-XZl-2mIKjbzR0JGqzscrIjBRaG72wgE2MmnQolsKpg/exec')
           .then(response => response.json())
           .then(events => {
-            logDebug('Fetched events: ' + JSON.stringify(events), debugFetchedEventsEl); // デバッグ用
+            logDebug('Fetched events: ' + JSON.stringify(events), debugFetchedEventsEl);
             return events;
           })
           .catch(error => {
@@ -58,12 +68,12 @@
       }
 
       fetchEventData().then(events => {
-        logDebug('Events to be added to the calendar: ' + JSON.stringify(events), debugCalendarEventsEl); // デバッグ用
+        logDebug('Events to be added to the calendar: ' + JSON.stringify(events), debugCalendarEventsEl);
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
           events: events.map(event => {
-            logDebug('Event data: ' + JSON.stringify(event), debugEventDataEl); // デバッグ用
+            logDebug('Event data: ' + JSON.stringify(event), debugEventDataEl);
             return {
               title: event.Subject,
               start: event['Start Date'],
@@ -72,8 +82,24 @@
               group: event.Group
             };
           }),
+          dateClick: function(info) {
+            const selectedDate = info.dateStr;
+            const dayEvents = events.filter(event => event['Start Date'] === selectedDate);
+
+            eventDetailsEl.innerHTML = ''; // 既存のイベント情報をクリア
+            if (dayEvents.length > 0) {
+              dayEvents.forEach(event => {
+                eventDetailsEl.innerHTML += `<h4>${event.Subject}</h4>
+                                              <p>${event.Description}</p>
+                                              <p><strong>場所:</strong> ${event.Location}</p>
+                                              <p><strong>グループ:</strong> ${event.Group}</p>`;
+              });
+            } else {
+              eventDetailsEl.innerHTML = '<p>この日にイベントはありません。</p>';
+            }
+          },
           eventDidMount: function(info) {
-            logDebug('Event mounted: ' + JSON.stringify(info.event), debugEventDataEl); // デバッグ用
+            logDebug('Event mounted: ' + JSON.stringify(info.event), debugEventDataEl);
           }
         });
 
