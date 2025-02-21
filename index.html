@@ -42,10 +42,11 @@
         element.appendChild(p);
       }
 
-      // UTCをJSTに変換する関数
+      // UTCをJSTに変換し、日付を1日追加する関数
       function convertToJST(dateTimeStr) {
         var date = new Date(dateTimeStr);
         var jstDate = new Date(date.getTime() + (9 * 60 * 60 * 1000));
+        jstDate.setDate(jstDate.getDate() + 1); // 日付を1日追加
         return jstDate.toISOString().split('Z')[0];
       }
 
