@@ -27,7 +27,7 @@
   <div id='calendar'></div>
   <div id='debugFetchedEvents' class="debug-section"></div>
   <div id='debugCalendarEvents' class="debug-section"></div>
-  <div id='debugEventData' class="debug-section"></div>
+  <div id='debugEventData' class="debug-section'></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -52,7 +52,9 @@
 
             // Start Date の形式を修正
             events.forEach(event => {
-              event['Start Date'] = event['Start Date'].split('T')[0];
+              var date = new Date(event['Start Date']);
+              date.setDate(date.getDate() + 1); // 1日足す
+              event['Start Date'] = date.toISOString().split('T')[0];
               event['Start Time'] = "T" + event['Start Time'].split('T')[1];
             });
 
