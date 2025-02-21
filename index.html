@@ -32,17 +32,19 @@
       var calendarEl = document.getElementById('calendar');
       var debugEl = document.getElementById('debug');
 
+      // デバッグ情報をページに表示する関数
       function logDebug(message) {
         var p = document.createElement('p');
         p.textContent = message;
         debugEl.appendChild(p);
       }
 
+      // JSONデータを取得する関数
       function fetchEventData() {
         return fetch('https://script.google.com/macros/s/AKfycby6ZlDd-wQ1oMkwJGjyJDa-Z_bPcr97Jbog-3k8mtYiOT-zTN1DnzuE-J6AOpupDF8XQw/exec')
           .then(response => response.json())
           .then(events => {
-            logDebug('Fetched events: ' + JSON.stringify(events));
+            logDebug('Fetched events: ' + JSON.stringify(events)); // デバッグ用
             return events;
           })
           .catch(error => {
@@ -52,23 +54,22 @@
       }
 
       fetchEventData().then(events => {
-        logDebug('Events to be added to the calendar: ' + JSON.stringify(events));
+        logDebug('Events to be added to the calendar: ' + JSON.stringify(events)); // デバッグ用
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
           events: events.map(event => {
-            const startDateTime = event['Start Date'] + 'T' + event['Start Time'];
-            logDebug('Event data: ' + JSON.stringify(event) + ', start: ' + startDateTime);
+            logDebug('Event data: ' + JSON.stringify(event)); // デバッグ用
             return {
               title: event.Subject,
-              start: startDateTime,
+              start: event['Start Date'],
               description: event.Description,
               location: event.Location,
               group: event.Group
             };
           }),
           eventDidMount: function(info) {
-            logDebug('Event mounted: ' + JSON.stringify(info.event));
+            logDebug('Event mounted: ' + JSON.stringify(info.event)); // デバッグ用
           }
         });
 
