@@ -1,169 +1,90 @@
-function fetchAllEventData() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  sheet.clear(); // 既存データをクリア
-  sheet.appendRow(["Subject", "Start Date", "Start Time", "End Time", "All Day Event", "Location", "Description", "Group"]); // ヘッダー行を追加
-
-  const baseUrl = "https://www.helloproject.com";
-  const eventListUrl = baseUrl + "/event/concert/";
-  const eventPageUrlsAndNames = fetchEventPageUrlsAndNames(eventListUrl); // イベント詳細ページのURLと名前を取得
-
-  let allEventData = [];
-  eventPageUrlsAndNames.forEach(([url, eventName]) => {
-    const html = fetchEventData(baseUrl + url);
-    let eventData = parseHtml(html);
-
-    // もし「コンサートスケジュール表」から取得できなかったら「公演詳細」＋<time>タグから取得
-    if (eventData.length === 0) {
-      eventData = parseEventDetails(html);
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>FullCalendar Example</title>
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css' rel='stylesheet' />
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js'></script>
+  <style>
+    #calendar {
+      max-width: 900px;
+      margin: 0 auto;
     }
+    .debug-section {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      overflow: auto;
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
 
-    // イベント名を各行に追加
-    eventData = eventData.map(row => [
-      decodeHtml(eventName), // Subject
-      formatDate(row[0]),    // Start Date
-      row[2],                // Start Time
-      "",                    // End Time
-      "FALSE",               // All Day Event
-      row[1],                // Location
-      row[3],                // Description
-      row[4]                 // Group
-    ]);
+  <h1>My FullCalendar</h1>
+  <div id='calendar'></div>
+  <div id='debugFetchedEvents' class="debug-section"></div>
+  <div id='debugCalendarEvents' class="debug-section"></div>
+  <div id='debugEventData' class="debug-section"></div>
 
-    allEventData = allEventData.concat(eventData);
-  });
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var debugFetchedEventsEl = document.getElementById('debugFetchedEvents');
+      var debugCalendarEventsEl = document.getElementById('debugCalendarEvents');
+      var debugEventDataEl = document.getElementById('debugEventData');
 
-  // スプレッドシートに一括で書き込む
-  if (allEventData.length > 0) {
-    sheet.getRange(2, 1, allEventData.length, allEventData[0].length).setValues(allEventData);
-  }
-}
+      // デバッグ情報をページに表示する関数
+      function logDebug(message, element) {
+        var p = document.createElement('p');
+        p.textContent = message;
+        element.appendChild(p);
+      }
 
-// HTMLエンティティをデコードする関数
-function decodeHtml(html) {
-  const entityPairs = {
-    '&amp;': '&',
-    '&#39;': "'",
-    '&quot;': '"',
-    '&lt;': '<',
-    '&gt;': '>',
-    '&times;': '×' // 追加
-  };
-  return html.replace(/&[#\w]+;/g, match => entityPairs[match] || match);
-}
+      // JSONデータを取得する関数
+      function fetchEventData() {
+        return fetch('https://script.google.com/macros/s/AKfycbxXh9UQzHzgSAxUg8sxAINgapf-XZl-2mIKjbzR0JGqzscrIjBRaG72wgE2MmnQolsKpg/exec')
+          .then(response => response.json())
+          .then(events => {
+            logDebug('Fetched events: ' + JSON.stringify(events), debugFetchedEventsEl); // デバッグ用
 
-// 日付フォーマットを変換する関数（例：4/29(火･祝) -> YYYY/MM/DD）
-function formatDate(dateStr) {
-  const datePattern = /(\d{1,2})\/(\d{1,2})\(([^)]+)\)/; // 日付フォーマットの正規表現パターンを修正
-  const match = dateStr.match(datePattern);
-  if (!match) return dateStr;
+            // Start Date の形式を修正
+            events.forEach(event => {
+              event['Start Date'] = event['Start Date'].split('T')[0];
+              event['Start Time'] = "T" + event['Start Time'].split('T')[1];
+            });
 
-  const year = new Date().getFullYear();
-  const month = ('0' + match[1]).slice(-2); // 2桁に揃える
-  const day = ('0' + match[2]).slice(-2);   // 2桁に揃える
+            return events.map(event => ({
+              title: event.Subject,
+              start: event['Start Date'] + event['Start Time'],
+              description: event.Description.split('T')[1],
+              location: event.Location,
+              group: event.Group
+            }));
+          })
+          .catch(error => {
+            logDebug('Error fetching events: ' + error, debugFetchedEventsEl);
+            return [];
+          });
+      }
 
-  return `${year}/${month}/${day}`; 
-}
+      fetchEventData().then(events => {
+        logDebug('Events to be added to the calendar: ' + JSON.stringify(events), debugCalendarEventsEl); // デバッグ用
 
-// イベント詳細ページのURLと名前を取得
-function fetchEventPageUrlsAndNames(eventListUrl) {
-  const html = fetchEventData(eventListUrl);
-  const linkPattern = /<p><a href="(\/event\/detail\/[^"]+)">([\s\S]*?)<\/a><\/p>/g;
-  let matches, urlsAndNames = [];
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          events: events,
+          eventDidMount: function(info) {
+            logDebug('Event mounted: ' + JSON.stringify(info.event), debugEventDataEl); // デバッグ用
+          }
+        });
 
-  while ((matches = linkPattern.exec(html)) !== null) {
-    const url = matches[1];
-    const eventName = matches[2].replace(/<br\s*\/?>/g, " ").replace(/<[^>]+>/g, "").trim();
-    urlsAndNames.push([url, eventName]);
-  }
-
-  return urlsAndNames;
-}
-
-// 指定URLのHTMLを取得
-function fetchEventData(url) {
-  const response = UrlFetchApp.fetch(url);
-  return response.getContentText("UTF-8");
-}
-
-// コンサートスケジュール表の情報を取得
-function parseHtml(html) {
-  const tablePattern = /<table id="concert_schedule">([\s\S]*?)<\/table>/;
-  const rowPattern = /<tr[^>]*>([\s\S]*?)<\/tr>/g;
-  const cellPattern = /<td[^>]*>([\s\S]*?)<\/td>/g;
-  const groupPattern = /<div class="icon-name[^"]*">([\s\S]*?)<\/div>/g; // 'g' フラグを追加
-
-  const tableMatch = html.match(tablePattern);
-  if (!tableMatch) return [];
-
-  // グループ名を取得
-  const groupMatches = [...html.matchAll(groupPattern)];
-  const groupNames = groupMatches.map(match => match[1].replace(/<[^>]+>/g, "").trim());
-
-  const rows = [];
-  const rowMatches = tableMatch[1].matchAll(rowPattern);
-
-  for (const rowMatch of rowMatches) {
-    const cellMatches = [...rowMatch[1].matchAll(cellPattern)];
-    if (cellMatches.length < 4) continue; // 4列未満ならスキップ
-
-    const rowData = cellMatches.slice(0, 4).map(match => 
-      match[1].replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim()
-    );
-
-    // 各グループごとに行を増やす
-    groupNames.forEach(groupName => {
-      rows.push([...rowData, groupName]);
+        calendar.render();
+      });
     });
-  }
+  </script>
 
-  return rows;
-}
-
-// 公演詳細の情報を解析して取得
-function parseEventDetails(html) {
-  const datePattern = /<time class="icon-time">([^<]+)<\/time>/;
-  const venuePattern = /【会場】([\s\S]*?)【出演】/;
-  const groupPattern = /【出演】([\s\S]*?)【主催・企画・制作】/;
-  const timePattern = /(\d{1,2}:\d{2})開場\/(\d{1,2}:\d{2})開演/g;
-
-  const dateMatch = html.match(datePattern);
-  const venueMatch = html.match(venuePattern);
-  const groupMatch = html.match(groupPattern);
-  const timeMatches = [...html.matchAll(timePattern)];
-
-  if (!dateMatch || !venueMatch || timeMatches.length === 0) return [];
-
-  const date = dateMatch[1].trim();
-  const venue = cleanHtml(venueMatch[1].trim());
-  const group = groupMatch ? cleanHtml(groupMatch[1].trim()) : "";
-
-  const eventDetails = timeMatches.map(match => [date, venue, match[1], match[2], group]);
-
-  return eventDetails;
-}
-
-// HTMLタグを取り除く
-function cleanHtml(str) {
-  return str.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
-}
-
-function doGet(e) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  const data = sheet.getDataRange().getValues();
-  const headers = data[0];
-  const jsonData = [];
-
-  for (let i = 1; i < data.length; i++) {
-    const row = data[i];
-    const rowObject = {};
-
-    for (let j = 0; j < headers.length; j++) {
-      rowObject[headers[j]] = row[j];
-    }
-
-    jsonData.push(rowObject);
-  }
-
-  const output = JSON.stringify(jsonData);
-  return ContentService.createTextOutput(output).setMimeType(ContentService.MimeType.JSON);
-}
+</body>
+</html>
