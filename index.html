@@ -27,7 +27,7 @@
   <div id='calendar'></div>
   <div id='debugFetchedEvents' class="debug-section"></div>
   <div id='debugCalendarEvents' class="debug-section"></div>
-  <div id='debugEventData' class="debug-section"></div>
+  <div id='debugEventData' class="debug-section'></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -75,6 +75,7 @@
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
+          timeZone: 'Asia/Tokyo', // タイムゾーンを設定
           events: events,
           eventDidMount: function(info) {
             logDebug('Event mounted: ' + JSON.stringify(info.event), debugEventDataEl); // デバッグ用
