@@ -12,6 +12,9 @@ body {
   height: 100%;
 }
 
+
+
+
 /* カレンダーの領域 (PCでは端いっぱいまで広げる) */
 #calendar-container {
   flex: 4;
@@ -37,6 +40,12 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+#event-details img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 440 / 330;
+  object-fit: cover; /* アスペクト比を維持しながら表示範囲に収める */
 }
 
 /* スマホ用レイアウト (幅が768px未満の場合) */
