@@ -1,73 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Event Calendar</title>
+  <link href="style.css" rel="stylesheet">
   <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css' rel='stylesheet' />
-  <link rel='stylesheet' href='styles.css' />
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js'></script>
 </head>
 <body>
-
-  <div id="calendar-container">
-    <h1>Event Calendar</h1>
-    <div id='calendar'></div>
+  <div id="container">
+    <div id="calendar-container">
+      <div id="calendar"></div>
+    </div>
+    <div id="event-details">
+      <h2>イベント詳細</h2>
+      <p><strong>タイトル:</strong> <span id="event-title"></span></p>
+      <p><strong>日付:</strong> <span id="event-date"></span></p>
+      <p><strong>場所:</strong> <span id="event-location"></span></p>
+      <p><strong>説明:</strong> <span id="event-description"></span></p>
+      <p><strong>グループ:</strong> <span id="event-group"></span></p>
+    </div>
   </div>
-  
-  <div id="event-details">
-    <h2>Event Details</h2>
-    <p><strong>Title:</strong> <span id="event-title"></span></p>
-    <p><strong>Date:</strong> <span id="event-date"></span></p>
-    <p><strong>Location:</strong> <span id="event-location"></span></p>
-    <p><strong>Description:</strong> <span id="event-description"></span></p>
-    <p><strong>Group:</strong> <span id="event-group"></span></p>
-  </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
-      var eventTitle = document.getElementById('event-title');
-      var eventDate = document.getElementById('event-date');
-      var eventLocation = document.getElementById('event-location');
-      var eventDescription = document.getElementById('event-description');
-      var eventGroup = document.getElementById('event-group');
-
-      function fetchEventData() {
-        return fetch('https://script.google.com/macros/s/AKfycbxXh9UQzHzgSAxUg8sxAINgapf-XZl-2mIKjbzR0JGqzscrIjBRaG72wgE2MmnQolsKpg/exec')
-          .then(response => response.json())
-          .then(events => {
-            return events.map(event => {
-              let utcDate = new Date(event['Start Date']);
-              let jstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
-              event['Start Date'] = jstDate.toISOString().split('T')[0];
-              event['Start Time'] = event['Start Time'].split('T')[1];
-              return {
-                title: event.Subject,
-                start: event['Start Date'] + "T" + event['Start Time'],
-                location: event.Location,
-                description: event.Description,
-                group: event.Group
-              };
-            });
-          });
-      }
-
-      fetchEventData().then(events => {
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          events: events,
-          eventClick: function(info) {
-            eventTitle.textContent = info.event.title;
-            eventDate.textContent = info.event.start.toISOString().split('T')[0];
-            eventLocation.textContent = info.event.extendedProps.location;
-            eventDescription.textContent = info.event.extendedProps.description;
-            eventGroup.textContent = info.event.extendedProps.group;
-          }
-        });
-        calendar.render();
-      });
-    });
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>
