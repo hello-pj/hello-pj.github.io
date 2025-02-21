@@ -35,10 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
-      slotLabelFormat: {
+      eventTimeFormat: { // 時間表示形式を統一
         hour: '2-digit',
         minute: '2-digit',
-        hour12: false // 24時間形式
+        meridiem: false // 24時間表示に設定
       },
       events: events,
       eventClick: function(info) {
