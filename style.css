@@ -97,7 +97,8 @@ body {
 
   #calendar {
     flex-grow: 1;
-    height: 100%; /* 高さを確保してカレンダーを表示 */
+    height: 100vh; /* 高さを確保してカレンダーを表示 */
+    min-height: 50vh; /* 最低限の高さを設定 */
   }
 
   #event-details {
@@ -105,4 +106,6 @@ body {
     border-left: none;
     border-top: 1px solid #ccc;
   }
+}
+
 }
