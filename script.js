@@ -9,27 +9,28 @@ document.addEventListener('DOMContentLoaded', function() {
   var groupFiltersContainer = document.getElementById('group-filters');
 
   var groupColors = {
+    "HELLO! PROJECT": "#035F9F",
     "モーニング娘。'25": "#E80112",
     "アンジュルム": "#0091D2",
     "Juice=Juice": "#611A85",
     "つばきファクトリー": "#F29EC2",
     "BEYOOOOONDS": "#249849",
+    "OCHA NORMA": "#F39800",
     "ロージークロニクル": "#FFD629",
-    "ハロプロ研修生": "#33D6AD",
-    "HELLO! PROJECT": "#035F9F",
-    "OCHA NORMA": "#F39800"
+    "ハロプロ研修生": "#33D6AD"
   };
 
   var groupImages = {
+    "HELLO! PROJECT": "img/hello_project_image.jpg",
     "モーニング娘。'25": "img/morning_musume_image.jpg",
     "アンジュルム": "img/angerme_image.jpg",
     "Juice=Juice": "img/juice_juice_image.jpg",
     "つばきファクトリー": "img/tsubaki_factory_image.jpg",
     "BEYOOOOONDS": "img/beyooooonds_image.jpg",
+    "OCHA NORMA": "img/ocha_norma_image.jpg",
     "ロージークロニクル": "img/rouge_chronicle_image.jpg",
-    "ハロプロ研修生": "img/hello_project_trainees_image.jpg",
-    "HELLO! PROJECT": "img/hello_project_image.jpg",
-    "OCHA NORMA": "img/ocha_norma_image.jpg"
+    "ハロプロ研修生": "img/hello_project_trainees_image.jpg"
+
   };
 
   var activeGroups = new Set(Object.keys(groupColors));
