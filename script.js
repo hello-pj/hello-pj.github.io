@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
   var calendarEl = document.getElementById('calendar');
-  var filters = document.querySelectorAll('.group-filter');
   var eventTitle = document.getElementById('event-title');
   var eventDate = document.getElementById('event-date');
   var eventLocation = document.getElementById('event-location');
   var eventDescription = document.getElementById('event-description');
   var eventGroup = document.getElementById('event-group');
   var eventImage = document.getElementById('event-image');
+  var groupFiltersContainer = document.getElementById('group-filters');
 
   var groupColors = {
     "モーニング娘。'25": "#E80112",
@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
     "OCHA NORMA": "img/ocha_norma_image.jpg"
   };
 
+  var activeGroups = new Set(Object.keys(groupColors));
+
   function fetchEventData() {
     return fetch('https://script.google.com/macros/s/AKfycbxXh9UQzHzgSAxUg8sxAINgapf-XZl-2mIKjbzR0JGqzscrIjBRaG72wgE2MmnQolsKpg/exec')
       .then(response => response.json())
@@ -42,28 +44,23 @@ document.addEventListener('DOMContentLoaded', function() {
           event['Start Date'] = jstDate.toISOString().split('T')[0];
           event['Start Time'] = event['Start Time'].split('T')[1];
           return {
+            id: event.Id,
             title: event.Subject,
             start: event['Start Date'] + "T" + event['Start Time'],
             location: event.Location,
             description: event.Description,
-            group: event.Group
+            group: event.Group,
+            color: groupColors[event.Group] || '#000000'
           };
         });
       });
   }
 
-  function updateCalendarEvents(events) {
-    var selectedGroups = Array.from(filters)
-      .filter(filter => filter.checked)
-      .map(filter => filter.value);
-
-    var filteredEvents = events.filter(event => selectedGroups.includes(event.group));
-
+  function updateCalendarEvents(calendar, events) {
     calendar.removeAllEvents();
-    calendar.addEventSource(filteredEvents.map(event => ({
-      ...event,
-      color: groupColors[event.group] || '#000000'
-    })));
+    events.filter(event => activeGroups.has(event.group)).forEach(event => {
+      calendar.addEvent(event);
+    });
   }
 
   fetchEventData().then(events => {
@@ -80,28 +77,36 @@ document.addEventListener('DOMContentLoaded', function() {
         minute: '2-digit',
         meridiem: false
       },
-      events: events.map(event => ({
-        ...event,
-        color: groupColors[event.group] || '#000000'
-      })),
+      events: events,
       eventClick: function(info) {
         eventTitle.textContent = info.event.title;
         eventDate.textContent = info.event.start.toISOString().split('T')[0];
         eventLocation.textContent = info.event.extendedProps.location;
         eventDescription.textContent = info.event.extendedProps.description;
         eventGroup.textContent = info.event.extendedProps.group;
-
-        var imageUrl = groupImages[info.event.extendedProps.group];
-        eventImage.src = imageUrl ? imageUrl : 'img/default_image.jpg';
+        eventImage.src = groupImages[info.event.extendedProps.group] || 'img/default_image.jpg';
       }
     });
-
     calendar.render();
 
-    filters.forEach(filter => {
-      filter.addEventListener('change', function() {
-        updateCalendarEvents(events);
-      });
+    Object.keys(groupColors).forEach(group => {
+      var button = document.createElement('div');
+      button.classList.add('group-filter', 'active');
+      button.textContent = group;
+      button.style.backgroundColor = groupColors[group];
+      button.onclick = function() {
+        if (activeGroups.has(group)) {
+          activeGroups.delete(group);
+          button.classList.remove('active');
+          button.style.backgroundColor = "#ddd";
+        } else {
+          activeGroups.add(group);
+          button.classList.add('active');
+          button.style.backgroundColor = groupColors[group];
+        }
+        updateCalendarEvents(calendar, events);
+      };
+      groupFiltersContainer.appendChild(button);
     });
   });
 });
