@@ -11,30 +11,30 @@ body {
 #group-filters {
   display: flex;
   justify-content: center;
-  gap: 5px; /* ギャップを小さくする */
-  padding: 5px; /* パディングを小さくする */
+  gap: 5px;
+  padding: 5px;
   background-color: #f1f1f1;
   border-bottom: 1px solid #ccc;
   position: sticky;
   top: 0;
   z-index: 1000;
-  flex-wrap: nowrap; /* 1列に並べる */
-  overflow-x: auto; /* 横スクロール可能にする */
-  height: 30px; /* 高さを30pxに固定 */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  height: 30px;
 }
 
 /* フィルターボタン */
 .group-filter {
-  padding: 5px 8px; /* パディングを小さくする */
-  border-radius: 3px; /* ボーダーを小さくする */
+  padding: 5px 8px;
+  border-radius: 3px;
   color: white;
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s;
-  font-size: 0.8em; /* フォントサイズを小さくする */
+  font-size: 0.8em;
   display: flex;
-  align-items: center; /* 文字を中央に配置 */
-  justify-content: center; /* 文字を中央に配置 */
+  align-items: center;
+  justify-content: center;
 }
 
 .group-filter.active {
@@ -50,7 +50,7 @@ body {
 #container {
   display: flex;
   flex: 1;
-  height: calc(100vh - 30px); /* フィルター分の高さを確保 */
+  height: calc(100vh - 30px);
   overflow: hidden;
 }
 
@@ -85,41 +85,40 @@ body {
   align-self: center;
   width: 100%;
   height: auto;
-  aspect-ratio: 475 / 310;
-  object-fit: contain; /* 画像全体をパネル内に収める */
-  max-height: 100%; /* 画像の最大高さをパネルに合わせる */
+  aspect-ratio: 445 / 330;
+  object-fit: contain;
 }
 
 /* スマホ用レイアウト */
 @media (max-width: 767px) {
   #container {
     flex-direction: column;
-    height: calc(100vh - 30px); /* フィルター分を考慮 */
+    height: calc(100vh - 30px);
   }
 
   #calendar-container {
     width: 100%;
-    height: 50%; /* カレンダーの高さを50%に設定 */
+    height: 50%;
   }
 
   #calendar {
     flex-grow: 1;
-    height: 100%; /* カレンダー領域の高さを確保 */
+    height: 100%;
   }
 
   #event-details {
     width: 100%;
-    height: 50%; /* 詳細パネルの高さを50%に設定 */
+    height: 50%;
     border-left: none;
     border-top: 1px solid #ccc;
-    overflow-y: auto; /* コンテンツが多い場合はスクロール可能に */
+    overflow-y: auto;
   }
 
   #event-image {
     align-self: center;
     width: 100%;
     height: auto;
-    max-height: 100%; /* 画像の最大高さをパネルに合わせる */
-    object-fit: contain; /* 画像全体をパネル内に収める */
+    max-height: none;
+    object-fit: contain;
   }
 }
