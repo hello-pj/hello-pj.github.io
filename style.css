@@ -4,104 +4,98 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow-x: hidden; /* 横スクロールを防止 */
+  overflow-x: hidden;
 }
 
+/* グループフィルターのスタイル */
+#group-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-bottom: 1px solid #ccc;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* フィルターボタン */
+.group-filter {
+  padding: 8px 12px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.group-filter.active {
+  opacity: 1;
+}
+
+.group-filter:not(.active) {
+  background-color: #ddd !important;
+  color: #666;
+}
+
+/* カレンダーとイベント詳細を表示するコンテナ */
 #container {
   display: flex;
   flex: 1;
   height: 100%;
-  overflow-x: hidden; /* 横スクロールを防止 */
+  overflow: hidden;
 }
 
-/* カレンダーの領域 (PCでは端いっぱいまで広げる) */
+/* カレンダー領域 */
 #calendar-container {
   flex: 4;
-  padding: 0; /* 余白をなくす */
-  overflow: hidden; /* はみ出し防止 */
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-/* カレンダーを container いっぱいに広げる */
+/* カレンダー本体 */
 #calendar {
   width: 100%;
   height: 100%;
-  flex-grow: 1; /* 高さも親要素いっぱいに広げる */
+  flex-grow: 1;
 }
 
-/* イベント詳細パネル (PCでは固定幅) */
+/* イベント詳細パネル */
 #event-details {
-  width: 400px; /* 固定幅 */
+  width: 400px;
   padding: 20px;
-  margin-left: 0; /* 左の余白をなくす */
   background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start; /* テキストを左詰めに配置 */
+  align-items: flex-start;
 }
 
-/* 画像のみ中央揃え */
+/* イベント画像 */
 #event-image {
-  align-self: center; /* 画像を中央に配置 */
-}
-
-#event-details img {
+  align-self: center;
   width: 100%;
   height: auto;
-  aspect-ratio: 475 / 310; /* アスペクト比を475 / 310に変更 */
-  object-fit: cover; /* アスペクト比を維持しながら表示範囲に収める */
+  aspect-ratio: 475 / 310;
+  object-fit: cover;
 }
 
-/* グループフィルターのデザイン */
-#group-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 10px;
-  background-color: #f1f1f1;
-  border-bottom: 1px solid #ccc;
-  justify-content: center;
-}
-
-.group-filter {
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 5px;
-  cursor: pointer;
-  border-radius: 5px;
-  background-color: #ddd;
-  user-select: none;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.group-filter.active {
-  background-color: #007bff;
-  color: white;
-}
-
-/* スマホ用レイアウト (幅が768px未満の場合) */
+/* スマホ用レイアウト */
 @media (max-width: 767px) {
   #container {
     flex-direction: column;
-    overflow-x: hidden; /* 横スクロールを防止 */
   }
 
   #calendar-container {
-    flex: none;
     width: 100%;
-    overflow-x: hidden; /* 横スクロールを防止 */
   }
 
   #event-details {
     width: 100%;
     border-left: none;
     border-top: 1px solid #ccc;
-  }
-
-  #group-filters {
-    flex-direction: column;
-    align-items: center;
   }
 }
