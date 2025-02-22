@@ -20,7 +20,7 @@ body {
   z-index: 1000;
   flex-wrap: nowrap; /* 1列に並べる */
   overflow-x: auto; /* 横スクロール可能にする */
-  height: 50px; /* 高さを固定 */
+  height: 30px; /* 高さを30pxに固定 */
 }
 
 /* フィルターボタン */
@@ -32,6 +32,9 @@ body {
   font-weight: bold;
   transition: background-color 0.3s;
   font-size: 0.8em; /* フォントサイズを小さくする */
+  display: flex;
+  align-items: center; /* 文字を中央に配置 */
+  justify-content: center; /* 文字を中央に配置 */
 }
 
 .group-filter.active {
@@ -47,7 +50,7 @@ body {
 #container {
   display: flex;
   flex: 1;
-  height: calc(100vh - 50px); /* フィルター分の高さを確保 */
+  height: calc(100vh - 30px); /* フィルター分の高さを確保 */
   overflow: hidden;
 }
 
@@ -91,7 +94,7 @@ body {
 @media (max-width: 767px) {
   #container {
     flex-direction: column;
-    height: calc(100vh - 50px); /* フィルター分を考慮 */
+    height: calc(100vh - 30px); /* フィルター分を考慮 */
   }
 
   #calendar-container {
