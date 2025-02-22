@@ -111,19 +111,32 @@ body {
 
   /* 詳細パネルのアニメーション用 */
   #event-details {
-    width: 100%;
+    width: 100vw; /* 画面幅いっぱいに */
     height: 50%;
-    background-color: rgba(255, 255, 255, 1); /* 背景色を不透明に設定 */
+    background-color: rgba(255, 255, 255, 1);
     position: fixed;
     bottom: -50%;
     left: 0;
     transition: bottom 0.3s ease-in-out;
     border-top: 1px solid #ccc;
     overflow-y: auto;
+    overflow-x: hidden; /* 横スクロールを防止 */
     padding: 20px;
-    z-index: 1000; /* z-indexを追加して最前面に表示 */
+    z-index: 1000;
+    box-sizing: border-box; /* paddingを含めても100vwになるように */
   }
 
+  /* 画像の中央配置と最大幅設定 */
+  #event-image {
+    max-width: 100%; /* 親要素内で収まるように */
+    display: block;  /* 余計な隙間をなくす */
+    margin: 0 auto;  /* 中央揃え */
+    height: auto;
+    aspect-ratio: 445 / 330;
+    object-fit: contain;
+  }
+  
+  
   /* 詳細パネル表示時 */
   #event-details.show {
     bottom: 0;
