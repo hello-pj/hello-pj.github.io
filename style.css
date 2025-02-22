@@ -69,15 +69,17 @@ body {
   flex-grow: 1;
 }
 
-/* イベント詳細パネル */
+/* イベント詳細パネル（PCモード） */
 #event-details {
   width: 400px;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: rgba(255, 255, 255, 1); /* 背景色を不透明に設定 */
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; /* 上部に配置 */
   align-items: flex-start;
+  overflow-y: auto; /* コンテンツがはみ出した場合にスクロール */
+  max-height: calc(100vh - 50px); /* 最大高さを設定 */
 }
 
 /* イベント画像 */
@@ -87,6 +89,7 @@ body {
   height: auto;
   aspect-ratio: 445 / 330;
   object-fit: contain;
+  margin-bottom: 20px; /* 下に少し余白を追加 */
 }
 
 /* スマホ用レイアウト */
@@ -98,7 +101,7 @@ body {
 
   #calendar-container {
     width: 100%;
-    height: 50%;
+    height: 100%;
   }
 
   #calendar {
@@ -106,19 +109,43 @@ body {
     height: 100%;
   }
 
+  /* 詳細パネルのアニメーション用 */
   #event-details {
     width: 100%;
     height: 50%;
-    border-left: none;
+    background-color: rgba(255, 255, 255, 1); /* 背景色を不透明に設定 */
+    position: fixed;
+    bottom: -50%;
+    left: 0;
+    transition: bottom 0.3s ease-in-out;
     border-top: 1px solid #ccc;
     overflow-y: auto;
+    padding: 20px;
+    z-index: 1000; /* z-indexを追加して最前面に表示 */
   }
 
-  #event-image {
-    align-self: center;
+  /* 詳細パネル表示時 */
+  #event-details.show {
+    bottom: 0;
+  }
+
+  /* 閉じるボタン */
+  #close-details {
+    display: block;
     width: 100%;
-    height: auto;
-    max-height: none;
-    object-fit: contain;
+    text-align: center;
+    padding: 10px;
+    background: #ccc;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px; /* 上の内容と少し間隔を取る */
+  }
+}
+
+/* PCモードで閉じるボタンを非表示 */
+@media (min-width: 768px) {
+  #close-details {
+    display: none;
   }
 }
