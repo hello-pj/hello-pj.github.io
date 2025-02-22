@@ -54,6 +54,33 @@ body {
   object-fit: cover; /* アスペクト比を維持しながら表示範囲に収める */
 }
 
+/* グループフィルターのデザイン */
+#group-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-bottom: 1px solid #ccc;
+  justify-content: center;
+}
+
+.group-filter {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #ddd;
+  user-select: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.group-filter.active {
+  background-color: #007bff;
+  color: white;
+}
+
 /* スマホ用レイアウト (幅が768px未満の場合) */
 @media (max-width: 767px) {
   #container {
@@ -71,5 +98,10 @@ body {
     width: 100%;
     border-left: none;
     border-top: 1px solid #ccc;
+  }
+
+  #group-filters {
+    flex-direction: column;
+    align-items: center;
   }
 }
