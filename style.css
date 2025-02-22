@@ -10,25 +10,27 @@ body {
 /* グループフィルターのスタイル */
 #group-filters {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  padding: 10px;
+  gap: 5px; /* ギャップを小さくする */
+  padding: 5px; /* パディングを小さくする */
   background-color: #f1f1f1;
   border-bottom: 1px solid #ccc;
   position: sticky;
   top: 0;
   z-index: 1000;
+  flex-wrap: nowrap; /* 1列に並べる */
+  overflow-x: auto; /* 横スクロール可能にする */
 }
 
 /* フィルターボタン */
 .group-filter {
-  padding: 8px 12px;
-  border-radius: 5px;
+  padding: 5px 8px; /* パディングを小さくする */
+  border-radius: 3px; /* ボーダーを小さくする */
   color: white;
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s;
+  font-size: 0.8em; /* フォントサイズを小さくする */
 }
 
 .group-filter.active {
@@ -81,6 +83,7 @@ body {
   height: auto;
   aspect-ratio: 475 / 310;
   object-fit: cover;
+  max-height: 100%; /* 画像の最大高さをパネルに合わせる */
 }
 
 /* スマホ用レイアウト */
@@ -107,5 +110,12 @@ body {
     border-top: 1px solid #ccc;
     overflow-y: auto; /* コンテンツが多い場合はスクロール可能に */
   }
-}
 
+  #event-image {
+    align-self: center;
+    width: 100%;
+    height: auto;
+    max-height: 100%; /* 画像の最大高さをパネルに合わせる */
+    object-fit: cover;
+  }
+}
