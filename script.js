@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var eventGroup = document.getElementById('event-group');
   var eventImage = document.getElementById('event-image');
   var groupFiltersContainer = document.getElementById('group-filters');
+  var eventDetails = document.getElementById('event-details');
 
   var groupColors = {
     "HELLO! PROJECT": "#035F9F",
@@ -30,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
     "OCHA NORMA": "img/ocha_norma_image.jpg",
     "ロージークロニクル": "img/rouge_chronicle_image.jpg",
     "ハロプロ研修生": "img/hello_project_trainees_image.jpg"
-
   };
 
   var activeGroups = new Set(Object.keys(groupColors));
@@ -86,6 +86,11 @@ document.addEventListener('DOMContentLoaded', function() {
         eventDescription.textContent = info.event.extendedProps.description;
         eventGroup.textContent = info.event.extendedProps.group;
         eventImage.src = groupImages[info.event.extendedProps.group] || 'img/default_image.jpg';
+
+        // モバイルの場合は詳細パネルを表示
+        if (window.innerWidth <= 768) {
+          eventDetails.classList.add('show');
+        }
       }
     });
     calendar.render();
@@ -109,5 +114,10 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       groupFiltersContainer.appendChild(button);
     });
+  });
+
+  // モバイル時の詳細パネルを閉じる処理
+  document.getElementById('close-details').addEventListener('click', function() {
+    eventDetails.classList.remove('show');
   });
 });
