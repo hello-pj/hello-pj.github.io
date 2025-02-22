@@ -9,18 +9,8 @@
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js'></script>
 </head>
 <body>
+  <div id="group-filters"></div> <!-- グループフィルター追加 -->
   <div id="container">
-    <div id="filter-container">
-      <label><input type="checkbox" class="group-filter" value="モーニング娘。'25" checked> モーニング娘。'25</label>
-      <label><input type="checkbox" class="group-filter" value="アンジュルム" checked> アンジュルム</label>
-      <label><input type="checkbox" class="group-filter" value="Juice=Juice" checked> Juice=Juice</label>
-      <label><input type="checkbox" class="group-filter" value="つばきファクトリー" checked> つばきファクトリー</label>
-      <label><input type="checkbox" class="group-filter" value="BEYOOOOONDS" checked> BEYOOOOONDS</label>
-      <label><input type="checkbox" class="group-filter" value="ロージークロニクル" checked> ロージークロニクル</label>
-      <label><input type="checkbox" class="group-filter" value="ハロプロ研修生" checked> ハロプロ研修生</label>
-      <label><input type="checkbox" class="group-filter" value="HELLO! PROJECT" checked> HELLO! PROJECT</label>
-      <label><input type="checkbox" class="group-filter" value="OCHA NORMA" checked> OCHA NORMA</label>
-    </div>
     <div id="calendar-container">
       <div id="calendar"></div>
     </div>
@@ -34,6 +24,7 @@
       <p><strong>グループ:</strong> <span id="event-group"></span></p>
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
