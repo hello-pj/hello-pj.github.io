@@ -1,3 +1,4 @@
+/* bodyスタイル */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -112,10 +113,10 @@ body {
   /* 詳細パネルのアニメーション用 */
   #event-details {
     width: 100vw; /* 画面幅いっぱいに */
-    height: 50%;
+    height: 80%; /* 表示範囲を95%に拡大 */
     background-color: rgba(255, 255, 255, 1);
     position: fixed;
-    bottom: -50%;
+    bottom: -80%; /* 初期位置を変更 */
     left: 0;
     transition: bottom 0.3s ease-in-out;
     border-top: 1px solid #ccc;
@@ -136,7 +137,6 @@ body {
     object-fit: contain;
   }
   
-  
   /* 詳細パネル表示時 */
   #event-details.show {
     bottom: 0;
@@ -145,17 +145,18 @@ body {
   /* 閉じるボタン */
   #close-details {
     display: block;
-    width: 100%; /* 親要素内で幅を最大に */
+    width: 100%; /* 幅を元のままに */
     text-align: center; /* 中央揃え */
-    padding: 10px;
+    padding: 5px; /* パディングを小さくする */
     background: #ccc;
     color: #333;
     font-weight: bold;
     cursor: pointer;
     margin-bottom: 10px; /* 上の内容と少し間隔を取る */
     box-sizing: border-box; /* paddingを含めた幅 */
+    height: auto; /* 高さを自動調整 */
+    line-height: 1.5em; /* テキストの高さを調整 */
   }
-
 }
 
 /* PCモードで閉じるボタンを非表示 */
@@ -163,4 +164,16 @@ body {
   #close-details {
     display: none;
   }
+}
+
+/* オーバーレイスタイル */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* グレイの半透明 */
+  z-index: 900; /* 詳細パネルの下に表示 */
+  display: none; /* デフォルトでは非表示 */
 }
