@@ -11,7 +11,7 @@ body {
 /* グループフィルターのスタイル */
 #group-filters {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start; /* ボタンを左端に配置 */
   gap: 5px;
   padding: 5px;
   background-color: #f1f1f1;
@@ -20,8 +20,9 @@ body {
   top: 0;
   z-index: 1000;
   flex-wrap: nowrap;
-  overflow-x: auto;
+  overflow-x: auto; /* 横スクロールを有効にする */
   height: 30px;
+  white-space: nowrap; /* 改行を防止する */
 }
 
 /* フィルターボタン */
@@ -33,9 +34,11 @@ body {
   font-weight: bold;
   transition: background-color 0.3s;
   font-size: 0.8em;
-  display: flex;
+  display: inline-block; /* 横並びにするために inline-block を使用 */
   align-items: center;
   justify-content: center;
+  white-space: nowrap; /* ボタン内の文字の改行を防止する */
+  min-width: fit-content; /* ボタンの幅を文字の幅に合わせる */
 }
 
 .group-filter.active {
