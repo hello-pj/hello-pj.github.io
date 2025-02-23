@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var eventImage = document.getElementById('event-image');
   var groupFiltersContainer = document.getElementById('group-filters');
   var eventDetails = document.getElementById('event-details');
+  var overlay = document.getElementById('overlay');
 
   var groupColors = {
     "HELLO! PROJECT": "#035F9F",
@@ -87,9 +88,9 @@ document.addEventListener('DOMContentLoaded', function() {
         eventGroup.textContent = info.event.extendedProps.group;
         eventImage.src = groupImages[info.event.extendedProps.group] || 'img/default_image.jpg';
 
-        // モバイルの場合は詳細パネルを表示
         if (window.innerWidth <= 768) {
           eventDetails.classList.add('show');
+          overlay.style.display = 'block';
         }
       }
     });
@@ -116,8 +117,35 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // モバイル時の詳細パネルを閉じる処理
-  document.getElementById('close-details').addEventListener('click', function() {
+  // 詳細パネルを閉じる処理
+  function closeEventDetails() {
     eventDetails.classList.remove('show');
+    overlay.style.display = 'none';
+  }
+
+  document.getElementById('close-details').addEventListener('click', closeEventDetails);
+  overlay.addEventListener('click', closeEventDetails);
+
+  // スワイプで閉じる処理
+  let startY = 0;
+  let isSwiping = false;
+
+  eventDetails.addEventListener('touchstart', function(e) {
+    startY = e.touches[0].clientY;
+    isSwiping = true;
+  });
+
+  eventDetails.addEventListener('touchmove', function(e) {
+    if (!isSwiping) return;
+    let moveY = e.touches[0].clientY;
+    let diffY = moveY - startY;
+    if (diffY > 30) {
+      closeEventDetails();
+      isSwiping = false;
+    }
+  });
+
+  eventDetails.addEventListener('touchend', function() {
+    isSwiping = false;
   });
 });
