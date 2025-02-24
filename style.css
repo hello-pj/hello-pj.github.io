@@ -121,16 +121,17 @@ body {
   /* 詳細パネルのアニメーション用 */
   #event-details {
     width: 100vw; /* 画面幅いっぱいに */
-    height: 80%; /* 表示範囲を95%に拡大 */
+    height: 90%; /* 表示範囲を95%に拡大 */
     background-color: rgba(255, 255, 255, 1);
     position: fixed;
-    bottom: -80%; /* 初期位置を変更 */
+    bottom: -90%; /* 初期位置を変更 */
     left: 0;
     transition: bottom 0.3s ease-in-out;
     border-top: 1px solid #ccc;
     overflow-y: auto;
     overflow-x: hidden; /* 横スクロールを防止 */
     padding: 20px;
+    padding-top: 10px;
     z-index: 1000;
     box-sizing: border-box; /* paddingを含めても100vwになるように */
   }
@@ -160,7 +161,7 @@ body {
     display: block;
     width: 100%; /* 幅を元のままに */
     text-align: center; /* 中央揃え */
-    padding: 5px; /* パディングを小さくする */
+    padding: 2px; /* パディングを小さくする */
     background: #ccc;
     color: #333;
     font-weight: bold;
