@@ -150,6 +150,11 @@ body {
     bottom: 0;
   }
 
+  /* 詳細パネル表示時にオーバーレイを表示 */
+  #event-details.show ~ #overlay {
+    display: block; /* オーバーレイを表示 */
+  }
+  
   /* 閉じるボタン */
   #close-details {
     display: block;
