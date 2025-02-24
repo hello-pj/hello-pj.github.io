@@ -66,6 +66,11 @@ body {
   height: 100%;
 }
 
+/* カレンダー内部 */
+.fc .fc-toolbar.fc-header-toolbar {
+    margin: 0.2em !important;
+}
+
 /* カレンダー本体 */
 #calendar {
   width: 100%;
