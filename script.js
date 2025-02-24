@@ -122,24 +122,26 @@ document.addEventListener('DOMContentLoaded', function() {
     overlay.style.display = 'none'; // オーバーレイを非表示
   });
 
+  overlay.addEventListener('click', function() {
+    eventDetails.classList.remove('show');
+    overlay.style.display = 'none'; // オーバーレイを非表示
+  });
+
   // タッチイベントの追加
   var startY;
 
-  // タッチ開始時のY座標を記録
   eventDetails.addEventListener('touchstart', function(e) {
     if (e.touches.length === 1) {
       startY = e.touches[0].clientY;
     }
   });
 
-  // タッチ移動時に詳細パネルのスクロールを監視
   eventDetails.addEventListener('touchmove', function(e) {
     var currentY = e.touches[0].clientY;
     var scrollTop = eventDetails.scrollTop;
     var isAtTop = scrollTop === 0;
 
-    // スクロールが上部に達している状態でさらに下にスワイプすると閉じる
-    if (isAtTop && currentY - startY > 50) { // 下に50px以上スワイプ
+    if (isAtTop && currentY - startY > 50) {
       eventDetails.classList.remove('show');
       overlay.style.display = 'none'; // オーバーレイを非表示
     }
