@@ -70,9 +70,13 @@ document.addEventListener('DOMContentLoaded', function() {
       initialView: 'dayGridMonth',
       locale: 'ja',
       headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        left: 'title',
+        right: 'prev,next today,dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      buttonText: {
+        month: 'M', // Month -> M
+        week: 'W',  // Week -> W
+        day: 'D'    // Day -> D
       },
       eventTimeFormat: {
         hour: '2-digit',
