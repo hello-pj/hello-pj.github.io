@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var eventImage = document.getElementById('event-image');
   var groupFiltersContainer = document.getElementById('group-filters');
   var eventDetails = document.getElementById('event-details');
+  var overlay = document.getElementById('overlay');
 
   var groupColors = {
     "HELLO! PROJECT": "#035F9F",
@@ -120,4 +121,21 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('close-details').addEventListener('click', function() {
     eventDetails.classList.remove('show');
   });
+  
+  
+  // イベント詳細を表示する関数にオーバーレイ表示を追加
+  calendar.on('eventClick', function(info) {
+    // ...既存のコード
+    if (window.innerWidth <= 768) {
+      eventDetails.classList.add('show');
+      overlay.style.display = 'block'; // オーバーレイを表示
+    }
+  });
+
+  // 詳細パネルを閉じる処理にオーバーレイ非表示を追加
+  document.getElementById('close-details').addEventListener('click', function() {
+    eventDetails.classList.remove('show');
+    overlay.style.display = 'none'; // オーバーレイを非表示
+  });
+  
 });
