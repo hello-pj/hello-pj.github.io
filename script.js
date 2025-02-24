@@ -1,9 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
   var calendarEl = document.getElementById('calendar');
+  var eventTitle = document.getElementById('event-title');
+  var eventDate = document.getElementById('event-date');
+  var eventLocation = document.getElementById('event-location');
+  var eventDescription = document.getElementById('event-description');
+  var eventGroup = document.getElementById('event-group');
+  var eventImage = document.getElementById('event-image');
   var groupFiltersContainer = document.getElementById('group-filters');
   var eventDetails = document.getElementById('event-details');
   var overlay = document.getElementById('overlay');
-  var closeButton = document.getElementById('close-details');
 
   var groupColors = {
     "HELLO! PROJECT": "#035F9F",
@@ -15,6 +20,18 @@ document.addEventListener('DOMContentLoaded', function() {
     "OCHA NORMA": "#F39800",
     "ロージークロニクル": "#FFD629",
     "ハロプロ研修生": "#33D6AD"
+  };
+
+  var groupImages = {
+    "HELLO! PROJECT": "img/hello_project_image.jpg",
+    "モーニング娘。'25": "img/morning_musume_image.jpg",
+    "アンジュルム": "img/angerme_image.jpg",
+    "Juice=Juice": "img/juice_juice_image.jpg",
+    "つばきファクトリー": "img/tsubaki_factory_image.jpg",
+    "BEYOOOOONDS": "img/beyooooonds_image.jpg",
+    "OCHA NORMA": "img/ocha_norma_image.jpg",
+    "ロージークロニクル": "img/rouge_chronicle_image.jpg",
+    "ハロプロ研修生": "img/hello_project_trainees_image.jpg"
   };
 
   var activeGroups = new Set(Object.keys(groupColors));
@@ -64,12 +81,12 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       events: events,
       eventClick: function(info) {
-        document.getElementById('event-title').textContent = info.event.title;
-        document.getElementById('event-date').textContent = info.event.start.toISOString().split('T')[0];
-        document.getElementById('event-location').textContent = info.event.extendedProps.location;
-        document.getElementById('event-description').textContent = info.event.extendedProps.description;
-        document.getElementById('event-group').textContent = info.event.extendedProps.group;
-        document.getElementById('event-image').src = 'img/default_image.jpg';
+        eventTitle.textContent = info.event.title;
+        eventDate.textContent = info.event.start.toISOString().split('T')[0];
+        eventLocation.textContent = info.event.extendedProps.location;
+        eventDescription.textContent = info.event.extendedProps.description;
+        eventGroup.textContent = info.event.extendedProps.group;
+        eventImage.src = groupImages[info.event.extendedProps.group] || 'img/default_image.jpg';
 
         if (window.innerWidth <= 768) {
           eventDetails.classList.add('show');
@@ -106,27 +123,29 @@ document.addEventListener('DOMContentLoaded', function() {
     overlay.style.display = 'none';
   }
 
-  closeButton.addEventListener('click', closeEventDetails);
+  document.getElementById('close-details').addEventListener('click', closeEventDetails);
   overlay.addEventListener('click', closeEventDetails);
 
-  // 下方向にスワイプで閉じる（スクロールを考慮）
-  let touchStartY = 0;
-  let touchEndY = 0;
+  // スワイプで閉じる処理
+  let startY = 0;
+  let isSwiping = false;
 
-  eventDetails.addEventListener('touchstart', function(event) {
-    touchStartY = event.touches[0].clientY;
+  eventDetails.addEventListener('touchstart', function(e) {
+    startY = e.touches[0].clientY;
+    isSwiping = true;
   });
 
-  eventDetails.addEventListener('touchmove', function(event) {
-    touchEndY = event.touches[0].clientY;
+  eventDetails.addEventListener('touchmove', function(e) {
+    if (!isSwiping) return;
+    let moveY = e.touches[0].clientY;
+    let diffY = moveY - startY;
+    if (diffY > 30) {
+      closeEventDetails();
+      isSwiping = false;
+    }
   });
 
   eventDetails.addEventListener('touchend', function() {
-    let scrollPosition = eventDetails.scrollTop;
-    let maxScroll = eventDetails.scrollHeight - eventDetails.clientHeight;
-
-    if (scrollPosition >= maxScroll && touchEndY - touchStartY > 50) {
-      closeEventDetails();
-    }
+    isSwiping = false;
   });
 });
