@@ -65,6 +65,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // 曜日の表示名（日本語）
+  var weekdayNames = {
+    0: '日',
+    1: '月',
+    2: '火',
+    3: '水',
+    4: '木',
+    5: '金',
+    6: '土'
+  };
+
   fetchEventData().then(events => {
     var calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
@@ -74,9 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
         right: 'prev,next today,dayGridMonth,timeGridWeek,timeGridDay'
       },
       buttonText: {
-        month: 'M', // Month -> M
-        week: 'W',  // Week -> W
-        day: 'D'    // Day -> D
+        today: '今日',
+        month: 'M',
+        week: 'W',
+        day: 'D'
       },
       eventTimeFormat: {
         hour: '2-digit',
@@ -95,6 +107,46 @@ document.addEventListener('DOMContentLoaded', function() {
         if (window.innerWidth <= 768) {
           eventDetails.classList.add('show');
           overlay.style.display = 'block'; // オーバーレイを表示
+        }
+      },
+      views: {
+        // 週表示のカスタマイズ
+        timeGridWeek: {
+          // 週表示のときのタイトルフォーマットをカスタマイズ
+          titleFormat: { year: 'numeric', month: 'long' },
+          // カスタムの日付ヘッダー内容
+          dayHeaderContent: function(args) {
+            const weekday = weekdayNames[args.date.getDay()];
+            const day = args.date.getDate();
+            
+            // 曜日と日付を含むHTMLを返す
+            return {
+              html: `<div style="display: flex; flex-direction: column; align-items: center;">
+                      <div style="font-size: 0.8em; color: #666;">${weekday}</div>
+                      <div style="font-size: 1.2em; font-weight: bold;">${day}</div>
+                    </div>`
+            };
+          }
+        },
+        // 日表示のカスタマイズ
+        timeGridDay: {
+          // 日表示のときのタイトルフォーマットをカスタマイズ
+          titleFormat: { year: 'numeric', month: 'long' },
+          // 日表示の曜日ヘッダーを非表示にする（後でカスタムヘッダーを追加するため）
+          dayHeaderFormat: { weekday: 'short' },
+          // カスタムの日付ヘッダー内容
+          dayHeaderContent: function(args) {
+            const weekday = weekdayNames[args.date.getDay()];
+            const day = args.date.getDate();
+            
+            // 曜日と日付を含むHTMLを返す
+            return {
+              html: `<div style="display: flex; flex-direction: column; align-items: center;">
+                      <div style="font-size: 0.8em; color: #666;">${weekday}</div>
+                      <div style="font-size: 1.2em; font-weight: bold;">${day}</div>
+                    </div>`
+            };
+          }
         }
       }
     });
