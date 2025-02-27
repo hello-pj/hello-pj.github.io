@@ -66,9 +66,12 @@ body {
   height: 100%;
 }
 
-/* カレンダー内部 */
+/* FullCalendarの設定を上書き*/
 .fc .fc-toolbar.fc-header-toolbar {
     margin: 0.2em !important;
+}
+.fc .fc-toolbar-title {
+  font-size: 1em !important; /* デフォルトのフォントサイズを3emに変更 */
 }
 
 /* カレンダー本体 */
@@ -191,3 +194,11 @@ body {
   z-index: 900; /* 詳細パネルの下に表示 */
   display: none; /* デフォルトでは非表示 */
 }
+
+/* タイトル文字のサイズ */
+@media (max-width: 400px) {
+  .fc .fc-toolbar-title {
+    font-size: 16px !important; /* 画面幅が400px以下の場合 */
+  }
+}
+
