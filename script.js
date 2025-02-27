@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   var activeGroups = new Set(Object.keys(groupColors));
 
+  // スワイプ関連の変数
+  var touchStartX = 0;
+  var touchEndX = 0;
+  var minSwipeDistance = 50; // スワイプと認識する最小距離
+
   function fetchEventData() {
     return fetch('https://script.google.com/macros/s/AKfycbxXh9UQzHzgSAxUg8sxAINgapf-XZl-2mIKjbzR0JGqzscrIjBRaG72wgE2MmnQolsKpg/exec')
       .then(response => response.json())
@@ -151,6 +156,59 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
     calendar.render();
+
+    // スワイプ機能の実装
+    calendarEl.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    calendarEl.addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe(calendar);
+    }, false);
+
+    // スワイプ処理関数
+    function handleSwipe(calendar) {
+      var swipeDistance = touchEndX - touchStartX;
+      
+      if (Math.abs(swipeDistance) >= minSwipeDistance) {
+        // 左スワイプ（次の期間へ）
+        if (swipeDistance < 0) {
+          calendar.next();
+        } 
+        // 右スワイプ（前の期間へ）
+        else {
+          calendar.prev();
+        }
+      }
+    }
+
+    // フィードバック用のスワイプインジケータ
+    var swipeIndicator = document.createElement('div');
+    swipeIndicator.id = 'swipe-indicator';
+    document.body.appendChild(swipeIndicator);
+
+    // スワイプ中の視覚的フィードバック
+    calendarEl.addEventListener('touchmove', function(e) {
+      var currentX = e.changedTouches[0].screenX;
+      var difference = currentX - touchStartX;
+      
+      if (Math.abs(difference) > 20) {
+        var opacity = Math.min(Math.abs(difference) / 200, 0.3);
+        var direction = difference > 0 ? '←' : '→';
+        
+        swipeIndicator.style.opacity = opacity;
+        swipeIndicator.style.left = difference > 0 ? '20px' : 'auto';
+        swipeIndicator.style.right = difference < 0 ? '20px' : 'auto';
+        swipeIndicator.textContent = direction;
+        swipeIndicator.classList.add('active');
+      }
+    }, false);
+
+    calendarEl.addEventListener('touchend', function() {
+      swipeIndicator.classList.remove('active');
+      swipeIndicator.style.opacity = 0;
+    }, false);
 
     Object.keys(groupColors).forEach(group => {
       var button = document.createElement('div');
