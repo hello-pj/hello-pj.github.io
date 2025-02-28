@@ -253,3 +253,8 @@ body {
     padding: 0 2px;
   }
 }
+
+/* カレンダーイベントにポインターカーソルを追加 */
+.fc-event {
+  cursor: pointer;
+}
