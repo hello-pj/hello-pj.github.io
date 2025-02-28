@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', function() {
   var groupFiltersContainer = document.getElementById('group-filters');
   var eventDetails = document.getElementById('event-details');
   var overlay = document.getElementById('overlay');
+  var calendar; // カレンダーインスタンスをグローバルに定義
+  var isMobile = window.innerWidth <= 768; // 現在のビューがモバイルかどうか
+  var currentEvents = []; // イベントデータを保持する変数
 
   var groupColors = {
     "HELLO! PROJECT": "#035F9F",
@@ -65,9 +68,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updateCalendarEvents(calendar, events) {
     calendar.removeAllEvents();
-    events.filter(event => activeGroups.has(event.group)).forEach(event => {
+    let filteredEvents = events.filter(event => activeGroups.has(event.group));
+    filteredEvents.forEach(event => {
       calendar.addEvent(event);
     });
+  }
+
+  // 全イベントにモバイルスタイルを適用または解除する関数
+  function updateAllEventStyles() {
+    let newIsMobile = window.innerWidth <= 768;
+    
+    // モバイル状態が変わった場合のみ処理
+    if (newIsMobile !== isMobile) {
+      isMobile = newIsMobile;
+      
+      // 現在の表示を保存
+      let currentDate = calendar ? calendar.getDate() : new Date();
+      let currentView = calendar && calendar.view ? calendar.view.type : 'dayGridMonth';
+      let scrollPosition = window.scrollY;
+      
+      // カレンダーを破棄して再作成
+      if (calendar) {
+        calendar.destroy();
+      }
+      
+      // 新しいカレンダーを作成
+      initializeCalendar(currentEvents);
+      
+      // 保存した状態を復元
+      calendar.gotoDate(currentDate);
+      calendar.changeView(currentView);
+      
+      // フィルターを適用
+      updateCalendarEvents(calendar, currentEvents);
+      
+      // スクロール位置を復元
+      window.scrollTo(0, scrollPosition);
+    }
   }
 
   // 曜日の表示名（日本語）
@@ -81,8 +118,11 @@ document.addEventListener('DOMContentLoaded', function() {
     6: '土'
   };
 
-  fetchEventData().then(events => {
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+  // カレンダー初期化関数
+  function initializeCalendar(events) {
+    currentEvents = events; // イベントデータを保存
+    
+    calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       locale: 'ja',
       headerToolbar: {
@@ -100,7 +140,56 @@ document.addEventListener('DOMContentLoaded', function() {
         minute: '2-digit',
         meridiem: false
       },
-      events: events,
+      events: events.filter(event => activeGroups.has(event.group)),
+      // モバイルモードか PC モードに応じてイベント表示をカスタマイズ
+      eventContent: function(arg) {
+        // モバイルモードかつ月表示の場合
+        if (isMobile && arg.view.type === 'dayGridMonth') {
+          let eventGroup = arg.event.extendedProps.group;
+          let eventColor = groupColors[eventGroup] || '#000000';
+          
+          // カスタム表示のためのコンテナを作成
+          let container = document.createElement('div');
+          container.style.width = '100%';
+          container.style.padding = '2px 4px';
+          container.style.borderRadius = '2px';
+          container.style.backgroundColor = eventColor;
+          container.style.color = '#fff';
+          container.style.fontSize = '0.85em';
+          container.style.whiteSpace = 'nowrap';
+          container.style.overflow = 'hidden';
+          container.style.textOverflow = 'ellipsis';
+          container.style.marginBottom = '2px';
+          
+          // イベント名のみを表示
+          container.textContent = arg.event.title;
+          
+          return { domNodes: [container] };
+        } 
+        // PCモードの月表示の場合
+        else if (!isMobile && arg.view.type === 'dayGridMonth') {
+          let eventGroup = arg.event.extendedProps.group;
+          let eventColor = groupColors[eventGroup] || '#000000';
+          
+          // カスタムHTMLを返す
+          return {
+            html: `
+              <div style="display: flex; align-items: center; width: 100%; overflow: hidden;">
+                <div style="min-width: 8px; min-height: 8px; width: 8px; height: 8px; border-radius: 50%; background-color: ${eventColor}; margin-right: 4px; flex-shrink: 0;"></div>
+                <div class="fc-event-time" style="margin-right: 4px; white-space: nowrap; flex-shrink: 0;">${arg.timeText}</div>
+                <div class="fc-event-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${arg.event.title}</div>
+              </div>
+            `
+          };
+        }
+        // 他のビュー（週表示、日表示）の場合はデフォルト表示を使用
+        return {
+          html: `
+            <div class="fc-event-time">${arg.timeText}</div>
+            <div class="fc-event-title">${arg.event.title}</div>
+          `
+        };
+      },
       eventClick: function(info) {
         eventTitle.textContent = info.event.title;
         eventDate.textContent = info.event.start.toISOString().split('T')[0];
@@ -155,7 +244,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     });
+    
     calendar.render();
+  }
+
+  fetchEventData().then(events => {
+    // カレンダーを初期化
+    initializeCalendar(events);
 
     // スワイプ機能の実装
     calendarEl.addEventListener('touchstart', function(e) {
@@ -240,6 +335,20 @@ document.addEventListener('DOMContentLoaded', function() {
     eventDetails.classList.remove('show');
     overlay.style.display = 'none'; // オーバーレイを非表示
   });
+  
+  // デバウンス関数（ウィンドウリサイズイベントの連続発火を防止）
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      clearTimeout(timeout);
+      timeout = setTimeout(func, wait);
+    };
+  }
+  
+  // ウィンドウサイズの変更を検知して、カレンダーの表示を更新（デバウンス処理付き）
+  window.addEventListener('resize', debounce(function() {
+    updateAllEventStyles();
+  }, 250));
 
   // タッチイベントの追加
   var startY;
