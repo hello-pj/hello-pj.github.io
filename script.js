@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
   var calendar; // カレンダーインスタンスをグローバルに定義
   var isMobile = window.innerWidth <= 768; // 現在のビューがモバイルかどうか
   var currentEvents = []; // イベントデータを保持する変数
+  
+  // イベントリスト表示用の要素を取得
+  var eventListContainer = document.getElementById('event-list-container');
 
   var groupColors = {
     "HELLO! PROJECT": "#035F9F",
@@ -118,6 +121,119 @@ document.addEventListener('DOMContentLoaded', function() {
     6: '土'
   };
 
+  // 同じ日付のイベントを取得する関数
+  function getEventsOnSameDay(eventDate, events) {
+    // 日付を YYYY-MM-DD 形式の文字列に変換（ローカル時間ベース）
+    const dateStr = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}-${String(eventDate.getDate()).padStart(2, '0')}`;
+    
+    // 同じ日付のイベントを時間順にソートして返す
+    return events
+      .filter(event => {
+        let eventDateStr;
+        if (typeof event.start === 'string') {
+          // 文字列の場合は日付部分を抽出
+          eventDateStr = event.start.split('T')[0];
+        } else {
+          // Date オブジェクトの場合
+          const eventDate = new Date(event.start);
+          eventDateStr = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}-${String(eventDate.getDate()).padStart(2, '0')}`;
+        }
+        
+        return eventDateStr === dateStr && activeGroups.has(event.group);
+      })
+      .sort((a, b) => {
+        // 時間でソート
+        const timeA = typeof a.start === 'string' ? a.start.split('T')[1] : new Date(a.start).toISOString().split('T')[1];
+        const timeB = typeof b.start === 'string' ? b.start.split('T')[1] : new Date(b.start).toISOString().split('T')[1];
+        return timeA.localeCompare(timeB);
+      });
+  }
+
+  // イベントリストを表示する関数
+  function showEventList(date, events) {
+    // イベントリストの日付を設定
+    const formattedDate = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 (${weekdayNames[date.getDay()]})`;
+    document.getElementById('event-list-date').textContent = formattedDate + 'のイベント';
+    
+    // イベントリストをクリア
+    const eventListEl = document.getElementById('event-list');
+    eventListEl.innerHTML = '';
+    
+    // イベントリストを作成
+    if (events.length === 0) {
+      const noEventEl = document.createElement('div');
+      noEventEl.className = 'no-events';
+      noEventEl.textContent = 'この日のイベントはありません';
+      eventListEl.appendChild(noEventEl);
+    } else {
+      events.forEach(event => {
+        const eventItem = document.createElement('div');
+        eventItem.className = 'event-list-item';
+        
+        // 時間を正しく表示するために Date オブジェクトを使用
+        const eventDate = new Date(event.start);
+        const hours = eventDate.getHours().toString().padStart(2, '0');
+        const minutes = eventDate.getMinutes().toString().padStart(2, '0');
+        const formattedTime = `${hours}:${minutes}`;
+        
+        // イベントIDを取得して保存（後でイベントを特定するため）
+        const eventId = event.id;
+        
+        eventItem.innerHTML = `
+          <div class="event-list-time">${formattedTime}</div>
+          <div class="event-list-content">
+            <div class="event-list-title">${event.title}</div>
+            <div class="event-list-group" style="color: ${groupColors[event.group]}">${event.group}</div>
+          </div>
+        `;
+        
+        // クリックイベントを追加（イベントIDを使用）
+        eventItem.addEventListener('click', function() {
+          // まずリストのイベントを使用して詳細表示を試みる
+          showEventDetails(event);
+          eventListContainer.classList.remove('show');
+        });
+        
+        eventListEl.appendChild(eventItem);
+      });
+    }
+    
+    // イベントリストコンテナを表示
+    eventListContainer.classList.add('show');
+    
+    // オーバーレイを必ず表示
+    overlay.style.display = 'block';
+  }
+
+  // イベント詳細を表示する関数
+  function showEventDetails(event) {
+    eventTitle.textContent = event.title;
+    
+    // 日付の処理 - どのタイプの日付でも正しく処理
+    if (typeof event.start === 'string') {
+      eventDate.textContent = event.start.split('T')[0];
+    } else if (typeof event.start.toISOString === 'function') {
+      eventDate.textContent = event.start.toISOString().split('T')[0];
+    } else {
+      const d = new Date(event.start);
+      eventDate.textContent = d.toISOString().split('T')[0];
+    }
+    
+    // extendedPropsとプロパティの両方から安全に取得
+    eventLocation.textContent = event.extendedProps?.location || event.location || "";
+    eventDescription.textContent = event.extendedProps?.description || event.description || "";
+    
+    // グループ情報を取得
+    const groupValue = event.extendedProps?.group || event.group || "";
+    eventGroup.textContent = groupValue;
+    
+    // 画像のソースを設定
+    eventImage.src = groupImages[groupValue] || 'img/default_image.jpg';
+    
+    eventDetails.classList.add('show');
+    overlay.style.display = 'block';
+  }
+
   // カレンダー初期化関数
   function initializeCalendar(events) {
     currentEvents = events; // イベントデータを保存
@@ -191,16 +307,35 @@ document.addEventListener('DOMContentLoaded', function() {
         };
       },
       eventClick: function(info) {
-        eventTitle.textContent = info.event.title;
-        eventDate.textContent = info.event.start.toISOString().split('T')[0];
-        eventLocation.textContent = info.event.extendedProps.location;
-        eventDescription.textContent = info.event.extendedProps.description;
-        eventGroup.textContent = info.event.extendedProps.group;
-        eventImage.src = groupImages[info.event.extendedProps.group] || 'img/default_image.jpg';
-
         if (window.innerWidth <= 768) {
-          eventDetails.classList.add('show');
-          overlay.style.display = 'block'; // オーバーレイを表示
+          // モバイルモードの場合
+          // 現在のビューを取得
+          const currentView = calendar.view.type;
+          
+          // 月表示の場合はイベントリストを表示
+          if (currentView === 'dayGridMonth') {
+            // 月表示の場合、まずイベントリストを表示
+            const sameDay = getEventsOnSameDay(info.event.start, currentEvents);
+            showEventList(info.event.start, sameDay);
+          } else {
+            // 日表示と週表示の場合は直接イベント詳細を表示
+            showEventDetails(info.event);
+          }
+        } else {
+          // PCの場合、直接イベント詳細を表示
+          eventTitle.textContent = info.event.title;
+          eventDate.textContent = info.event.start.toISOString().split('T')[0];
+          eventLocation.textContent = info.event.extendedProps.location;
+          eventDescription.textContent = info.event.extendedProps.description;
+          eventGroup.textContent = info.event.extendedProps.group;
+          eventImage.src = groupImages[info.event.extendedProps.group] || 'img/default_image.jpg';
+        }
+      },
+      // 日付セルのクリックイベント（モバイルでのみ機能）
+      dateClick: function(info) {
+        if (window.innerWidth <= 768) {
+          const sameDay = getEventsOnSameDay(info.date, currentEvents);
+          showEventList(info.date, sameDay);
         }
       },
       views: {
@@ -326,14 +461,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+  // 閉じるボタンのイベントハンドラ
   document.getElementById('close-details').addEventListener('click', function() {
     eventDetails.classList.remove('show');
-    overlay.style.display = 'none'; // オーバーレイを非表示
+    overlay.style.display = 'none';
+  });
+
+  document.getElementById('close-event-list').addEventListener('click', function() {
+    eventListContainer.classList.remove('show');
+    overlay.style.display = 'none';
   });
 
   overlay.addEventListener('click', function() {
+    // 詳細パネルとイベントリストを閉じる
     eventDetails.classList.remove('show');
-    overlay.style.display = 'none'; // オーバーレイを非表示
+    eventListContainer.classList.remove('show');
+    // オーバーレイを非表示
+    overlay.style.display = 'none';
   });
   
   // デバウンス関数（ウィンドウリサイズイベントの連続発火を防止）
@@ -350,7 +494,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateAllEventStyles();
   }, 250));
 
-  // タッチイベントの追加
+  // タッチイベントの追加（イベント詳細パネル用）
   var startY;
 
   eventDetails.addEventListener('touchstart', function(e) {
@@ -366,7 +510,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (isAtTop && currentY - startY > 50) {
       eventDetails.classList.remove('show');
-      overlay.style.display = 'none'; // オーバーレイを非表示
+      overlay.style.display = 'none';
+    }
+  });
+  
+  // タッチイベントの追加（イベントリスト用）
+  eventListContainer.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1) {
+      startY = e.touches[0].clientY;
+    }
+  });
+
+  eventListContainer.addEventListener('touchmove', function(e) {
+    var currentY = e.touches[0].clientY;
+    var scrollTop = eventListContainer.scrollTop;
+    var isAtTop = scrollTop === 0;
+
+    if (isAtTop && currentY - startY > 50) {
+      eventListContainer.classList.remove('show');
+      overlay.style.display = 'none';
     }
   });
 });
