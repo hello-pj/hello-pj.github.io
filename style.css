@@ -225,3 +225,31 @@ body {
 #swipe-indicator.active {
   display: flex;
 }
+
+/* モバイル表示でのイベント表示を最適化 */
+@media (max-width: 767px) {
+  /* 月表示のセルの高さを調整 */
+  .fc-dayGridMonth-view .fc-daygrid-day {
+    height: auto !important;
+  }
+  
+  /* 日付の数字を小さくして場所を確保 */
+  .fc-daygrid-day-number {
+    font-size: 0.9em !important;
+    padding: 2px !important;
+  }
+  
+  /* イベント間の間隔を調整 */
+  .fc-daygrid-event-harness {
+    margin-bottom: 1px !important;
+  }
+  
+  /* 「+more」の表示を調整 */
+  .fc-daygrid-more-link {
+    font-size: 0.8em !important;
+    margin-top: 1px !important;
+    background-color: #f0f0f0;
+    border-radius: 3px;
+    padding: 0 2px;
+  }
+}
