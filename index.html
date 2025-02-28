@@ -1,67 +1,76 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9301479849999305"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9301479849999305" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ハロープロジェクト グループ紹介</title>
+    <!-- PWA関連追加 -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0073e6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="H!P カレンダー">
+    <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+    <meta name="description" content="Hello! Projectのグループ紹介とイベントカレンダー">
+    <!-- PWA関連追加ここまで -->
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             background-color: #ffffff;
             color: #333;
             line-height: 1.6;
         }
-
+        
         .header {
             padding: 60px 20px;
             text-align: center;
-            background-color: rgb(1,117,194);
+            background-color: rgb(1, 117, 194);
             color: #ffffff;
             margin-bottom: 40px;
         }
-
+        
         .header h1 {
             font-size: 3rem;
             margin-bottom: 10px;
             letter-spacing: 2px;
         }
-
+        
         .header h2 {
             font-size: 1.2rem;
             opacity: 0.9;
         }
-
+        
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
-
+        
         .group-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 40px;
             padding: 20px;
         }
-
+        
         .group-card {
             position: relative;
             cursor: pointer;
             transition: transform 0.3s ease;
         }
-
+        
         .group-card:hover {
             transform: translateY(-5px);
         }
-
+        
         .group-image {
             position: relative;
             width: 100%;
@@ -69,13 +78,13 @@
             overflow: hidden;
             border-radius: 8px;
         }
-
+        
         .group-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
+        
         .movie-button {
             position: absolute;
             right: 20px;
@@ -91,27 +100,27 @@
             font-size: 0.9rem;
             transition: transform 0.2s ease;
         }
-
+        
         .movie-button:hover {
             transform: translateX(5px);
         }
-
+        
         .movie-button svg {
             width: 24px;
             height: 24px;
         }
-
+        
         .group-info {
             padding: 20px 0;
         }
-
+        
         .group-name {
             font-size: 2rem;
             margin-bottom: 15px;
             position: relative;
             display: inline-block;
         }
-
+        
         .more-button {
             display: inline-block;
             padding: 8px 30px;
@@ -121,37 +130,77 @@
             font-size: 0.9rem;
             transition: opacity 0.2s ease;
         }
-
+        
         .more-button:hover {
             opacity: 0.8;
         }
-
         /* グループ固有のスタイル */
-        .morning-musume .group-name { color: #E80112; }
-        .morning-musume .more-button { background-color: #E80112; }
-
-        .angerme .group-name { color: #0091D2; }
-        .angerme .more-button { background-color: #0091D2; }
-
-        .juice-juice .group-name { color: #611A85; }
-        .juice-juice .more-button { background-color: #611A85; }
-
-        .tsubaki .group-name { color: #F29EC2; }
-        .tsubaki .more-button { background-color: #F29EC2; }
-
-        .beyooooonds .group-name { color: #249849; }
-        .beyooooonds .more-button { background-color: #249849; }
-
-        .ocha-norma .group-name { color: #F39800; }
-        .ocha-norma .more-button { background-color: #F39800; }
-
-        .rosy-chronicle .group-name { color: #FFD629; }
-        .rosy-chronicle .more-button { background-color: #FFD629; }
-
-        .trainee .group-name { color: #33D6AD; }
-        .trainee .more-button { background-color: #33D6AD; }
-
+        
+        .morning-musume .group-name {
+            color: #E80112;
+        }
+        
+        .morning-musume .more-button {
+            background-color: #E80112;
+        }
+        
+        .angerme .group-name {
+            color: #0091D2;
+        }
+        
+        .angerme .more-button {
+            background-color: #0091D2;
+        }
+        
+        .juice-juice .group-name {
+            color: #611A85;
+        }
+        
+        .juice-juice .more-button {
+            background-color: #611A85;
+        }
+        
+        .tsubaki .group-name {
+            color: #F29EC2;
+        }
+        
+        .tsubaki .more-button {
+            background-color: #F29EC2;
+        }
+        
+        .beyooooonds .group-name {
+            color: #249849;
+        }
+        
+        .beyooooonds .more-button {
+            background-color: #249849;
+        }
+        
+        .ocha-norma .group-name {
+            color: #F39800;
+        }
+        
+        .ocha-norma .more-button {
+            background-color: #F39800;
+        }
+        
+        .rosy-chronicle .group-name {
+            color: #FFD629;
+        }
+        
+        .rosy-chronicle .more-button {
+            background-color: #FFD629;
+        }
+        
+        .trainee .group-name {
+            color: #33D6AD;
+        }
+        
+        .trainee .more-button {
+            background-color: #33D6AD;
+        }
         /* イベントカレンダーバナーのスタイル */
+        
         .calendar-banner {
             position: fixed;
             right: 20px;
@@ -161,39 +210,37 @@
             z-index: 1000;
             transition: transform 0.3s ease;
         }
-
+        
         .calendar-banner img {
             width: 100%;
             height: 100%;
         }
-
         /* モバイル対応 */
+        
         @media (max-width: 1024px) {
             .group-grid {
                 grid-template-columns: 1fr;
             }
-
             .calendar-banner {
                 width: 240px;
                 height: 94px;
             }
         }
-
+        
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
             }
-
             .group-image {
                 height: 300px;
             }
-
             .group-name {
                 font-size: 1.5rem;
             }
         }
     </style>
 </head>
+
 <body>
     <header class="header">
         <h1>HELLO!PROJECT</h1>
@@ -210,14 +257,13 @@
             <div class="group-card morning-musume">
                 <a href="https://www.helloproject.com/morningmusume/">
                     <div class="group-image">
-                         <img src="img/morning_musume_image.jpg" alt="モーニング娘。'25">
+                        <img src="img/morning_musume_image.jpg" alt="モーニング娘。'25">
                     </div>
                 </a>
                 <a href="https://www.youtube.com/@morningmusume" class="movie-button">
-                   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#FF0000"/>
-                    </svg>
-                    MOVIE →
+                    </svg> MOVIE →
                 </a>
                 <div class="group-info">
                     <h2 class="group-name">モーニング娘。'25</h2>
@@ -228,14 +274,13 @@
             <div class="group-card angerme">
                 <a href="https://www.helloproject.com/angerme/">
                     <div class="group-image">
-                         <img src="img/angerme_image.jpg" alt="アンジュルム">
+                        <img src="img/angerme_image.jpg" alt="アンジュルム">
                     </div>
                 </a>
                 <a href="https://www.youtube.com/@angerme" class="movie-button">
-                   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#FF0000"/>
-                    </svg>
-                    MOVIE →
+                    </svg> MOVIE →
                 </a>
                 <div class="group-info">
                     <h2 class="group-name">アンジュルム</h2>
@@ -250,10 +295,9 @@
                     </div>
                 </a>
                 <a href="https://www.youtube.com/@juice-juice" class="movie-button">
-                   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#FF0000"/>
-                    </svg>
-                    MOVIE →
+                    </svg> MOVIE →
                 </a>
                 <div class="group-info">
                     <h2 class="group-name">Juice=Juice</h2>
@@ -264,14 +308,13 @@
             <div class="group-card tsubaki">
                 <a href="https://www.helloproject.com/tsubakifactory/">
                     <div class="group-image">
-                       <img src="img/tsubaki_factory_image.jpg" alt="つばきファクトリー">
+                        <img src="img/tsubaki_factory_image.jpg" alt="つばきファクトリー">
                     </div>
                 </a>
                 <a href="https://www.youtube.com/@tsubakifactory" class="movie-button">
-                   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#FF0000"/>
-                    </svg>
-                    MOVIE →
+                    </svg> MOVIE →
                 </a>
                 <div class="group-info">
                     <h2 class="group-name">つばきファクトリー</h2>
@@ -286,10 +329,9 @@
                     </div>
                 </a>
                 <a href="https://www.youtube.com/@BEYOOOOONDS" class="movie-button">
-                   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#FF0000"/>
-                    </svg>
-                    MOVIE →
+                    </svg> MOVIE →
                 </a>
                 <div class="group-info">
                     <h2 class="group-name">BEYOOOOONDS</h2>
@@ -300,14 +342,13 @@
             <div class="group-card ocha-norma">
                 <a href="https://www.helloproject.com/ochanorma/">
                     <div class="group-image">
-                       <img src="img/ocha_norma_image.jpg" alt="OCHA NORMA">
+                        <img src="img/ocha_norma_image.jpg" alt="OCHA NORMA">
                     </div>
                 </a>
                 <a href="https://www.youtube.com/@OCHANORMA" class="movie-button">
-                   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#FF0000"/>
-                    </svg>
-                    MOVIE →
+                    </svg> MOVIE →
                 </a>
                 <div class="group-info">
                     <h2 class="group-name">OCHA NORMA</h2>
@@ -322,10 +363,9 @@
                     </div>
                 </a>
                 <a href="https://www.youtube.com/@RosyChronicle" class="movie-button">
-                   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#FF0000"/>
-                    </svg>
-                    MOVIE →
+                    </svg> MOVIE →
                 </a>
                 <div class="group-info">
                     <h2 class="group-name">ロージークロニクル</h2>
@@ -346,5 +386,11 @@
             </div>
         </div>
     </div>
+
+    <!-- ServiceWorker登録スクリプト -->
+    <script src="/pwa-register.js"></script>
+    <!-- インストールバナースクリプト -->
+    <script src="/install-banner.js"></script>
 </body>
+
 </html>

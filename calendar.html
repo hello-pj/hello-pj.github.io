@@ -1,40 +1,81 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello! Project イベントカレンダー</title>
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello! Project イベントカレンダー</title>
+    <!-- PWA関連追加 -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0073e6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="H!P カレンダー">
+    <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+    <meta name="description" content="Hello! Projectのイベントカレンダー">
+    <!-- PWA関連追加ここまで -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div id="header">Hello! Project イベントカレンダー</div>
-  <div id="overlay"></div>
-  <div id="group-filters"></div>
-  <div id="container">
-    <div id="calendar-container">
-      <div id="calendar"></div>
+    <div id="header">Hello! Project イベントカレンダー</div>
+    <div id="overlay"></div>
+    <div id="group-filters"></div>
+    <div id="container">
+        <div id="calendar-container">
+            <div id="calendar"></div>
+        </div>
+        <div id="event-details">
+            <div id="close-details">閉じる</div>
+            <img id="event-image" src="img/default_image.jpg" alt="Event Image">
+            <h2>イベント詳細</h2>
+            <p><strong>タイトル:</strong> <span id="event-title"></span></p>
+            <p><strong>日付:</strong> <span id="event-date"></span></p>
+            <p><strong>場所:</strong> <span id="event-location"></span></p>
+            <p><strong>説明:</strong> <span id="event-description"></span></p>
+            <p><strong>グループ:</strong> <span id="event-group"></span></p>
+        </div>
     </div>
-    <div id="event-details">
-      <div id="close-details">閉じる</div>
-      <img id="event-image" src="img/default_image.jpg" alt="Event Image">
-      <h2>イベント詳細</h2>
-      <p><strong>タイトル:</strong> <span id="event-title"></span></p>
-      <p><strong>日付:</strong> <span id="event-date"></span></p>
-      <p><strong>場所:</strong> <span id="event-location"></span></p>
-      <p><strong>説明:</strong> <span id="event-description"></span></p>
-      <p><strong>グループ:</strong> <span id="event-group"></span></p>
+
+    <!-- イベントリスト表示用のコンテナを追加 -->
+    <div id="event-list-container">
+        <div id="close-event-list">閉じる</div>
+        <h2 id="event-list-date">イベント一覧</h2>
+        <div id="event-list"></div>
     </div>
-  </div>
-  
-  <!-- イベントリスト表示用のコンテナを追加 -->
-  <div id="event-list-container">
-    <div id="close-event-list">閉じる</div>
-    <h2 id="event-list-date">イベント一覧</h2>
-    <div id="event-list"></div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
-  <script src="script.js"></script>
+
+    <!-- PWAでオフライン時のメッセージを表示するコンテナ -->
+    <div id="offline-message" style="display: none; position: fixed; top: 60px; left: 0; width: 100%; background-color: #ff9800; color: white; text-align: center; padding: 10px; z-index: 1500;">
+        現在オフラインモードです。一部の機能が制限されています。
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+    <script src="script.js"></script>
+
+    <!-- ServiceWorker登録スクリプト -->
+    <script src="/pwa-register.js"></script>
+    <!-- インストールバナースクリプト -->
+    <script src="/install-banner.js"></script>
+
+    <!-- オフライン状態を検知するスクリプト -->
+    <script>
+        // オンライン/オフライン状態を検知
+        function updateOnlineStatus() {
+            var offlineMessage = document.getElementById('offline-message');
+            if (navigator.onLine) {
+                offlineMessage.style.display = 'none';
+            } else {
+                offlineMessage.style.display = 'block';
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+
+        // 初期チェック
+        document.addEventListener('DOMContentLoaded', updateOnlineStatus);
+    </script>
 </body>
+
 </html>
