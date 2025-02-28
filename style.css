@@ -8,6 +8,22 @@ body {
   overflow-x: hidden;
 }
 
+/* ヘッダーのスタイル */
+#header {
+  height: 50px;
+  background-color: #0073e6;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1100;
+}
+
 /* グループフィルターのスタイル */
 #group-filters {
   display: flex;
@@ -124,10 +140,10 @@ body {
   /* 詳細パネルのアニメーション用 */
   #event-details {
     width: 100vw; /* 画面幅いっぱいに */
-    height: 90%; /* 表示範囲を95%に拡大 */
+    height: 85%; /* 表示範囲を95%に拡大 */
     background-color: rgba(255, 255, 255, 1);
     position: fixed;
-    bottom: -90%; /* 初期位置を変更 */
+    bottom: -85%; /* 初期位置を変更 */
     left: 0;
     transition: bottom 0.3s ease-in-out;
     border-top: 1px solid #ccc;
@@ -135,7 +151,7 @@ body {
     overflow-x: hidden; /* 横スクロールを防止 */
     padding: 20px;
     padding-top: 10px;
-    z-index: 1000;
+    z-index: 1200;
     box-sizing: border-box; /* paddingを含めても100vwになるように */
   }
 
@@ -191,7 +207,7 @@ body {
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5); /* グレイの半透明 */
-  z-index: 900; /* 詳細パネルの下に表示 */
+  z-index: 1100; /* 詳細パネルの下に表示 */
   display: none; /* デフォルトでは非表示 */
 }
 
