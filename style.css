@@ -22,6 +22,7 @@ body {
   top: 0;
   width: 100%;
   z-index: 1100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* グループフィルターのスタイル */
@@ -70,7 +71,7 @@ body {
 #container {
   display: flex;
   flex: 1;
-  height: calc(100vh - 30px);
+  height: calc(100vh - 80px); /* ヘッダー(50px) + フィルター(30px)の高さを引く */
   overflow: hidden;
 }
 
