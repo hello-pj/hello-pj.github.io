@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hello-pj.github.io/sitemap.xml
