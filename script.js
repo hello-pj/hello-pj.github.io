@@ -321,11 +321,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function showEventDetails(event, displayText) {
         eventTitle.textContent = event.title;
 
-        // 日付と時間の処理
+        // 日付と時間の処理（変更なし）
         var displayDate = '';
+        var isAllDayEvent = false; // 終日イベントかどうかのフラグ
 
         if (event.allDay) {
             // 終日イベントの処理
+            isAllDayEvent = true; // 終日イベントフラグをセット
             var startStr = '';
 
             if (typeof event.start === 'string') {
@@ -351,13 +353,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     endStr = endYear + '-' + endMonth + '-' + endDay;
                 }
 
-                displayDate = startStr + ' 〜 ' + endStr + ' (終日)';
+                // 開始日と終了日が同じ場合は単一日表示
+                if (startStr === endStr) {
+                    displayDate = startStr + ' (終日)';
+                } else {
+                    // 開始日と終了日が異なる場合のみ範囲表示
+                    displayDate = startStr + ' 〜 ' + endStr + ' (終日)';
+                }
             } else {
                 displayDate = startStr + ' (終日)';
             }
         } else {
-            // 時間指定イベントの処理
-
+            // 時間指定イベントの処理（変更なし）
             // 1. まず日付を取得
             var dateStr = '';
             if (typeof event.start === 'string') {
@@ -423,8 +430,40 @@ document.addEventListener('DOMContentLoaded', function() {
             groupText = event.group || "";
         }
 
-        eventLocation.textContent = locationText;
-        eventDescription.textContent = descriptionText;
+        // 場所の表示（終日イベントでは非表示）
+        // 場所を含む段落要素を探す
+        var locationElement = null;
+        var paragraphs = eventDetails.querySelectorAll('p');
+        for (var i = 0; i < paragraphs.length; i++) {
+            if (paragraphs[i].textContent.indexOf('場所:') !== -1) {
+                locationElement = paragraphs[i];
+                break;
+            }
+        }
+
+        if (locationElement) {
+            if (isAllDayEvent) {
+                // 終日イベントの場合は場所を非表示
+                locationElement.style.display = 'none';
+            } else {
+                // 通常イベントの場合は場所を表示
+                locationElement.style.display = '';
+                eventLocation.textContent = locationText;
+            }
+        }
+
+        // 説明欄の処理 - URLの場合はリンクにする
+        var urlRegex = /^https?:\/\/[^\s]+$/;
+        if (descriptionText && urlRegex.test(descriptionText.trim())) {
+            // URLの場合
+            var url = descriptionText.trim();
+            // HTMLを使ってリンクを作成
+            eventDescription.innerHTML = '<a href="' + url + '" target="_blank">オフィシャルサイトの情報ページへ</a>';
+        } else {
+            // 通常のテキストの場合
+            eventDescription.textContent = descriptionText;
+        }
+
         eventGroup.textContent = groupText;
 
         // 画像のソースを設定
