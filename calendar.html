@@ -5,13 +5,19 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9301479849999305" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- キャッシュ制御 - 最も重要な部分 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <!-- SEO向上のためのタイトルタグ改善 -->
-    <title>ハロー！プロジェクト イベントカレンダー | ライブ・リリース情報まとめ</title>
+    <title>ハロプロイベントカレンダー</title>
 
     <!-- 追加メタタグ -->
     <meta name="keywords" content="ハロプロ,Hello! Project,ハロープロジェクト,モーニング娘。,アンジュルム,イベント,ライブ,カレンダー,2025年,コンサート,リリースイベント">
     <meta name="author" content="Hello! Project Fan Calendar">
-    <meta property="og:title" content="ハロー！プロジェクト イベントカレンダー | ライブ・リリース情報まとめ">
+    <meta property="og:title" content="ハロプロイベントカレンダー | ライブ情報まとめ">
     <meta property="og:description" content="ハロー！プロジェクトの最新イベントカレンダー。全グループのコンサート日程、イベント情報を網羅。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://hello-pj.github.io/calendar">
@@ -20,32 +26,42 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ハロー！プロジェクト イベントカレンダー">
+    <meta name="twitter:title" content="ハロプロイベントカレンダー">
     <meta name="twitter:description" content="ハロー！プロジェクトの最新イベントカレンダー。全グループのコンサート日程、イベント情報を網羅。">
     <meta name="twitter:image" content="https://hello-pj.github.io/img/calendar_preview.jpg">
 
     <!-- PWA関連追加 -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0073e6">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="H!P カレンダー">
     <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
     <!-- メタディスクリプションの改善 -->
     <meta name="description" content="ハロー！プロジェクトの最新イベントカレンダー。モーニング娘。'25、アンジュルム、Juice=Juice、つばきファクトリーなど全グループのコンサート日程、リリースイベント情報を網羅。グループ別にフィルタリングも可能。">
-    <!-- PWA関連追加ここまで -->
+
     <!-- キャノニカルURL -->
     <link rel="canonical" href="https://hello-pj.github.io/calendar">
 
-    <!-- CSS読み込み -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="calendar.css">
+    <!-- 日付ベースのキャッシュバスト用変数 -->
+    <script>
+        // 日付ベースのキャッシュバスト用変数をページに追加
+        window.cacheBuster = '?v=' + new Date().toISOString().slice(0, 10);
+    </script>
+
+    <!-- CSS読み込み - キャッシュバスター追加 -->
+    <script>
+        document.write('<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">');
+        document.write('<link rel="stylesheet" href="common.css' + window.cacheBuster + '">');
+        document.write('<link rel="stylesheet" href="calendar.css' + window.cacheBuster + '">');
+    </script>
 </head>
 
 <body>
     <div id="header">
-        <a href="index.html" style="color: white; text-decoration: none;">ハロー！プロジェクト イベントカレンダー</a>
+        <a href="index.html" style="color: white; text-decoration: none;">ハロプロイベントカレンダー</a>
     </div>
     <div id="overlay"></div>
     <div id="group-filters"></div>
@@ -94,13 +110,13 @@
         </div>
     </div>
 
+    <!-- スクリプト読み込み - キャッシュバスター追加 -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
-    <script src="script.js"></script>
-
-    <!-- ServiceWorker登録スクリプト -->
-    <script src="/pwa-register.js"></script>
-    <!-- インストールバナースクリプト -->
-    <script src="/install-banner.js"></script>
+    <script>
+        document.write('<script src="script.js' + window.cacheBuster + '"><\/script>');
+        document.write('<script src="/pwa-register.js' + window.cacheBuster + '"><\/script>');
+        document.write('<script src="/install-banner.js' + window.cacheBuster + '"><\/script>');
+    </script>
 
     <!-- オフライン状態を検知するスクリプト -->
     <script>
