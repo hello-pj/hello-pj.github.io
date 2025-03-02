@@ -37,9 +37,10 @@
     <!-- キャノニカルURL -->
     <link rel="canonical" href="https://hello-pj.github.io/calendar">
 
-
+    <!-- CSS読み込み -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="calendar.css">
 </head>
 
 <body>
@@ -72,8 +73,25 @@
     </div>
 
     <!-- PWAでオフライン時のメッセージを表示するコンテナ -->
-    <div id="offline-message" style="display: none; position: fixed; top: 60px; left: 0; width: 100%; background-color: #ff9800; color: white; text-align: center; padding: 10px; z-index: 1500;">
+    <div id="offline-message">
         現在オフラインモードです。一部の機能が制限されています。
+    </div>
+
+    <!-- A8.net広告バナー（固定表示） -->
+    <div id="ad-container">
+        <!-- PC用バナー (468x60) -->
+        <div class="ad-banner ad-pc">
+            <a href="https://px.a8.net/svt/ejp?a8mat=450UJF+4M3YK2+3HXW+NV9N5" rel="nofollow">
+                <img border="0" width="468" height="60" alt="" src="https://www29.a8.net/svt/bgt?aid=250302363279&wid=001&eno=01&mid=s00000016322004009000&mc=1"></a>
+            <img border="0" width="1" height="1" src="https://www19.a8.net/0.gif?a8mat=450UJF+4M3YK2+3HXW+NV9N5" alt="">
+        </div>
+
+        <!-- モバイル用バナー (320x50) -->
+        <div class="ad-banner ad-mobile">
+            <a href="https://px.a8.net/svt/ejp?a8mat=450UJF+4M3YK2+3HXW+NUMHT" rel="nofollow">
+                <img border="0" width="320" height="50" alt="" src="https://www29.a8.net/svt/bgt?aid=250302363279&wid=001&eno=01&mid=s00000016322004006000&mc=1"></a>
+            <img border="0" width="1" height="1" src="https://www11.a8.net/0.gif?a8mat=450UJF+4M3YK2+3HXW+NUMHT" alt="">
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>

@@ -1,0 +1,372 @@
+/* カレンダーページ用スタイル */
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-x: hidden;
+    font-family: Arial, sans-serif;
+}
+
+
+/* ヘッダーのスタイル */
+
+#header {
+    height: 50px;
+    background-color: #0073e6;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1100;
+}
+
+
+/* グループフィルターのスタイル */
+
+#group-filters {
+    display: flex;
+    justify-content: flex-start;
+    gap: 5px;
+    padding: 8px 5px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 50px;
+    z-index: 1000;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    height: auto;
+    min-height: 40px;
+    white-space: nowrap;
+}
+
+
+/* フィルターボタン */
+
+.group-filter {
+    padding: 5px 10px;
+    border-radius: 15px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    font-size: 0.85em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    min-width: fit-content;
+    margin: 3px 5px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    height: 24px;
+}
+
+.group-filter.active {
+    opacity: 1;
+}
+
+.group-filter:not(.active) {
+    background-color: #ddd !important;
+    color: #666;
+    border: 1px solid #ccc;
+}
+
+.group-filter:hover {
+    opacity: 0.9;
+}
+
+
+/* カレンダーとイベント詳細を表示するコンテナ */
+
+#container {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 80px);
+    /* ヘッダー(50px) + フィルター(30px)の高さを引く */
+    overflow: hidden;
+    margin-bottom: 70px;
+    /* 広告スペース確保 */
+}
+
+
+/* カレンダー領域 */
+
+#calendar-container {
+    flex: 4;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+
+/* FullCalendarの設定を上書き*/
+
+.fc .fc-toolbar.fc-header-toolbar {
+    margin: 0.2em !important;
+}
+
+.fc .fc-toolbar-title {
+    font-size: 1em !important;
+}
+
+
+/* カレンダー本体 */
+
+#calendar {
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+}
+
+
+/* イベント詳細パネル（PCモード） */
+
+#event-details {
+    width: 400px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow-y: auto;
+    max-height: calc(100vh - 50px);
+    padding-bottom: 70px;
+    /* 広告のための余白 */
+}
+
+
+/* イベント画像 */
+
+#event-image {
+    align-self: center;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 445 / 330;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+
+/* イベントリストコンテナ */
+
+#event-list-container {
+    width: 100vw;
+    height: 85%;
+    background-color: rgba(255, 255, 255, 1);
+    position: fixed;
+    bottom: -85%;
+    left: 0;
+    transition: bottom 0.3s ease-in-out;
+    border-top: 1px solid #ccc;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
+    padding-top: 10px;
+    z-index: 1200;
+    box-sizing: border-box;
+    display: none;
+}
+
+
+/* イベントリストコンテナ表示時 */
+
+#event-list-container.show {
+    bottom: 0;
+    display: block;
+}
+
+
+/* イベントリストアイテム */
+
+.event-list-item {
+    display: flex;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.event-list-item:hover {
+    background-color: #f5f5f5;
+}
+
+.event-list-time {
+    width: 60px;
+    font-weight: bold;
+    color: #333;
+}
+
+.event-list-content {
+    flex: 1;
+}
+
+.event-list-title {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.event-list-group {
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.no-events {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+}
+
+
+/* 閉じるボタン（イベントリスト用） */
+
+#close-event-list {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 2px;
+    background: #ccc;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    height: auto;
+    line-height: 1.5em;
+}
+
+
+/* オーバーレイのスタイル */
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1100;
+    display: none;
+}
+
+
+/* カレンダーイベントにポインターカーソルを追加 */
+
+.fc-event {
+    cursor: pointer;
+}
+
+
+/* オフラインメッセージのスタイル */
+
+#offline-message {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: #ff9800;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    z-index: 1500;
+}
+
+
+/* スマホ用レイアウト */
+
+@media (max-width: 767px) {
+    #container {
+        flex-direction: column;
+        height: calc(100vh - 30px);
+        margin-bottom: 60px;
+    }
+    #calendar-container {
+        width: 100%;
+        height: 100%;
+    }
+    #calendar {
+        flex-grow: 1;
+        height: 100%;
+    }
+    /* 詳細パネルのアニメーション用 */
+    #event-details {
+        width: 100vw;
+        height: 85%;
+        background-color: rgba(255, 255, 255, 1);
+        position: fixed;
+        bottom: -85%;
+        left: 0;
+        transition: bottom 0.3s ease-in-out;
+        border-top: 1px solid #ccc;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 20px;
+        padding-top: 10px;
+        z-index: 1200;
+        box-sizing: border-box;
+    }
+    /* 画像の中央配置と最大幅設定 */
+    #event-image {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+        height: auto;
+        aspect-ratio: 445 / 330;
+        object-fit: contain;
+    }
+    /* 詳細パネル表示時 */
+    #event-details.show {
+        bottom: 0;
+        height: calc(85% - 50px);
+        /* 広告の上に表示 */
+    }
+    /* イベントリスト表示時 */
+    #event-list-container.show {
+        bottom: 0;
+        height: calc(85% - 50px);
+        /* 広告の上に表示 */
+    }
+    /* 詳細パネル表示時にオーバーレイを表示 */
+    #event-details.show~#overlay,
+    #event-list-container.show~#overlay {
+        display: block;
+    }
+    /* 閉じるボタン */
+    #close-details,
+    #close-event-list {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 2px;
+        background: #ccc;
+        color: #333;
+        font-weight: bold;
+        cursor: pointer;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        height: auto;
+        line-height: 1.5em;
+    }
+    /* カレンダーの日付セルにポインターカーソルを追加 */
+    .fc-daygrid-day {
+        cursor: pointer;
+    }
+}
+
+
+/* PCモードでモバイル用の要素を非表示 */
+
+@media (min-width: 768px) {
+    #close-details {
+        display: none !important;
+    }
+    #event-list-container {
+        display: none !important;
+    }
+}

@@ -52,14 +52,14 @@ body {
 
 
 /* #group-filters::before {
-  content: "グループ:";
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 8px;
-  font-size: 0.85em;
-  color: #777;
-  font-weight: bold;
-  height: 100%;
+content: "グループ:";
+display: inline-flex;
+align-items: center;
+padding: 5px 8px;
+font-size: 0.85em;
+color: #777;
+font-weight: bold;
+height: 100%;
 } */
 
 
@@ -387,6 +387,18 @@ body {
     .fc-daygrid-day {
         cursor: pointer;
     }
+    /* イベント表示領域の底上げ（広告スペース確保） */
+    #container {
+        margin-bottom: 60px;
+    }
+    /* イベントリストコンテナも広告の上に表示 */
+    #event-list-container.show {
+        height: calc(85% - 50px);
+    }
+    /* イベント詳細パネルも広告の上に表示 */
+    #event-details.show {
+        height: calc(85% - 50px);
+    }
 }
 
 
@@ -411,4 +423,304 @@ body {
 
 .fc-event {
     cursor: pointer;
+}
+
+
+/* 広告バナー関連のスタイル調整 */
+
+@media (min-width: 768px) {
+    /* PCモードでは詳細パネルの下部に余白を確保 */
+    #event-details {
+        padding-bottom: 70px;
+    }
+    /* カレンダー表示領域の底上げ（広告スペース確保） */
+    #container {
+        margin-bottom: 70px;
+    }
+}
+
+
+/* index.htmlのスタイル */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: rgb(1, 117, 194);
+    color: #ffffff;
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.header h2 {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 100px;
+    /* 下部に余白を追加 */
+}
+
+.group-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    padding: 20px;
+}
+
+.group-card {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.group-card:hover {
+    transform: translateY(-5px);
+}
+
+.group-image {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.group-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.movie-button {
+    position: absolute;
+    right: 20px;
+    bottom: 120px;
+    background: #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: #333;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+}
+
+.movie-button:hover {
+    transform: translateX(5px);
+}
+
+.movie-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+.group-info {
+    padding: 20px 0;
+}
+
+.group-name {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+}
+
+.more-button {
+    display: inline-block;
+    padding: 8px 30px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 0.9rem;
+    transition: opacity 0.2s ease;
+}
+
+.more-button:hover {
+    opacity: 0.8;
+}
+
+
+/* グループ固有のスタイル */
+
+.morning-musume .group-name {
+    color: #E80112;
+}
+
+.morning-musume .more-button {
+    background-color: #E80112;
+}
+
+.angerme .group-name {
+    color: #0091D2;
+}
+
+.angerme .more-button {
+    background-color: #0091D2;
+}
+
+.juice-juice .group-name {
+    color: #611A85;
+}
+
+.juice-juice .more-button {
+    background-color: #611A85;
+}
+
+.tsubaki .group-name {
+    color: #F29EC2;
+}
+
+.tsubaki .more-button {
+    background-color: #F29EC2;
+}
+
+.beyooooonds .group-name {
+    color: #249849;
+}
+
+.beyooooonds .more-button {
+    background-color: #249849;
+}
+
+.ocha-norma .group-name {
+    color: #F39800;
+}
+
+.ocha-norma .more-button {
+    background-color: #F39800;
+}
+
+.rosy-chronicle .group-name {
+    color: #FFD629;
+}
+
+.rosy-chronicle .more-button {
+    background-color: #FFD629;
+}
+
+.trainee .group-name {
+    color: #33D6AD;
+}
+
+.trainee .more-button {
+    background-color: #33D6AD;
+}
+
+
+/* イベントカレンダーバナーのスタイル */
+
+.calendar-banner {
+    position: fixed;
+    right: 20px;
+    bottom: 80px;
+    /* 広告バナーの高さ+余白分だけ上に移動 */
+    width: 479px;
+    height: 187px;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.calendar-banner img {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* モバイル対応 */
+
+@media (max-width: 1024px) {
+    .group-grid {
+        grid-template-columns: 1fr;
+    }
+    .calendar-banner {
+        width: 240px;
+        height: 94px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+    .group-image {
+        height: 300px;
+    }
+    .group-name {
+        font-size: 1.5rem;
+    }
+}
+
+
+/* 共通の広告バナー関連のスタイル */
+
+#ad-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background-color: white;
+    padding: 5px 0;
+    border-top: 1px solid #ddd;
+    z-index: 1000;
+}
+
+.ad-banner {
+    display: inline-block;
+}
+
+
+/* デフォルトでPC用バナーを表示、モバイル用を非表示 */
+
+.ad-mobile {
+    display: none;
+}
+
+
+/* モバイル画面用の表示切替 */
+
+@media (max-width: 767px) {
+    .ad-pc {
+        display: none;
+    }
+    .ad-mobile {
+        display: inline-block;
+    }
+    /* モバイル表示時に広告の下に余白を追加 */
+    body {
+        padding-bottom: 60px;
+    }
+}
+
+
+/* オフラインメッセージのスタイル */
+
+#offline-message {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: #ff9800;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    z-index: 1500;
 }
