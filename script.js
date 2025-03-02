@@ -452,16 +452,70 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // 説明欄の処理 - URLの場合はリンクにする
-        var urlRegex = /^https?:\/\/[^\s]+$/;
-        if (descriptionText && urlRegex.test(descriptionText.trim())) {
+        // 説明欄のタイトルを変更（終日イベントの場合は「説明:」、それ以外は「開場:」）
+        var descriptionElement = null;
+        var descriptionLabel = null;
+        for (var i = 0; i < paragraphs.length; i++) {
+            if (paragraphs[i].textContent.indexOf('説明:') !== -1) {
+                descriptionElement = paragraphs[i];
+                var strongElements = paragraphs[i].querySelectorAll('strong');
+                for (var j = 0; j < strongElements.length; j++) {
+                    if (strongElements[j].textContent.indexOf('説明:') !== -1) {
+                        descriptionLabel = strongElements[j];
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        if (descriptionLabel) {
+            // 終日イベントでない場合のみ「開場:」に変更
+            if (!isAllDayEvent) {
+                descriptionLabel.textContent = '開場:';
+            } else {
+                // 終日イベントの場合は「説明:」のまま
+                descriptionLabel.textContent = '説明:';
+            }
+        }
+
+        // 説明欄の処理 - 日時情報かURLかを判断
+        if (descriptionText) {
             // URLの場合
-            var url = descriptionText.trim();
-            // HTMLを使ってリンクを作成
-            eventDescription.innerHTML = '<a href="' + url + '" target="_blank">オフィシャルサイトの情報ページへ</a>';
+            var urlRegex = /^https?:\/\/[^\s]+$/;
+            if (urlRegex.test(descriptionText.trim())) {
+                var url = descriptionText.trim();
+                // URLの場合はリンクを作成
+                eventDescription.innerHTML = '<a href="' + url + '" target="_blank">オフィシャルサイトの情報ページへ</a>';
+            }
+            // 時間指定イベントで、ISO形式の日時の場合（例: 1899-12-30T06:00:00.000Z）
+            else if (!isAllDayEvent && descriptionText.includes('T') && (descriptionText.includes('Z') || descriptionText.includes('+'))) {
+                try {
+                    // ISO文字列を解析してDate型に変換
+                    var timeDate = new Date(descriptionText);
+                    if (!isNaN(timeDate.getTime())) {
+                        // 時間だけを抽出（日本時間に合わせる）
+                        var hours = timeDate.getUTCHours() + 9;
+                        if (hours >= 24) hours -= 24;
+                        var minutes = timeDate.getUTCMinutes();
+
+                        // フォーマットされた時間を表示
+                        var formattedTime = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0');
+                        eventDescription.textContent = formattedTime;
+                    } else {
+                        // 解析に失敗した場合はそのまま表示
+                        eventDescription.textContent = descriptionText;
+                    }
+                } catch (e) {
+                    // エラーが発生した場合はそのまま表示
+                    eventDescription.textContent = descriptionText;
+                }
+            } else {
+                // 通常のテキストの場合
+                eventDescription.textContent = descriptionText;
+            }
         } else {
-            // 通常のテキストの場合
-            eventDescription.textContent = descriptionText;
+            eventDescription.textContent = '';
         }
 
         eventGroup.textContent = groupText;
