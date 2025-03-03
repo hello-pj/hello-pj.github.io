@@ -242,8 +242,15 @@ var CalendarUI = (function() {
                     }
 
                     var eventDetailsEl = document.getElementById('event-details');
+
+                    // 詳細パネルを表示
                     showEventDetails(event, formattedTime + ' ' + event.title, eventDetailsEl);
+
+                    // イベントリストは非表示にするが、detailOpenedFromListフラグを設定
                     eventListContainer.classList.remove('show');
+
+                    // グローバルフラグを設定（calendar-main.jsで参照）
+                    window.detailOpenedFromList = true;
                 });
 
                 eventListEl.appendChild(eventItem);

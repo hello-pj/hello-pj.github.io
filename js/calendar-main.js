@@ -1,4 +1,5 @@
 // Main script file to orchestrate calendar functionality
+// Main script file to orchestrate calendar functionality
 document.addEventListener('DOMContentLoaded', function() {
     // DOM elements
     var calendarEl = document.getElementById('calendar');
@@ -11,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendar; // カレンダーインスタンス
     var isMobile = window.innerWidth <= 768; // 現在のビューがモバイルかどうか
     var currentEvents = []; // イベントデータを保持する変数
+
+    // イベントリストから詳細パネルが開かれたかどうかを追跡するグローバルフラグ
+    window.detailOpenedFromList = false;
 
     // スワイプ関連の変数
     var touchStartX = 0;
@@ -125,18 +129,29 @@ document.addEventListener('DOMContentLoaded', function() {
             CalendarUI.showEventDetails(info.event, displayText, eventDetails);
         }
     }
-    // calendar-main.js の setupEventListeners 関数を修正
 
     function setupEventListeners() {
         // Close buttons
         document.getElementById('close-details').addEventListener('click', function() {
             eventDetails.classList.remove('show');
-            overlay.style.display = 'none';
+
+            // イベントリストから開かれた場合、リストに戻る
+            if (window.detailOpenedFromList && window.innerWidth <= 768) {
+                eventListContainer.classList.add('show');
+                // オーバーレイは表示したまま
+            } else {
+                overlay.style.display = 'none';
+            }
+
+            // フラグをリセット
+            window.detailOpenedFromList = false;
         });
 
         document.getElementById('close-event-list').addEventListener('click', function() {
             eventListContainer.classList.remove('show');
             overlay.style.display = 'none';
+            // フラグをリセット
+            window.detailOpenedFromList = false;
         });
 
         // Overlay click
@@ -146,6 +161,8 @@ document.addEventListener('DOMContentLoaded', function() {
             eventListContainer.classList.remove('show');
             // オーバーレイを非表示
             overlay.style.display = 'none';
+            // フラグをリセット
+            window.detailOpenedFromList = false;
         });
 
         // Window resize
@@ -228,7 +245,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(function() {
                     eventDetailsPanel.classList.remove('show');
                     eventDetailsPanel.style.transform = 'translateY(0)';
-                    overlay.style.display = 'none';
+
+                    // イベントリストから開かれた場合、リストに戻る
+                    if (window.detailOpenedFromList && window.innerWidth <= 768) {
+                        eventListContainer.classList.add('show');
+                    } else {
+                        overlay.style.display = 'none';
+                    }
+
+                    // フラグをリセット
+                    window.detailOpenedFromList = false;
                 }, 300);
             } else {
                 // 閾値未満ならパネルを元の位置に戻す
@@ -314,13 +340,24 @@ document.addEventListener('DOMContentLoaded', function() {
         var closeDetailsBtn = document.getElementById('close-details');
         closeDetailsBtn.addEventListener('click', function() {
             eventDetailsPanel.classList.remove('show');
-            overlay.style.display = 'none';
+
+            // イベントリストから開かれた場合、リストに戻る
+            if (window.detailOpenedFromList && window.innerWidth <= 768) {
+                eventListContainer.classList.add('show');
+            } else {
+                overlay.style.display = 'none';
+            }
+
+            // フラグをリセット
+            window.detailOpenedFromList = false;
         });
 
         var closeEventListBtn = document.getElementById('close-event-list');
         closeEventListBtn.addEventListener('click', function() {
             eventListPanel.classList.remove('show');
             overlay.style.display = 'none';
+            // フラグをリセット
+            window.detailOpenedFromList = false;
         });
     }
 
