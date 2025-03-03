@@ -125,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
             CalendarUI.showEventDetails(info.event, displayText, eventDetails);
         }
     }
+    // calendar-main.js の setupEventListeners 関数を修正
 
     function setupEventListeners() {
         // Close buttons
@@ -156,43 +157,170 @@ document.addEventListener('DOMContentLoaded', function() {
         setupTouchEvents();
     }
 
+    // calendar-main.js の既存の setupTouchEvents 関数を置き換えます
     function setupTouchEvents() {
-        var startY;
+        // スワイプ関連の変数
+        var startY = 0;
+        var currentY = 0;
+        var isDragging = false;
+        var initialPanelPosition = 0;
+        var touchStartTime = 0;
 
-        // Event details panel
-        eventDetails.addEventListener('touchstart', function(e) {
-            if (e.touches.length === 1) {
-                startY = e.touches[0].clientY;
+        // イベント詳細パネルのスワイプ処理
+        var eventDetailsPanel = document.getElementById('event-details');
+
+        eventDetailsPanel.addEventListener('touchstart', function(e) {
+            if (e.touches.length !== 1) return; // 単一タッチのみ処理
+
+            startY = e.touches[0].clientY;
+            initialPanelPosition = eventDetailsPanel.getBoundingClientRect().top;
+            touchStartTime = Date.now();
+            isDragging = false;
+
+            // コンテンツのスクロールは許可するため、preventDefaultは最小限に
+            if (eventDetailsPanel.scrollTop <= 0 && e.target.closest('#close-details')) {
+                e.preventDefault();
             }
+        }, { passive: false });
+
+        eventDetailsPanel.addEventListener('touchmove', function(e) {
+            if (e.touches.length !== 1) return;
+
+            // スクロール位置が最上部なら、またはハンドル部分ならスワイプを許可
+            if (eventDetailsPanel.scrollTop <= 0 || e.target.closest('#close-details')) {
+                currentY = e.touches[0].clientY;
+                var deltaY = currentY - startY;
+
+                // 下方向へのスワイプのみ処理（deltaY > 0）
+                if (deltaY > 0) {
+                    isDragging = true;
+
+                    // パネルを物理的に移動
+                    var newPosition = Math.min(deltaY, window.innerHeight);
+                    eventDetailsPanel.style.transition = 'none';
+                    eventDetailsPanel.style.transform = 'translateY(' + newPosition + 'px)';
+
+                    // スクロールの代わりにパネル移動
+                    if (eventDetailsPanel.scrollTop <= 0) {
+                        e.preventDefault();
+                    }
+                }
+            }
+        }, { passive: false });
+
+        eventDetailsPanel.addEventListener('touchend', function(e) {
+            if (!isDragging) return;
+
+            var endY = e.changedTouches[0].clientY;
+            var deltaY = endY - startY;
+            var touchDuration = Date.now() - touchStartTime;
+            var velocity = deltaY / touchDuration;
+
+            // スワイプ判定の閾値
+            // 1. 移動距離が画面高さの30%以上
+            // 2. または、スワイプの速度が0.5以上（速いスワイプ）
+            if (deltaY > window.innerHeight * 0.3 || velocity > 0.5) {
+                // パネルを閉じる（スムーズなアニメーションで）
+                eventDetailsPanel.style.transition = 'transform 0.3s ease-out';
+                eventDetailsPanel.style.transform = 'translateY(' + window.innerHeight + 'px)';
+
+                // アニメーション完了後にクラスを削除
+                setTimeout(function() {
+                    eventDetailsPanel.classList.remove('show');
+                    eventDetailsPanel.style.transform = 'translateY(0)';
+                    overlay.style.display = 'none';
+                }, 300);
+            } else {
+                // 閾値未満ならパネルを元の位置に戻す
+                eventDetailsPanel.style.transition = 'transform 0.2s ease-out';
+                eventDetailsPanel.style.transform = 'translateY(0)';
+            }
+
+            isDragging = false;
         });
 
-        eventDetails.addEventListener('touchmove', function(e) {
-            var currentY = e.touches[0].clientY;
-            var scrollTop = eventDetails.scrollTop;
-            var isAtTop = scrollTop === 0;
+        // イベントリストコンテナのスワイプ処理も同様に実装
+        var eventListPanel = document.getElementById('event-list-container');
 
-            if (isAtTop && currentY - startY > 50) {
-                eventDetails.classList.remove('show');
-                overlay.style.display = 'none';
+        eventListPanel.addEventListener('touchstart', function(e) {
+            if (e.touches.length !== 1) return;
+
+            startY = e.touches[0].clientY;
+            initialPanelPosition = eventListPanel.getBoundingClientRect().top;
+            touchStartTime = Date.now();
+            isDragging = false;
+
+            // ハンドル部分のみpreventDefault
+            if (eventListPanel.scrollTop <= 0 && e.target.closest('#close-event-list')) {
+                e.preventDefault();
             }
+        }, { passive: false });
+
+        eventListPanel.addEventListener('touchmove', function(e) {
+            if (e.touches.length !== 1) return;
+
+            // スクロール位置が最上部またはハンドル部分ならスワイプを許可
+            if (eventListPanel.scrollTop <= 0 || e.target.closest('#close-event-list')) {
+                currentY = e.touches[0].clientY;
+                var deltaY = currentY - startY;
+
+                // 下方向へのスワイプのみ処理（deltaY > 0）
+                if (deltaY > 0) {
+                    isDragging = true;
+
+                    // パネルを物理的に移動
+                    var newPosition = Math.min(deltaY, window.innerHeight);
+                    eventListPanel.style.transition = 'none';
+                    eventListPanel.style.transform = 'translateY(' + newPosition + 'px)';
+
+                    // スクロールの代わりにパネル移動
+                    if (eventListPanel.scrollTop <= 0) {
+                        e.preventDefault();
+                    }
+                }
+            }
+        }, { passive: false });
+
+        eventListPanel.addEventListener('touchend', function(e) {
+            if (!isDragging) return;
+
+            var endY = e.changedTouches[0].clientY;
+            var deltaY = endY - startY;
+            var touchDuration = Date.now() - touchStartTime;
+            var velocity = deltaY / touchDuration;
+
+            // スワイプ判定の閾値
+            if (deltaY > window.innerHeight * 0.3 || velocity > 0.5) {
+                // パネルを閉じる（スムーズなアニメーションで）
+                eventListPanel.style.transition = 'transform 0.3s ease-out';
+                eventListPanel.style.transform = 'translateY(' + window.innerHeight + 'px)';
+
+                // アニメーション完了後にクラスを削除
+                setTimeout(function() {
+                    eventListPanel.classList.remove('show');
+                    eventListPanel.style.transform = 'translateY(0)';
+                    overlay.style.display = 'none';
+                }, 300);
+            } else {
+                // 閾値未満ならパネルを元の位置に戻す
+                eventListPanel.style.transition = 'transform 0.2s ease-out';
+                eventListPanel.style.transform = 'translateY(0)';
+            }
+
+            isDragging = false;
         });
 
-        // Event list container
-        eventListContainer.addEventListener('touchstart', function(e) {
-            if (e.touches.length === 1) {
-                startY = e.touches[0].clientY;
-            }
+        // ヘッダー部分（閉じるボタン）のタッチイベントはより単純化
+        var closeDetailsBtn = document.getElementById('close-details');
+        closeDetailsBtn.addEventListener('click', function() {
+            eventDetailsPanel.classList.remove('show');
+            overlay.style.display = 'none';
         });
 
-        eventListContainer.addEventListener('touchmove', function(e) {
-            var currentY = e.touches[0].clientY;
-            var scrollTop = eventListContainer.scrollTop;
-            var isAtTop = scrollTop === 0;
-
-            if (isAtTop && currentY - startY > 50) {
-                eventListContainer.classList.remove('show');
-                overlay.style.display = 'none';
-            }
+        var closeEventListBtn = document.getElementById('close-event-list');
+        closeEventListBtn.addEventListener('click', function() {
+            eventListPanel.classList.remove('show');
+            overlay.style.display = 'none';
         });
     }
 

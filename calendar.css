@@ -139,6 +139,8 @@ body {
     max-height: calc(100vh - 50px);
     padding-bottom: 70px;
     /* 広告のための余白 */
+    will-change: transform;
+    -webkit-overflow-scrolling: touch;
 }
 
 
@@ -172,6 +174,8 @@ body {
     z-index: 1200;
     box-sizing: border-box;
     display: none;
+    will-change: transform;
+    -webkit-overflow-scrolling: touch;
 }
 
 
@@ -223,14 +227,14 @@ body {
 }
 
 
-/* 閉じるボタン（イベントリスト用） */
+/* 閉じるボタン（イベントリスト用）のデフォルトスタイル */
 
-#close-event-list {
+#close-event-list,
+#close-details {
     display: block;
     width: 100%;
     text-align: center;
     padding: 2px;
-    background: #ccc;
     color: #333;
     font-weight: bold;
     cursor: pointer;
@@ -238,6 +242,7 @@ body {
     box-sizing: border-box;
     height: auto;
     line-height: 1.5em;
+    position: relative;
 }
 
 
@@ -252,6 +257,9 @@ body {
     background: rgba(0, 0, 0, 0.5);
     z-index: 1100;
     display: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    /* タップ時のハイライトを消す */
 }
 
 
@@ -278,9 +286,29 @@ body {
 }
 
 
-/* スマホ用レイアウト */
+/* パネルのスムーズなアニメーション */
+
+.panel-slide-transition {
+    transition: transform 0.3s ease-out;
+}
+
+
+/* PCモードでモバイル用の要素を非表示 */
+
+@media (min-width: 768px) {
+    #close-details {
+        display: none !important;
+    }
+    #event-list-container {
+        display: none !important;
+    }
+}
+
+
+/* スマホ用レイアウト - すべてのモバイル関連のスタイルをまとめたセクション */
 
 @media (max-width: 767px) {
+    /* コンテナレイアウト */
     #container {
         flex-direction: column;
         height: calc(100vh - 30px);
@@ -294,7 +322,7 @@ body {
         flex-grow: 1;
         height: 100%;
     }
-    /* 詳細パネルのアニメーション用 */
+    /* 詳細パネルのスタイル */
     #event-details {
         width: 100vw;
         height: 85%;
@@ -311,7 +339,7 @@ body {
         z-index: 1200;
         box-sizing: border-box;
     }
-    /* 画像の中央配置と最大幅設定 */
+    /* 画像の設定 */
     #event-image {
         max-width: 100%;
         display: block;
@@ -320,53 +348,52 @@ body {
         aspect-ratio: 445 / 330;
         object-fit: contain;
     }
-    /* 詳細パネル表示時 */
+    /* パネル表示時 */
     #event-details.show {
         bottom: 0;
         height: calc(85% - 50px);
-        /* 広告の上に表示 */
+        transform: translateY(0);
     }
-    /* イベントリスト表示時 */
     #event-list-container.show {
         bottom: 0;
         height: calc(85% - 50px);
-        /* 広告の上に表示 */
+        transform: translateY(0);
     }
-    /* 詳細パネル表示時にオーバーレイを表示 */
+    /* オーバーレイ表示 */
     #event-details.show~#overlay,
     #event-list-container.show~#overlay {
         display: block;
-    }
-    /* 閉じるボタン */
-    #close-details,
-    #close-event-list {
-        display: block;
-        width: 100%;
-        text-align: center;
-        padding: 2px;
-        background: #ccc;
-        color: #333;
-        font-weight: bold;
-        cursor: pointer;
-        margin-bottom: 10px;
-        box-sizing: border-box;
-        height: auto;
-        line-height: 1.5em;
     }
     /* カレンダーの日付セルにポインターカーソルを追加 */
     .fc-daygrid-day {
         cursor: pointer;
     }
-}
-
-
-/* PCモードでモバイル用の要素を非表示 */
-
-@media (min-width: 768px) {
-    #close-details {
-        display: none !important;
+    /* 閉じるボタンとスワイプハンドルのスタイル */
+    #close-details,
+    #close-event-list {
+        display: block;
+        position: relative;
+        height: 30px;
+        padding: 2px;
+        text-align: center;
+        color: #333;
+        font-weight: bold;
+        cursor: pointer;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        width: 100%;
     }
-    #event-list-container {
-        display: none !important;
+    /* スワイプハンドルの視覚的なインジケータ */
+    #close-details::before,
+    #close-event-list::before {
+        content: '';
+        width: 40px;
+        height: 4px;
+        background-color: #ccc;
+        border-radius: 4px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 }

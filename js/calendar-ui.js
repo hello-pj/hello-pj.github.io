@@ -233,8 +233,14 @@ var CalendarUI = (function() {
                     '<div class="event-list-group" style="color: ' + CalendarData.groupColors[groupValue] + '">' + groupValue + '</div>' +
                     '</div>';
 
-                // クリックイベントを追加 - ここでは正確な時間を渡す
-                eventItem.addEventListener('click', function() {
+                // ここが重要: タップ機能を追加
+                eventItem.addEventListener('click', function(e) {
+                    // タップイベントが正しく発火するように、ドラッグ中のクリックイベントをキャンセル
+                    // スワイプで閉じる機能で追加した変数を使用
+                    if (window.isDraggingEventList) {
+                        return; // スワイプ中なら何もしない
+                    }
+
                     var eventDetailsEl = document.getElementById('event-details');
                     showEventDetails(event, formattedTime + ' ' + event.title, eventDetailsEl);
                     eventListContainer.classList.remove('show');
