@@ -257,6 +257,110 @@ var CalendarUI = (function() {
             });
         }
 
+        // Find or create a container for the share all button
+        var shareAllButtonContainer = document.getElementById('share-all-button-container');
+        if (!shareAllButtonContainer) {
+            shareAllButtonContainer = document.createElement('div');
+            shareAllButtonContainer.id = 'share-all-button-container';
+            shareAllButtonContainer.style.textAlign = 'center';
+            shareAllButtonContainer.style.marginTop = '15px';
+            shareAllButtonContainer.style.marginBottom = '15px';
+
+            // Get the event list element
+            var eventListEl = document.getElementById('event-list');
+
+            // Insert after the event list
+            if (eventListEl.nextSibling) {
+                eventListContainer.insertBefore(shareAllButtonContainer, eventListEl.nextSibling);
+            } else {
+                eventListContainer.appendChild(shareAllButtonContainer);
+            }
+        }
+
+        // Clear previous buttons
+        shareAllButtonContainer.innerHTML = '';
+
+        // Only add the share button if there are events
+        if (events.length > 0) {
+            // Create a button to share all events
+            var shareAllButton = EventSharing.createShareButton(function() {
+                EventSharing.shareDayEvents(date, events);
+            });
+
+            // Add text to indicate it's for sharing all
+            shareAllButton.textContent = 'この日のイベントをシェア';
+
+            // スタイルの修正 - 中央配置のためのスタイル
+            shareAllButton.style.width = '80%'; // 幅を調整
+            shareAllButton.style.maxWidth = '300px';
+            shareAllButton.style.margin = '15px auto'; // 上下のマージンと左右のautoで中央配置
+            shareAllButton.style.display = 'block'; // ブロック要素に変更して中央配置が効くようにする
+
+            // コンテナ自体のスタイルも修正
+            shareAllButtonContainer.style.textAlign = 'center';
+            shareAllButtonContainer.style.width = '100%';
+
+            // Add the share button to the container
+            shareAllButtonContainer.appendChild(shareAllButton);
+        }
+
+        // Also add share buttons to each event in the list
+        var eventItems = document.querySelectorAll('.event-list-item');
+        eventItems.forEach(function(item, index) {
+            // Create a small share button
+            var shareItemButton = document.createElement('button');
+            shareItemButton.className = 'share-item-button';
+            shareItemButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>';
+            shareItemButton.style.backgroundColor = 'transparent';
+            shareItemButton.style.color = '#0073e6';
+            shareItemButton.style.border = 'none';
+            shareItemButton.style.padding = '6px';
+            shareItemButton.style.margin = '0';
+            shareItemButton.style.cursor = 'pointer';
+            shareItemButton.style.borderRadius = '50%';
+            shareItemButton.style.display = 'flex';
+            shareItemButton.style.alignItems = 'center';
+            shareItemButton.style.justifyContent = 'center';
+
+            // Add the button to the item
+            var contentDiv = item.querySelector('.event-list-content');
+            if (contentDiv) {
+                // Create a container for the content and share button
+                var containerDiv = document.createElement('div');
+                containerDiv.style.display = 'flex';
+                containerDiv.style.justifyContent = 'space-between';
+                containerDiv.style.alignItems = 'center';
+                containerDiv.style.width = '100%';
+
+                // Move the content into the container
+                item.removeChild(contentDiv);
+                containerDiv.appendChild(contentDiv);
+
+                // Add the share button to the container
+                containerDiv.appendChild(shareItemButton);
+
+                // Add the container back to the item
+                item.appendChild(containerDiv);
+            } else {
+                item.appendChild(shareItemButton);
+            }
+
+            // Add click event listener to share just this event
+            shareItemButton.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent opening the event details
+
+                // Format the date for sharing
+                var formattedDate = date.getFullYear() + '年' +
+                    (date.getMonth() + 1) + '月' +
+                    date.getDate() + '日 (' +
+                    weekdayNames[date.getDay()] + ')';
+
+                // Share just this event
+                EventSharing.shareEvent(events[index], formattedDate);
+            });
+        });
+
+
         // イベントリストコンテナを表示
         eventListContainer.classList.add('show');
 
@@ -476,6 +580,59 @@ var CalendarUI = (function() {
 
         // 画像のソースを設定
         eventImage.src = CalendarData.groupImages[groupText] || 'img/default_image.jpg';
+
+        // Find or create a container for the share button
+        var shareButtonContainer = document.getElementById('share-button-container');
+        if (!shareButtonContainer) {
+            shareButtonContainer = document.createElement('div');
+            shareButtonContainer.id = 'share-button-container';
+            shareButtonContainer.style.textAlign = 'center';
+            shareButtonContainer.style.marginTop = '15px';
+
+            // Insert after the event details but before any potential ads
+            var detailsEnd = document.querySelector('#event-details p:last-of-type');
+            if (detailsEnd && detailsEnd.nextSibling) {
+                eventDetailsEl.insertBefore(shareButtonContainer, detailsEnd.nextSibling);
+            } else {
+                eventDetailsEl.appendChild(shareButtonContainer);
+            }
+        }
+
+        // Clear previous buttons
+        shareButtonContainer.innerHTML = '';
+
+        // Create and add the share button
+        var shareButton = EventSharing.createShareButton(function() {
+            // Format the date for sharing
+            var formattedDate = '';
+            if (typeof event.start === 'string') {
+                // Parse the string date
+                var dateObj = new Date(event.start);
+                formattedDate = dateObj.getFullYear() + '年' +
+                    (dateObj.getMonth() + 1) + '月' +
+                    dateObj.getDate() + '日 (' +
+                    weekdayNames[dateObj.getDay()] + ')';
+            } else if (event.start instanceof Date) {
+                formattedDate = event.start.getFullYear() + '年' +
+                    (event.start.getMonth() + 1) + '月' +
+                    event.start.getDate() + '日 (' +
+                    weekdayNames[event.start.getDay()] + ')';
+            } else if (typeof event.start === 'object' && event.start && typeof event.start.toDate === 'function') {
+                var fcDate = event.start.toDate();
+                formattedDate = fcDate.getFullYear() + '年' +
+                    (fcDate.getMonth() + 1) + '月' +
+                    fcDate.getDate() + '日 (' +
+                    weekdayNames[fcDate.getDay()] + ')';
+            }
+
+            // Call the share event function
+            EventSharing.shareEvent(event, formattedDate);
+        });
+
+        // Add the share button to the container
+        shareButtonContainer.appendChild(shareButton);
+
+
 
         // 詳細パネルを表示
         eventDetailsEl.classList.add('show');
