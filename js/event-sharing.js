@@ -1,5 +1,23 @@
 // First, let's add the share button to HTML elements (calendar-ui.js)
 
+// X投稿用のグループ名変換マッピング
+const xGroupNameMapping = {
+    "HELLO! PROJECT": "HelloProject",
+    "モーニング娘。'25": "モーニング娘25",
+    "アンジュルム": "アンジュルム",
+    "Juice=Juice": "juicejuice",
+    "つばきファクトリー": "つばきファクトリー",
+    "BEYOOOOONDS": "BEYOOOOONDS",
+    "OCHA NORMA": "ocha_norma",
+    "ロージークロニクル": "ロージークロニクル",
+    "ハロプロ研修生": "ハロプロ研修生"
+};
+
+// X投稿用にグループ名を変換する関数
+function convertGroupNameForX(groupName) {
+    return xGroupNameMapping[groupName] || groupName;
+}
+
 // 1. Function to create a share button
 function createShareButton(callback) {
     var shareBtn = document.createElement('button');
@@ -22,6 +40,31 @@ function createShareButton(callback) {
     shareBtn.addEventListener('click', callback);
 
     return shareBtn;
+}
+
+// 1.2 Function to create an X (Twitter) share button
+function createXShareButton(callback) {
+    var xShareBtn = document.createElement('button');
+    xShareBtn.className = 'share-button x-share-button';
+    // X (Twitter) logo
+    xShareBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg> 投稿';
+    xShareBtn.style.backgroundColor = '#000000';
+    xShareBtn.style.color = 'white';
+    xShareBtn.style.border = 'none';
+    xShareBtn.style.borderRadius = '4px';
+    xShareBtn.style.padding = '8px 12px';
+    xShareBtn.style.margin = '10px 5px';
+    xShareBtn.style.cursor = 'pointer';
+    xShareBtn.style.display = 'flex';
+    xShareBtn.style.alignItems = 'center';
+    xShareBtn.style.justifyContent = 'center';
+    xShareBtn.style.gap = '5px';
+    xShareBtn.style.fontSize = '14px';
+    xShareBtn.style.width = 'fit-content';
+
+    xShareBtn.addEventListener('click', callback);
+
+    return xShareBtn;
 }
 
 // 2. Function to format an event for sharing
@@ -125,6 +168,63 @@ function formatEventForSharing(event, formattedDate) {
     return eventInfo;
 }
 
+// 2.2 Format events for X (Twitter) sharing
+function formatEventsForXSharing(date, events) {
+    // 曜日の配列
+    const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+
+    // 日付のフォーマット
+    const formattedDate = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日（${weekdays[date.getDay()]}）`;
+
+    // 投稿のベーステキスト (約80文字)
+    let xText = `【ハロプロイベント情報】\n🎶 ${formattedDate}の出演グループはこちら！\n`;
+
+    // 出演グループを収集 (重複を避けるためにセットを使用)
+    const groups = new Set();
+    events.forEach(event => {
+        let groupName = '';
+        if (event.extendedProps && event.extendedProps.group) {
+            groupName = event.extendedProps.group;
+        } else if (event.group) {
+            groupName = event.group;
+        }
+
+        // HELLO! PROJECTも含めて全てのグループを表示
+        if (groupName) {
+            groups.add(groupName);
+        }
+    });
+
+    // グループごとに行を追加 (X用のグループ名変換を適用)
+    const usedGroupNames = new Set(); // 既に使用したグループ名を追跡
+    groups.forEach(group => {
+        const xGroupName = convertGroupNameForX(group);
+        xText += `✨ #${xGroupName}\n`;
+
+        // 使用したグループ名を記録
+        usedGroupNames.add(xGroupName.toLowerCase());
+    });
+
+    // 最後の部分 - 重複をチェック
+    let footer = `\n📅 詳細情報はカレンダーをチェック✅️\nhttps://hello-pj.github.io/calendar\n`;
+
+    // 'helloproject'がグループ名で使われていなければ追加
+    if (!usedGroupNames.has('helloproject')) {
+        footer += `#helloproject `;
+    }
+
+    footer += `#ハロプロ`;
+
+    // Twitter文字数制限を考慮 (280文字)
+    // 現在のテキスト + フッターの長さを計算
+    if ((xText + footer).length > 280) {
+        // 文字数オーバーする場合はハッシュタグを省略
+        return xText + `\n📅 詳細情報はカレンダーをチェック✅️\nhttps://hello-pj.github.io/calendar`;
+    } else {
+        return xText + footer;
+    }
+}
+
 // 3. Function to share a single event
 function shareEvent(event, displayDate) {
     if (navigator.share) {
@@ -180,6 +280,19 @@ function shareDayEvents(date, events) {
         // Fallback method
         fallbackShare(shareText);
     }
+}
+
+// 4.2 Function to share events to X (Twitter)
+function shareEventsToX(date, events) {
+    // Format the text for X
+    const xShareText = formatEventsForXSharing(date, events);
+
+    // Encode for URL
+    const encodedText = encodeURIComponent(xShareText);
+
+    // Open Twitter intent URL
+    const xURL = `https://twitter.com/intent/tweet?text=${encodedText}`;
+    window.open(xURL, '_blank');
 }
 
 // 5. Fallback sharing method
@@ -266,9 +379,12 @@ function showToast(message) {
 // Export functions to make them available
 window.EventSharing = {
     createShareButton,
+    createXShareButton,
     formatEventForSharing,
+    formatEventsForXSharing,
     shareEvent,
     shareDayEvents,
+    shareEventsToX,
     fallbackShare,
     showToast
 };

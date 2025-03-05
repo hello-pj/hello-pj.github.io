@@ -265,6 +265,9 @@ var CalendarUI = (function() {
             shareAllButtonContainer.style.textAlign = 'center';
             shareAllButtonContainer.style.marginTop = '15px';
             shareAllButtonContainer.style.marginBottom = '15px';
+            shareAllButtonContainer.style.display = 'flex';
+            shareAllButtonContainer.style.justifyContent = 'center';
+            shareAllButtonContainer.style.flexWrap = 'wrap';
 
             // Get the event list element
             var eventListEl = document.getElementById('event-list');
@@ -280,28 +283,38 @@ var CalendarUI = (function() {
         // Clear previous buttons
         shareAllButtonContainer.innerHTML = '';
 
-        // Only add the share button if there are events
+        // Only add the share buttons if there are events
         if (events.length > 0) {
             // Create a button to share all events
             var shareAllButton = EventSharing.createShareButton(function() {
                 EventSharing.shareDayEvents(date, events);
             });
 
+            // Create X (Twitter) share button
+            var xShareButton = EventSharing.createXShareButton(function() {
+                EventSharing.shareEventsToX(date, events);
+            });
+
             // Add text to indicate it's for sharing all
             shareAllButton.textContent = 'この日のイベントをシェア';
 
-            // スタイルの修正 - 中央配置のためのスタイル
-            shareAllButton.style.width = '80%'; // 幅を調整
-            shareAllButton.style.maxWidth = '300px';
-            shareAllButton.style.margin = '15px auto'; // 上下のマージンと左右のautoで中央配置
-            shareAllButton.style.display = 'block'; // ブロック要素に変更して中央配置が効くようにする
+            // スタイルの修正 - 共通スタイル
+            var commonButtonStyle = {
+                width: '48%',
+                maxWidth: '220px',
+                margin: '10px 5px',
+                display: 'inline-block'
+            };
 
-            // コンテナ自体のスタイルも修正
-            shareAllButtonContainer.style.textAlign = 'center';
-            shareAllButtonContainer.style.width = '100%';
+            // シェアボタンのスタイル適用
+            Object.assign(shareAllButton.style, commonButtonStyle);
 
-            // Add the share button to the container
+            // Xボタンのスタイル適用
+            Object.assign(xShareButton.style, commonButtonStyle);
+
+            // Add the share buttons to the container
             shareAllButtonContainer.appendChild(shareAllButton);
+            shareAllButtonContainer.appendChild(xShareButton);
         }
 
         // Also add share buttons to each event in the list
@@ -367,7 +380,6 @@ var CalendarUI = (function() {
         // オーバーレイを必ず表示
         document.getElementById('overlay').style.display = 'block';
     }
-
     // Show event details
     function showEventDetails(event, displayText, eventDetailsEl) {
         var eventTitle = document.getElementById('event-title');
