@@ -36,6 +36,8 @@ function createShareButton(callback) {
     shareBtn.style.gap = '5px';
     shareBtn.style.fontSize = '14px';
     shareBtn.style.width = 'fit-content';
+    shareBtn.style.whiteSpace = 'nowrap'; // テキストが折り返さないようにする
+    shareBtn.style.minWidth = 'min-content'; // 追加: 内容の最小幅より小さくならないようにする
 
     shareBtn.addEventListener('click', callback);
 
@@ -61,6 +63,8 @@ function createXShareButton(callback) {
     xShareBtn.style.gap = '5px';
     xShareBtn.style.fontSize = '14px';
     xShareBtn.style.width = 'fit-content';
+    xShareBtn.style.whiteSpace = 'nowrap'; // テキストが折り返さないようにする
+    xShareBtn.style.minWidth = 'min-content'; // 追加: 内容の最小幅より小さくならないようにする
 
     xShareBtn.addEventListener('click', callback);
 

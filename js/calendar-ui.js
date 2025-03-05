@@ -283,6 +283,7 @@ var CalendarUI = (function() {
         // Clear previous buttons
         shareAllButtonContainer.innerHTML = '';
 
+
         // Only add the share buttons if there are events
         if (events.length > 0) {
             // Create a button to share all events
@@ -302,8 +303,15 @@ var CalendarUI = (function() {
             var commonButtonStyle = {
                 width: '48%',
                 maxWidth: '220px',
+                minWidth: 'fit-content', // より適切なfit-contentを使用
                 margin: '10px 5px',
-                display: 'inline-block'
+                display: 'inline-flex', // inline-blockからinline-flexに変更
+                alignItems: 'center',
+                justifyContent: 'center',
+                whiteSpace: 'nowrap', // テキストが折り返さないようにする
+                overflow: 'hidden', // はみ出した分は非表示
+                textOverflow: 'ellipsis', // はみ出した部分は省略記号に
+                flexShrink: 0 // 追加: ボタンが縮まないようにする
             };
 
             // シェアボタンのスタイル適用
@@ -312,11 +320,39 @@ var CalendarUI = (function() {
             // Xボタンのスタイル適用
             Object.assign(xShareButton.style, commonButtonStyle);
 
+            // SVGアイコンを再追加（テキスト設定でSVGが消えるため）
+            var shareIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            shareIcon.setAttribute('width', '16');
+            shareIcon.setAttribute('height', '16');
+            shareIcon.setAttribute('viewBox', '0 0 24 24');
+            shareIcon.setAttribute('fill', 'none');
+            shareIcon.setAttribute('stroke', 'currentColor');
+            shareIcon.setAttribute('stroke-width', '2');
+            shareIcon.setAttribute('stroke-linecap', 'round');
+            shareIcon.setAttribute('stroke-linejoin', 'round');
+            shareIcon.innerHTML = '<circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>';
+
+            // テキストノードを作成
+            var shareText = document.createTextNode(' この日のイベントをシェア');
+
+            // ボタンの中身をクリアして再構築
+            shareAllButton.innerHTML = '';
+            shareAllButton.appendChild(shareIcon);
+            shareAllButton.appendChild(shareText);
+
+            // Xボタンも同様に再構築
+            var xIcon = document.createElement('span');
+            xIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>';
+            var xText = document.createTextNode(' 投稿');
+
+            xShareButton.innerHTML = '';
+            xShareButton.appendChild(xIcon);
+            xShareButton.appendChild(xText);
+
             // Add the share buttons to the container
             shareAllButtonContainer.appendChild(shareAllButton);
             shareAllButtonContainer.appendChild(xShareButton);
         }
-
         // Also add share buttons to each event in the list
         var eventItems = document.querySelectorAll('.event-list-item');
         eventItems.forEach(function(item, index) {
