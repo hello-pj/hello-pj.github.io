@@ -1,5 +1,4 @@
 // Main script file to orchestrate calendar functionality
-// Main script file to orchestrate calendar functionality
 document.addEventListener('DOMContentLoaded', function() {
     // DOM elements
     var calendarEl = document.getElementById('calendar');
@@ -21,11 +20,17 @@ document.addEventListener('DOMContentLoaded', function() {
     var touchEndX = 0;
     var minSwipeDistance = 50; // スワイプと認識する最小距離
 
-    // Initialize application
-    initApp();
+    // Initialize application with retry mechanism
+    initAppWithRetry();
 
-    function initApp() {
-        // Load event data
+    function initAppWithRetry(retryCount = 0) {
+        // Check if calendar element is available
+        if (!calendarEl) {
+            console.error('Calendar element not found!');
+            return;
+        }
+
+        // Load event data with retry mechanism
         CalendarData.fetchEventData()
             .then(function(events) {
                 currentEvents = events;
@@ -38,6 +43,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Create group filters
                 createGroupFilters(events);
+            })
+            .catch(function(error) {
+                console.error('Error loading calendar data:', error);
+                if (retryCount < 3) {
+                    // Retry after a short delay
+                    setTimeout(function() {
+                        initAppWithRetry(retryCount + 1);
+                    }, 1000);
+                } else {
+                    // Show an error message to the user
+                    calendarEl.innerHTML = '<div style="padding: 20px; text-align: center;">カレンダーデータの読み込みに失敗しました。ページを再読み込みしてください。</div>';
+                }
             });
 
         // Setup event listeners
@@ -45,66 +62,84 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function initializeCalendar(events) {
-        calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'ja',
-            headerToolbar: {
-                left: 'title',
-                right: 'prev,next today,dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            buttonText: {
-                today: '今日',
-                month: 'M',
-                week: 'W',
-                day: 'D'
-            },
-            eventTimeFormat: {
-                hour: '2-digit',
-                minute: '2-digit',
-                meridiem: false
-            },
-            events: events.filter(function(event) {
-                return CalendarData.activeGroups.has(event.group);
-            }),
-            // モバイルモードか PC モードに応じてイベント表示をカスタマイズ
-            eventContent: function(arg) {
-                return CalendarUI.formatEventContent(arg, isMobile);
-            },
-            eventClick: function(info) {
-                handleEventClick(info);
-            },
-            // 日付セルのクリックイベント（モバイルでのみ機能）
-            dateClick: function(info) {
-                if (window.innerWidth <= 768) {
-                    var sameDay = CalendarUI.getEventsOnSameDay(info.date, currentEvents);
-                    CalendarUI.showEventList(info.date, sameDay, eventListContainer);
-                }
-            },
-            views: {
-                // 週表示のカスタマイズ
-                timeGridWeek: {
-                    // 週表示のときのタイトルフォーマットをカスタマイズ
-                    titleFormat: { year: 'numeric', month: 'long' },
-                    // カスタムの日付ヘッダー内容
-                    dayHeaderContent: function(args) {
-                        return CalendarUI.formatDayHeader(args);
+        try {
+            // Make sure FullCalendar is available
+            if (typeof FullCalendar === 'undefined') {
+                throw new Error('FullCalendar library not loaded');
+            }
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'ja',
+                headerToolbar: {
+                    left: 'title',
+                    right: 'prev,next today,dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText: {
+                    today: '今日',
+                    month: 'M',
+                    week: 'W',
+                    day: 'D'
+                },
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    meridiem: false
+                },
+                events: events.filter(function(event) {
+                    return CalendarData.activeGroups.has(event.group);
+                }),
+                // モバイルモードか PC モードに応じてイベント表示をカスタマイズ
+                eventContent: function(arg) {
+                    return CalendarUI.formatEventContent(arg, isMobile);
+                },
+                eventClick: function(info) {
+                    handleEventClick(info);
+                },
+                // 日付セルのクリックイベント（モバイルでのみ機能）
+                dateClick: function(info) {
+                    if (window.innerWidth <= 768) {
+                        var sameDay = CalendarUI.getEventsOnSameDay(info.date, currentEvents);
+                        CalendarUI.showEventList(info.date, sameDay, eventListContainer);
                     }
                 },
-                // 日表示のカスタマイズ
-                timeGridDay: {
-                    // 日表示のときのタイトルフォーマットをカスタマイズ
-                    titleFormat: { year: 'numeric', month: 'long' },
-                    // 日表示の曜日ヘッダーを非表示にする（後でカスタムヘッダーを追加するため）
-                    dayHeaderFormat: { weekday: 'short' },
-                    // カスタムの日付ヘッダー内容
-                    dayHeaderContent: function(args) {
-                        return CalendarUI.formatDayHeader(args);
+                views: {
+                    // 週表示のカスタマイズ
+                    timeGridWeek: {
+                        // 週表示のときのタイトルフォーマットをカスタマイズ
+                        titleFormat: { year: 'numeric', month: 'long' },
+                        // カスタムの日付ヘッダー内容
+                        dayHeaderContent: function(args) {
+                            return CalendarUI.formatDayHeader(args);
+                        }
+                    },
+                    // 日表示のカスタマイズ
+                    timeGridDay: {
+                        // 日表示のときのタイトルフォーマットをカスタマイズ
+                        titleFormat: { year: 'numeric', month: 'long' },
+                        // 日表示の曜日ヘッダーを非表示にする（後でカスタムヘッダーを追加するため）
+                        dayHeaderFormat: { weekday: 'short' },
+                        // カスタムの日付ヘッダー内容
+                        dayHeaderContent: function(args) {
+                            return CalendarUI.formatDayHeader(args);
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        calendar.render();
+            calendar.render();
+            console.log('Calendar successfully rendered');
+
+            // Hide loading indicator if it exists
+            var loadingIndicator = document.getElementById('calendar-loading');
+            if (loadingIndicator) {
+                loadingIndicator.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error initializing calendar:', error);
+            // Show error message in calendar container
+            calendarEl.innerHTML = '<div style="padding: 20px; text-align: center;">カレンダーの初期化に失敗しました。ページを再読み込みしてください。</div>';
+        }
     }
 
     function handleEventClick(info) {
@@ -132,38 +167,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function setupEventListeners() {
         // Close buttons
-        document.getElementById('close-details').addEventListener('click', function() {
-            eventDetails.classList.remove('show');
+        var closeDetailsBtn = document.getElementById('close-details');
+        if (closeDetailsBtn) {
+            closeDetailsBtn.addEventListener('click', function() {
+                eventDetails.classList.remove('show');
 
-            // イベントリストから開かれた場合、リストに戻る
-            if (window.detailOpenedFromList && window.innerWidth <= 768) {
-                eventListContainer.classList.add('show');
-                // オーバーレイは表示したまま
-            } else {
+                // イベントリストから開かれた場合、リストに戻る
+                if (window.detailOpenedFromList && window.innerWidth <= 768) {
+                    eventListContainer.classList.add('show');
+                    // オーバーレイは表示したまま
+                } else {
+                    overlay.style.display = 'none';
+                }
+
+                // フラグをリセット
+                window.detailOpenedFromList = false;
+            });
+        }
+
+        var closeEventListBtn = document.getElementById('close-event-list');
+        if (closeEventListBtn) {
+            closeEventListBtn.addEventListener('click', function() {
+                eventListContainer.classList.remove('show');
                 overlay.style.display = 'none';
-            }
-
-            // フラグをリセット
-            window.detailOpenedFromList = false;
-        });
-
-        document.getElementById('close-event-list').addEventListener('click', function() {
-            eventListContainer.classList.remove('show');
-            overlay.style.display = 'none';
-            // フラグをリセット
-            window.detailOpenedFromList = false;
-        });
+                // フラグをリセット
+                window.detailOpenedFromList = false;
+            });
+        }
 
         // Overlay click
-        overlay.addEventListener('click', function() {
-            // 詳細パネルとイベントリストを閉じる
-            eventDetails.classList.remove('show');
-            eventListContainer.classList.remove('show');
-            // オーバーレイを非表示
-            overlay.style.display = 'none';
-            // フラグをリセット
-            window.detailOpenedFromList = false;
-        });
+        if (overlay) {
+            overlay.addEventListener('click', function() {
+                // 詳細パネルとイベントリストを閉じる
+                eventDetails.classList.remove('show');
+                eventListContainer.classList.remove('show');
+                // オーバーレイを非表示
+                overlay.style.display = 'none';
+                // フラグをリセット
+                window.detailOpenedFromList = false;
+            });
+        }
 
         // Window resize
         window.addEventListener('resize', debounce(function() {

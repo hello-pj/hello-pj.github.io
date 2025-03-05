@@ -50,24 +50,17 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="H!P カレンダー">
     <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+
     <!-- メタディスクリプションの改善 -->
     <meta name="description" content="ハロー！プロジェクトの最新イベントカレンダー。モーニング娘。'25、アンジュルム、Juice=Juice、つばきファクトリーなど全グループのコンサート日程、リリースイベント情報を網羅。グループ別にフィルタリングも可能。">
 
     <!-- キャノニカルURL -->
     <link rel="canonical" href="https://hello-pj.github.io/calendar">
 
-    <!-- 日付ベースのキャッシュバスト用変数 -->
-    <script>
-        // 日付ベースのキャッシュバスト用変数をページに追加
-        window.cacheBuster = '?v=' + new Date().toISOString().slice(0, 10);
-    </script>
-
-    <!-- CSS読み込み - キャッシュバスター追加 -->
-    <script>
-        document.write('<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">');
-        document.write('<link rel="stylesheet" href="common.css' + window.cacheBuster + '">');
-        document.write('<link rel="stylesheet" href="calendar.css' + window.cacheBuster + '">');
-    </script>
+    <!-- 直接CSSを読み込み、キャッシュの問題を防ぐ -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="calendar.css">
 </head>
 
 <body>
@@ -78,7 +71,13 @@
     <div id="group-filters"></div>
     <div id="container">
         <div id="calendar-container">
-            <div id="calendar"></div>
+            <div id="calendar">
+                <!-- ローディングインジケーター -->
+                <div id="calendar-loading" style="display: flex; justify-content: center; align-items: center; height: 300px; flex-direction: column;">
+                    <div style="border: 4px solid #f3f3f3; border-top: 4px solid #0073e6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px;"></div>
+                    <div>カレンダーを読み込み中...</div>
+                </div>
+            </div>
         </div>
         <!-- イベント詳細パネル部分 -->
         <div id="event-details">
@@ -122,16 +121,26 @@
         </div>
     </div>
 
-    <!-- スクリプト読み込み - キャッシュバスター追加 -->
+    <!-- スタイルをページ内に追加 -->
+    <style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <!-- スクリプト読み込み - 直接読み込み -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
-    <script>
-        document.write('<script src="js/calendar-data.js' + window.cacheBuster + '"><\/script>');
-        document.write('<script src="js/event-sharing.js' + window.cacheBuster + '"><\/script>'); // 新しい行
-        document.write('<script src="js/calendar-ui.js' + window.cacheBuster + '"><\/script>');
-        document.write('<script src="js/calendar-main.js' + window.cacheBuster + '"><\/script>');
-        document.write('<script src="/pwa-register.js' + window.cacheBuster + '"><\/script>');
-        document.write('<script src="/install-banner.js' + window.cacheBuster + '"><\/script>');
-    </script>
+    <script src="js/calendar-data.js"></script>
+    <script src="js/event-sharing.js"></script>
+    <script src="js/calendar-ui.js"></script>
+    <script src="js/calendar-main.js"></script>
+    <script src="/pwa-register.js"></script>
+    <script src="/install-banner.js"></script>
 
     <!-- オフライン状態を検知するスクリプト -->
     <script>
@@ -150,6 +159,24 @@
 
         // 初期チェック
         document.addEventListener('DOMContentLoaded', updateOnlineStatus);
+
+        // カレンダーロード完了時にローディングを非表示
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarLoadingElem = document.getElementById('calendar-loading');
+            if (calendarLoadingElem) {
+                // カレンダーが正常に読み込まれたらローディングを非表示
+                setTimeout(function() {
+                    if (document.querySelector('.fc')) {
+                        calendarLoadingElem.style.display = 'none';
+                    }
+                }, 1000);
+
+                // 時間がかかり過ぎる場合はタイムアウトで非表示
+                setTimeout(function() {
+                    calendarLoadingElem.style.display = 'none';
+                }, 5000);
+            }
+        });
     </script>
 </body>
 
