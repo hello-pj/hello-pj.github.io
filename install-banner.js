@@ -7,7 +7,7 @@
     const bannerHTML = `
       <div id="pwa-install-banner" style="position: fixed; bottom: 0; left: 0; right: 0; background-color: #0073e6; color: white; padding: 12px; display: flex; justify-content: space-between; align-items: center; z-index: 9999; font-family: Arial, sans-serif; box-shadow: 0 -2px 10px rgba(0,0,0,0.2);">
         <div style="flex: 1;">
-          <div style="font-weight: bold; margin-bottom: 4px;">Hello! Projectカレンダーアプリをインストール</div>
+          <div style="font-weight: bold; margin-bottom: 4px;">ハロプロイベントカレンダーアプリをインストール！</div>
           <div style="font-size: 0.9em;">インストールするとホーム画面に追加してアプリとして使用できます</div>
         </div>
         <div>
