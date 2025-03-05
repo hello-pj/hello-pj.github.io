@@ -575,3 +575,43 @@ body {
     flex: 1;
     padding-right: 5px;
 }
+
+
+/* ヘッダーツールバーが常に表示されるようにし、折りたたまれないようにする */
+
+.fc .fc-toolbar.fc-header-toolbar {
+    margin: 0.2em !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 5 !important;
+}
+
+
+/* ヘッダー内のすべてのボタンと要素が表示されるようにする */
+
+.fc-header-toolbar .fc-toolbar-chunk,
+.fc-header-toolbar .fc-button-group,
+.fc-header-toolbar .fc-button,
+.fc-header-toolbar .fc-toolbar-title {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+
+/* コンテンツが重ならないようにパディングを追加 */
+
+#calendar-container {
+    padding-top: 10px;
+}
+
+
+/* ツールバーが目立つように白い背景を設定 */
+
+.fc-header-toolbar {
+    background-color: white;
+    padding: 5px !important;
+    border-radius: 4px;
+}

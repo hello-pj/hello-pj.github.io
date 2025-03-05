@@ -530,4 +530,89 @@ document.addEventListener('DOMContentLoaded', function() {
             timeout = setTimeout(func, wait);
         };
     }
+
+    // Function to ensure header toolbar visibility
+    function ensureHeaderVisibility() {
+        // Select the header toolbar element
+        const headerToolbar = document.querySelector('.fc-header-toolbar');
+
+        if (headerToolbar) {
+            // Make sure it's visible
+            headerToolbar.style.display = '';
+            headerToolbar.style.visibility = 'visible';
+            headerToolbar.style.opacity = '1';
+
+            // Also check individual button containers
+            const buttonContainers = headerToolbar.querySelectorAll('.fc-button-group, .fc-today-button, .fc-toolbar-title');
+            buttonContainers.forEach(container => {
+                container.style.display = '';
+                container.style.visibility = 'visible';
+                container.style.opacity = '1';
+            });
+        }
+    }
+
+    // Run the function periodically to ensure buttons remain visible
+    setInterval(ensureHeaderVisibility, 2000);
+
+    // Also run when window is resized or calendar view changes
+    window.addEventListener('resize', ensureHeaderVisibility);
+
+    // 修正: FullCalendarのイベントリスナーの正しい使用法
+    // calendar.onはFullCalendar 5で動作しない場合があります
+    if (typeof calendar !== 'undefined') {
+        try {
+            // 以前のバージョンのFullCalendarではこれを使用
+            if (typeof calendar.on === 'function') {
+                calendar.on('viewSkeletonRender', ensureHeaderVisibility);
+            }
+            // FullCalendar 5ではこの方法を試してみる
+            else if (typeof calendar.getOption === 'function') {
+                calendar.setOption('viewDidMount', ensureHeaderVisibility);
+                calendar.setOption('datesSet', ensureHeaderVisibility);
+            }
+        } catch (e) {
+            console.log('カレンダーイベントリスナーの設定中にエラーが発生しました:', e);
+        }
+    }
+
+    // Additionally, add a mutation observer to detect DOM changes that might affect visibility
+    const observeHeaderChanges = () => {
+        const headerToolbar = document.querySelector('.fc-header-toolbar');
+        if (headerToolbar) {
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    if (mutation.type === 'attributes' &&
+                        (mutation.attributeName === 'style' ||
+                            mutation.attributeName === 'class')) {
+                        ensureHeaderVisibility();
+                    }
+                });
+            });
+
+            observer.observe(headerToolbar, {
+                attributes: true,
+                subtree: true,
+                childList: true
+            });
+        }
+    };
+
+    // Start observing after calendar is fully loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        // Wait a short delay to ensure calendar is rendered
+        setTimeout(() => {
+            observeHeaderChanges();
+            ensureHeaderVisibility();
+
+            // 直接カレンダービューの変更イベントをドキュメントレベルで監視
+            document.addEventListener('click', function(e) {
+                // ツールバーボタンがクリックされた場合
+                if (e.target.closest('.fc-button')) {
+                    // ボタンクリック後にヘッダーの可視性を確認
+                    setTimeout(ensureHeaderVisibility, 100);
+                }
+            });
+        }, 1000);
+    });
 });
