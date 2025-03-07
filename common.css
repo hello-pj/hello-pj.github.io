@@ -31,6 +31,12 @@ body {
     display: none;
 }
 
+.ad-banner img {
+    /* 枠線を追加 */
+    border: 1px solid #e0e0e0;
+    box-sizing: border-box;
+}
+
 
 /* モバイル画面用の表示切替 */
 
@@ -44,5 +50,52 @@ body {
     /* モバイル表示時に広告の下に余白を追加 */
     body {
         padding-bottom: 60px;
+    }
+}
+
+
+/* 広告ローテーション用スタイル */
+
+.ad-slider {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    /* 広告の高さを明示的に指定 */
+    overflow: hidden;
+}
+
+.ad-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+
+/* 初期状態でも最初の広告は表示 */
+
+.ad-slide:first-child {
+    opacity: 1;
+    z-index: 1;
+}
+
+.ad-slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+
+/* スマホ表示のときの高さ調整 */
+
+@media (max-width: 767px) {
+    .ad-slider {
+        height: 50px;
+        /* モバイルバナーの高さに合わせる */
     }
 }

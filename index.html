@@ -221,18 +221,45 @@
 
     <!-- A8.net広告バナー（固定表示） -->
     <div id="ad-container">
-        <!-- PC用バナー (468x60) -->
-        <div class="ad-banner ad-pc">
-            <a href="https://px.a8.net/svt/ejp?a8mat=450UJF+4M3YK2+3HXW+NV9N5" rel="nofollow">
-                <img border="0" width="468" height="60" alt="" src="https://www29.a8.net/svt/bgt?aid=250302363279&wid=001&eno=01&mid=s00000016322004009000&mc=1"></a>
-            <img border="0" width="1" height="1" src="https://www19.a8.net/0.gif?a8mat=450UJF+4M3YK2+3HXW+NV9N5" alt="">
-        </div>
+        <!-- 広告スライドコンテナ -->
+        <div class="ad-slider">
+            <!-- 広告セット1: 既存広告 -->
+            <div class="ad-slide active">
+                <!-- PC用バナー (468x60) -->
+                <div class="ad-banner ad-pc">
+                    <a href="https://px.a8.net/svt/ejp?a8mat=450UJF+4M3YK2+3HXW+NV9N5" rel="nofollow">
+                        <img border="0" width="468" height="60" alt="" src="https://www29.a8.net/svt/bgt?aid=250302363279&wid=001&eno=01&mid=s00000016322004009000&mc=1">
+                    </a>
+                    <img border="0" width="1" height="1" src="https://www19.a8.net/0.gif?a8mat=450UJF+4M3YK2+3HXW+NV9N5" alt="">
+                </div>
 
-        <!-- モバイル用バナー (320x50) -->
-        <div class="ad-banner ad-mobile">
-            <a href="https://px.a8.net/svt/ejp?a8mat=450UJF+4M3YK2+3HXW+NUMHT" rel="nofollow">
-                <img border="0" width="320" height="50" alt="" src="https://www29.a8.net/svt/bgt?aid=250302363279&wid=001&eno=01&mid=s00000016322004006000&mc=1"></a>
-            <img border="0" width="1" height="1" src="https://www11.a8.net/0.gif?a8mat=450UJF+4M3YK2+3HXW+NUMHT" alt="">
+                <!-- モバイル用バナー (320x50) -->
+                <div class="ad-banner ad-mobile">
+                    <a href="https://px.a8.net/svt/ejp?a8mat=450UJF+4M3YK2+3HXW+NUMHT" rel="nofollow">
+                        <img border="0" width="320" height="50" alt="" src="https://www29.a8.net/svt/bgt?aid=250302363279&wid=001&eno=01&mid=s00000016322004006000&mc=1">
+                    </a>
+                    <img border="0" width="1" height="1" src="https://www11.a8.net/0.gif?a8mat=450UJF+4M3YK2+3HXW+NUMHT" alt="">
+                </div>
+            </div>
+
+            <!-- 広告セット2: メルカリ広告 -->
+            <div class="ad-slide">
+                <!-- PC向けバナー -->
+                <div class="ad-banner ad-pc">
+                    <a href="https://px.a8.net/svt/ejp?a8mat=450YF7+5VYC4Y+5LNQ+BW8O2&a8ejpredirect=https%3A%2F%2Fjp.mercari.com%2F" target="_blank" rel="nofollow">
+                        <img src="img/mercari-banner-pc.png" alt="メルカリでハロプログッズを探す" width="468" height="60">
+                        <img border="0" width="1" height="1" src="https://www15.a8.net/0.gif?a8mat=450YF7+5VYC4Y+5LNQ+BW8O2" alt="">
+                    </a>
+                </div>
+
+                <!-- スマホ向けバナー -->
+                <div class="ad-banner ad-mobile">
+                    <a href="https://px.a8.net/svt/ejp?a8mat=450YF7+5VYC4Y+5LNQ+BW8O2&a8ejpredirect=https%3A%2F%2Fjp.mercari.com%2F" target="_blank" rel="nofollow">
+                        <img src="img/mercari-banner-mobile.png" alt="メルカリでハロプログッズを探す" width="320" height="50">
+                        <img border="0" width="1" height="1" src="https://www15.a8.net/0.gif?a8mat=450YF7+5VYC4Y+5LNQ+BW8O2" alt="">
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -240,6 +267,7 @@
     <script>
         document.write('<script src="/pwa-register.js' + window.cacheBuster + '"><\/script>');
         document.write('<script src="/install-banner.js' + window.cacheBuster + '"><\/script>');
+        document.write('<script src="/js/ad-rotation.js' + window.cacheBuster + '"><\/script>');
     </script>
 </body>
 
