@@ -23,7 +23,7 @@
     <meta http-equiv="Expires" content="0">
 
     <!-- SEO向上のためのタイトルタグ改善 -->
-    <title>ハロプロイベントカレンダー</title>
+    <title>ハロプロイベントカレンダー | グループ別最新ライブ・コンサート情報</title>
 
     <!-- 追加メタタグ -->
     <meta name="keywords" content="ハロプロ,Hello! Project,ハロープロジェクト,モーニング娘。,アンジュルム,イベント,ライブ,カレンダー,2025年,コンサート,リリースイベント">
@@ -52,8 +52,7 @@
     <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
 
     <!-- メタディスクリプションの改善 -->
-    <meta name="description" content="ハロー！プロジェクトの最新イベントカレンダー。モーニング娘。'25、アンジュルム、Juice=Juice、つばきファクトリーなど全グループのコンサート日程、リリースイベント情報を網羅。グループ別にフィルタリングも可能。">
-
+    <meta name="description" content="モーニング娘。'25、アンジュルム、Juice=Juice、つばきファクトリー、BEYOOOOONDS、OCHA NORMAなどハロー！プロジェクトの最新ライブ・コンサートスケジュールを一覧表示。公演日程、会場情報、リリースイベントなど最新情報を網羅。グループ別にフィルタリングも可能。">
     <!-- キャノニカルURL -->
     <link rel="canonical" href="https://hello-pj.github.io/calendar">
 
@@ -68,7 +67,16 @@
         <a href="index.html" style="color: white; text-decoration: none;">HELLO!PROJECTイベントカレンダー</a>
     </div>
     <div id="overlay"></div>
-    <div id="group-filters"></div>
+    <div id="group-filters">
+        <div id="help-button" class="group-filter help-filter">?</div>
+    </div>
+    <!-- ポップアップ説明用のモーダル -->
+    <div id="help-modal" class="help-modal">
+        <div class="help-modal-content">
+            <span class="help-close">&times;</span>
+            <p>ハロー！プロジェクト所属の各グループ（モーニング娘。'25、アンジュルム、Juice=Juice、つばきファクトリー、BEYOOOOONDS、OCHA NORMA、ロージークロニクル、ハロプロ研修生）の最新ライブ・コンサートスケジュールをカレンダー形式で確認できます。グループ別のフィルターボタンで、特定のグループの予定だけを表示することができます。</p>
+        </div>
+    </div>
     <div id="container">
         <div id="calendar-container">
             <div id="calendar">

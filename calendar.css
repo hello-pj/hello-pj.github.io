@@ -44,6 +44,8 @@ body {
     height: auto;
     min-height: 40px;
     white-space: nowrap;
+    justify-content: flex-start;
+    /* 左揃えを明示的に指定 */
 }
 
 
@@ -614,4 +616,85 @@ body {
     background-color: white;
     padding: 5px !important;
     border-radius: 4px;
+}
+
+
+/* ヘルプボタンのスタイル */
+
+.help-filter {
+    background-color: #f8f8f8 !important;
+    /* 背景色と同じ色 */
+    color: #666 !important;
+    /* 「？」の色 */
+    font-weight: normal;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50% !important;
+    border: 1px solid #666 !important;
+    /* 細い外枠 */
+    padding: 0 !important;
+    margin: 3px 5px !important;
+    /* 他のボタンと同じマージンに設定 */
+    box-sizing: border-box;
+    position: relative;
+    top: 0;
+    /* 上下の位置調整を解除 */
+}
+
+
+/* モーダルの基本スタイル */
+
+.help-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.help-modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.help-close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.help-close:hover,
+.help-close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+
+/* モバイル用調整 */
+
+@media (max-width: 767px) {
+    .help-modal-content {
+        margin: 30% auto;
+        width: 90%;
+        padding: 15px;
+    }
 }

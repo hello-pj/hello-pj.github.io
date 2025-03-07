@@ -501,6 +501,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function createGroupFilters(events) {
+        // 既存のヘルプボタンがあれば削除
+        var existingHelpButton = document.getElementById('help-button');
+        if (existingHelpButton) {
+            existingHelpButton.parentNode.removeChild(existingHelpButton);
+        }
+
+        // 既存のモーダルがあれば削除
+        var existingModal = document.getElementById('help-modal');
+        if (existingModal) {
+            existingModal.parentNode.removeChild(existingModal);
+        }
+
+        // グループフィルターをクリア
+        groupFiltersContainer.innerHTML = '';
+
+        // グループフィルターを作成
         Object.keys(CalendarData.groupColors).forEach(function(group) {
             var button = document.createElement('div');
             button.classList.add('group-filter', 'active');
@@ -520,6 +536,96 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             groupFiltersContainer.appendChild(button);
         });
+
+        // ヘルプボタンを追加
+        var helpButton = document.createElement('div');
+        helpButton.id = 'help-button';
+        helpButton.classList.add('group-filter');
+        helpButton.textContent = '?';
+
+        // スタイル調整
+        helpButton.style.backgroundColor = '#f8f8f8';
+        helpButton.style.color = '#666';
+        helpButton.style.border = '1px solid #666';
+        helpButton.style.borderRadius = '50%';
+        helpButton.style.width = '24px';
+        helpButton.style.height = '24px';
+        helpButton.style.minWidth = '24px';
+        helpButton.style.maxWidth = '24px';
+        helpButton.style.padding = '0';
+        helpButton.style.lineHeight = '24px';
+        helpButton.style.textAlign = 'center';
+        helpButton.style.display = 'flex';
+        helpButton.style.alignItems = 'center';
+        helpButton.style.justifyContent = 'center';
+        helpButton.style.boxSizing = 'border-box';
+        helpButton.style.margin = '3px 5px';
+        helpButton.style.cursor = 'pointer';
+
+        helpButton.onclick = function(e) {
+            e.stopPropagation();
+            showHelpModal();
+        };
+
+        groupFiltersContainer.appendChild(helpButton);
+
+        // ヘルプモーダルの作成・表示関数
+        function showHelpModal() {
+            var helpModal = document.getElementById('help-modal');
+            if (!helpModal) {
+                helpModal = document.createElement('div');
+                helpModal.id = 'help-modal';
+                helpModal.style.display = 'none';
+                helpModal.style.position = 'fixed';
+                helpModal.style.zIndex = '2000';
+                helpModal.style.left = '0';
+                helpModal.style.top = '0';
+                helpModal.style.width = '100%';
+                helpModal.style.height = '100%';
+                helpModal.style.backgroundColor = 'rgba(0,0,0,0.4)';
+
+                var modalContent = document.createElement('div');
+                modalContent.style.backgroundColor = '#fefefe';
+                modalContent.style.margin = '15% auto';
+                modalContent.style.padding = '20px';
+                modalContent.style.border = '1px solid #888';
+                modalContent.style.width = '80%';
+                modalContent.style.maxWidth = '600px';
+                modalContent.style.borderRadius = '8px';
+                modalContent.style.position = 'relative';
+
+                var closeButton = document.createElement('span');
+                closeButton.innerHTML = '&times;';
+                closeButton.style.color = '#aaa';
+                closeButton.style.position = 'absolute';
+                closeButton.style.top = '10px';
+                closeButton.style.right = '15px';
+                closeButton.style.fontSize = '28px';
+                closeButton.style.fontWeight = 'bold';
+                closeButton.style.cursor = 'pointer';
+
+                closeButton.onclick = function() {
+                    helpModal.style.display = 'none';
+                };
+
+                var helpText = document.createElement('p');
+                helpText.textContent = 'ハロー！プロジェクト所属の各グループ（モーニング娘。\'25、アンジュルム、Juice=Juice、つばきファクトリー、BEYOOOOONDS、OCHA NORMA、ロージークロニクル、ハロプロ研修生）の最新ライブ・コンサートスケジュールをカレンダー形式で確認できます。グループ別のフィルターボタンで、特定のグループの予定だけを表示することができます。';
+
+                modalContent.appendChild(closeButton);
+                modalContent.appendChild(helpText);
+                helpModal.appendChild(modalContent);
+                document.body.appendChild(helpModal);
+
+                // モーダル外クリックで閉じる
+                helpModal.onclick = function(event) {
+                    if (event.target == helpModal) {
+                        helpModal.style.display = 'none';
+                    }
+                };
+            }
+
+            helpModal.style.display = 'block';
+        }
     }
 
     // デバウンス関数（ウィンドウリサイズイベントの連続発火を防止）
