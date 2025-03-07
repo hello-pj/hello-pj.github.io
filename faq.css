@@ -1,0 +1,186 @@
+/* FAQ専用スタイル */
+
+body {
+    font-family: Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #0073e6;
+    color: #ffffff;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 60px;
+}
+
+.faq-item {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-question {
+    color: #0073e6;
+    font-size: 1.25em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    position: relative;
+    padding-left: 30px;
+}
+
+.faq-question::before {
+    content: "Q:";
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: bold;
+    color: #0073e6;
+}
+
+.faq-answer {
+    padding-left: 30px;
+    position: relative;
+}
+
+.faq-answer::before {
+    content: "A:";
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: bold;
+    color: #333;
+}
+
+.nav-buttons {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.nav-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #0073e6;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 0 10px;
+    transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+    background-color: #005bb8;
+}
+
+
+/* レスポンシブ調整 */
+
+@media (max-width: 768px) {
+    .header {
+        padding: 40px 15px;
+    }
+    .header h1 {
+        font-size: 2rem;
+    }
+    .container {
+        padding: 15px;
+        margin: 0 15px 60px 15px;
+    }
+    .faq-question {
+        font-size: 1.1em;
+    }
+}
+
+
+/* カレンダーボタン（ナビゲーション用） */
+
+.calendar-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    background-color: #FF0066;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: white;
+    border: 2px solid white;
+    text-decoration: none;
+}
+
+.calendar-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.calendar-button svg {
+    width: 30px;
+    height: 30px;
+    stroke: white;
+    stroke-width: 2;
+    margin-bottom: 2px;
+}
+
+.calendar-button span {
+    font-size: 10px;
+    font-weight: bold;
+    margin-top: 1px;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+
+/* モバイル調整 */
+
+@media (max-width: 768px) {
+    .calendar-button {
+        width: 70px;
+        height: 70px;
+        top: 15px;
+        right: 15px;
+    }
+    .calendar-button svg {
+        width: 26px;
+        height: 26px;
+    }
+    .calendar-button span {
+        font-size: 9px;
+    }
+}
