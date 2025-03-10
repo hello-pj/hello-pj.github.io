@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja" class="beyooooonds">
+
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9301479849999305" crossorigin="anonymous"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-X9FTGD7R7B"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'G-X9FTGD7R7B');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- キャッシュ制御 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <!-- SEO向上のためのタイトルタグ改善 -->
+    <title>BEYOOOOONDS | ハロプロメンバー紹介</title>
+
+    <!-- メタディスクリプションの改善 -->
+    <meta name="description" content="BEYOOOOONDS のメンバープロフィール、誕生日、血液型、出身地など詳細情報。ハロー！プロジェクトを代表する人気アイドルグループのメンバー一覧。">
+
+    <!-- 追加メタタグ -->
+    <meta name="keywords" content="ハロプロ,Hello! Project,ハロープロジェクト,BEYOOOOONDS,メンバー,プロフィール,検索">
+    <meta name="author" content="Hello! Project Fan Calendar">
+    <meta property="og:title" content="BEYOOOOONDS | メンバー紹介">
+    <meta property="og:description" content="BEYOOOOONDSのメンバー詳細情報。プロフィール、誕生日、血液型、出身地など。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hello-pj.github.io/groups/beyooooonds">
+    <meta property="og:image" content="https://hello-pj.github.io/img/beyooooonds_image.jpg">
+    <meta property="og:site_name" content="H!P カレンダー">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BEYOOOOONDS | メンバー紹介">
+    <meta name="twitter:description" content="BEYOOOOONDSのメンバー詳細情報。プロフィール、誕生日、血液型、出身地など。">
+    <meta name="twitter:image" content="https://hello-pj.github.io/img/beyooooonds_image.jpg">
+
+    <!-- PWA関連追加 -->
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#249849">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="H!P カレンダー">
+    <link rel="apple-touch-icon" href="../icons/icon-152x152.png">
+
+    <!-- キャノニカルURL -->
+    <link rel="canonical" href="https://hello-pj.github.io/groups/beyooooonds">
+
+    <!-- CSS読み込み - パスを修正 -->
+    <link rel="stylesheet" href="../common.css">
+    <link rel="stylesheet" href="../members.css">
+    <link rel="stylesheet" href="../group-pages.css">
+</head>
+
+<body class="beyooooonds">
+    <div id="header">
+        <a href="../index.html" style="color: white; text-decoration: none;">BEYOOOOONDS</a>
+    </div>
+
+    <!-- カレンダーへのショートカットボタン -->
+    <a href="../calendar" class="calendar-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span>カレンダー</span>
+    </a>
+
+    <!-- グループヘッダー -->
+    <div class="group-header">
+        <h1>BEYOOOOONDS</h1>
+        <p>2018年に結成された、若さとエネルギーあふれるハロー！プロジェクトのアイドルグループ。独特の世界観とキャラクター性で注目を集めています。</p>
+    </div>
+
+    <!-- グループ画像 -->
+    <img src="../img/beyooooonds_image.jpg" alt="BEYOOOOONDS" class="group-image">
+
+    <!-- ナビゲーションボタン -->
+    <div class="nav-container">
+        <a href="../index.html" class="back-button home-btn">TOPに戻る</a>
+        <a href="../members.html" class="back-button members-btn">全メンバー一覧</a>
+    </div>
+
+    <!-- 検索結果カウントと読み込み中表示 -->
+    <div class="search-status">
+        <p id="result-count">メンバー情報を読み込み中...</p>
+        <div id="loading-spinner" class="spinner"></div>
+    </div>
+
+    <!-- メンバーカード表示エリア -->
+    <div id="members-container" class="members-grid"></div>
+
+    <!-- メンバー詳細モーダル -->
+    <div id="member-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <div class="modal-img-container">
+                    <img id="modal-image" src="" alt="">
+                    <div id="modal-color-tag"></div>
+                </div>
+                <div class="modal-info">
+                    <h2 id="modal-name"></h2>
+                    <p id="modal-name-reading"></p>
+                    <p id="modal-group"></p>
+                    <div class="modal-details">
+                        <div class="detail-item">
+                            <span class="detail-label">誕生日:</span>
+                            <span id="modal-birthday"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">血液型:</span>
+                            <span id="modal-blood"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">出身地:</span>
+                            <span id="modal-prefecture"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">メンバーカラー:</span>
+                            <span id="modal-color-name"></span>
+                        </div>
+                    </div>
+                    <div class="modal-links">
+                        <a id="modal-blog" href="#" target="_blank" class="modal-link blog-link">ブログ</a>
+                        <a id="modal-instagram" href="#" target="_blank" class="modal-link instagram-link">Instagram</a>
+                        <a id="modal-profile" href="#" target="_blank" class="modal-link profile-link">公式プロフィール</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p class="footer-title">ハロー！プロジェクト非公式ファンサイト</p>
+            <p class="footer-subtitle">メンバー情報・イベント情報カレンダー</p>
+            <div class="footer-groups">
+                <span>モーニング娘。'25</span>
+                <span>アンジュルム</span>
+                <span>Juice=Juice</span>
+                <span>つばきファクトリー</span>
+                <span>BEYOOOOONDS</span>
+                <span>OCHA NORMA</span>
+                <span>ロージークロニクル</span>
+                <span>ハロプロ研修生</span>
+            </div>
+            <p class="footer-update">2025年最新情報随時更新中</p>
+            <div class="footer-links" style="margin-top: 10px;">
+                <a href="../faq" style="color: #0073e6; text-decoration: none; margin: 0 5px;">よくある質問</a>
+                <a href="../calendar" style="color: #0073e6; text-decoration: none; margin: 0 5px;">イベントカレンダー</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- A8.net広告バナー（固定表示） -->
+    <div id="ad-container">
+        <!-- 広告スライドコンテナ -->
+        <div class="ad-slider">
+            <!-- 広告セット1: 既存広告 -->
+            <div class="ad-slide active">
+                <!-- PC用バナー (468x60) -->
+                <div class="ad-banner ad-pc">
+                    <a href="https://px.a8.net/svt/ejp?a8mat=450UJF+4M3YK2+3HXW+NV9N5" rel="nofollow">
+                        <img border="0" width="468" height="60" alt="" src="https://www29.a8.net/svt/bgt?aid=250302363279&wid=001&eno=01&mid=s00000016322004009000&mc=1">
+                    </a>
+                    <img border="0" width="1" height="1" src="https://www19.a8.net/0.gif?a8mat=450UJF+4M3YK2+3HXW+NV9N5" alt="">
+                </div>
+
+                <!-- モバイル用バナー (320x50) -->
+                <div class="ad-banner ad-mobile">
+                    <a href="https://px.a8.net/svt/ejp?a8mat=450UJF+4M3YK2+3HXW+NUMHT" rel="nofollow">
+                        <img border="0" width="320" height="50" alt="" src="https://www29.a8.net/svt/bgt?aid=250302363279&wid=001&eno=01&mid=s00000016322004006000&mc=1">
+                    </a>
+                    <img border="0" width="1" height="1" src="https://www11.a8.net/0.gif?a8mat=450UJF+4M3YK2+3HXW+NUMHT" alt="">
+                </div>
+            </div>
+
+            <!-- 広告セット2: メルカリ広告 -->
+            <div class="ad-slide">
+                <!-- PC向けバナー -->
+                <div class="ad-banner ad-pc">
+                    <a href="https://px.a8.net/svt/ejp?a8mat=450YF7+5VYC4Y+5LNQ+BW8O2&a8ejpredirect=https%3A%2F%2Fjp.mercari.com%2F" target="_blank" rel="nofollow">
+                        <img src="../img/mercari-banner-pc.png" alt="メルカリでハロプログッズを探す" width="468" height="60">
+                        <img border="0" width="1" height="1" src="https://www15.a8.net/0.gif?a8mat=450YF7+5VYC4Y+5LNQ+BW8O2" alt="">
+                    </a>
+                </div>
+
+                <!-- スマホ向けバナー -->
+                <div class="ad-banner ad-mobile">
+                    <a href="https://px.a8.net/svt/ejp?a8mat=450YF7+5VYC4Y+5LNQ+BW8O2&a8ejpredirect=https%3A%2F%2Fjp.mercari.com%2F" target="_blank" rel="nofollow">
+                        <img src="../img/mercari-banner-mobile.png" alt="メルカリでハロプログッズを探す" width="320" height="50">
+                        <img border="0" width="1" height="1" src="https://www15.a8.net/0.gif?a8mat=450YF7+5VYC4Y+5LNQ+BW8O2" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スクリプト読み込み - パスを修正 -->
+    <script src="../js/ad-rotation.js"></script>
+    <script src="../pwa-register.js"></script>
+    <script src="../install-banner.js"></script>
+    <script src="../js/group-members.js"></script>
+
+    <script>
+        // ページがスクロールされたときにヘッダーのタイトルを表示/非表示する
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('#header a');
+            const groupHeader = document.querySelector('.group-header');
+
+            // 初期状態（ページトップ）ではヘッダータイトルを非表示
+            updateHeaderVisibility();
+
+            // スクロールイベントでヘッダータイトルの表示を切り替え
+            window.addEventListener('scroll', updateHeaderVisibility);
+
+            function updateHeaderVisibility() {
+                if (window.scrollY > groupHeader.offsetHeight) {
+                    // スクロールしたらヘッダータイトルを表示
+                    header.style.opacity = '1';
+                } else {
+                    // ページ上部ではヘッダータイトルを非表示
+                    header.style.opacity = '0';
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
