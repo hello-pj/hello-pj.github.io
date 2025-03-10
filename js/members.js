@@ -83,8 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
     async function initializeMembers() {
         allMembers = await fetchMembers();
 
-        // 追加: 血液型の値を確認するコンソールログ
-        console.log('血液型の値:', allMembers.map(member => member["血液型"]));
 
         if (allMembers.length > 0) {
             // フィルター項目の設定
@@ -241,11 +239,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const groupPath = convertGroupNameToPath(member["グループ名"]);
             const memberPath = convertMemberNameToPath(member["メンバー名"]);
             const imagePath = `img/members/${groupPath}/${convertMemberNameToPath(member["メンバー名"], member["公式プロフィールURL"])}.jpg`;
-
-            // デバッグ用のコンソールログ
-            console.log('グループパス:', groupPath);
-            console.log('メンバーパス:', memberPath);
-            console.log('画像パス:', imagePath);
 
             // カードのHTMLを設定
             card.innerHTML = `
