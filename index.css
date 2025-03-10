@@ -71,24 +71,61 @@ body {
     object-fit: cover;
 }
 
-.movie-button {
+.group-info {
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.group-name {
+    font-size: 2rem;
+    margin-bottom: 0;
+    /* 下部のマージンを削除 */
+    position: relative;
+    display: inline-block;
+}
+
+.action-buttons {
     position: absolute;
     right: 20px;
-    bottom: 120px;
+    bottom: 20px;
+    /* 下部に配置するために値を変更（120pxから20pxに） */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+/* 共通ボタンスタイル */
+
+.movie-button,
+.official-button {
     background: #fff;
     padding: 8px 16px;
     border-radius: 20px;
     color: #333;
     text-decoration: none;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     font-size: 0.9rem;
     transition: transform 0.2s ease;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.movie-button:hover {
+.movie-button:hover,
+.official-button:hover {
     transform: translateX(5px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+
+/* YouTubeボタン固有のスタイル */
+
+.movie-button {
+    border: 1px solid rgba(255, 0, 0, 0.3);
 }
 
 .movie-button svg {
@@ -96,29 +133,12 @@ body {
     height: 24px;
 }
 
-.group-info {
-    padding: 20px 0;
-}
 
-.group-name {
-    font-size: 2rem;
-    margin-bottom: 15px;
-    position: relative;
-    display: inline-block;
-}
+/* 公式サイトボタン固有のスタイル */
 
-.more-button {
-    display: inline-block;
-    padding: 8px 30px;
-    border-radius: 20px;
-    text-decoration: none;
-    color: #fff;
-    font-size: 0.9rem;
-    transition: opacity 0.2s ease;
-}
-
-.more-button:hover {
-    opacity: 0.8;
+.official-button {
+    background: #f8f8f8;
+    border: 1px solid #ddd;
 }
 
 
@@ -128,64 +148,80 @@ body {
     color: #E80112;
 }
 
-.morning-musume .more-button {
+.morning-musume .official-button {
     background-color: #E80112;
+    color: #fff;
+    border: 1px solid #E80112;
 }
 
 .angerme .group-name {
     color: #0091D2;
 }
 
-.angerme .more-button {
+.angerme .official-button {
     background-color: #0091D2;
+    color: #fff;
+    border: 1px solid #0091D2;
 }
 
 .juice-juice .group-name {
     color: #611A85;
 }
 
-.juice-juice .more-button {
+.juice-juice .official-button {
     background-color: #611A85;
+    color: #fff;
+    border: 1px solid #611A85;
 }
 
 .tsubaki .group-name {
     color: #F29EC2;
 }
 
-.tsubaki .more-button {
+.tsubaki .official-button {
     background-color: #F29EC2;
+    color: #fff;
+    border: 1px solid #F29EC2;
 }
 
 .beyooooonds .group-name {
     color: #249849;
 }
 
-.beyooooonds .more-button {
+.beyooooonds .official-button {
     background-color: #249849;
+    color: #fff;
+    border: 1px solid #249849;
 }
 
 .ocha-norma .group-name {
     color: #F39800;
 }
 
-.ocha-norma .more-button {
+.ocha-norma .official-button {
     background-color: #F39800;
+    color: #fff;
+    border: 1px solid #F39800;
 }
 
 .rosy-chronicle .group-name {
     color: #FFD629;
 }
 
-.rosy-chronicle .more-button {
+.rosy-chronicle .official-button {
     background-color: #FFD629;
+    color: #fff;
+    border: 1px solid #FFD629;
 }
 
 .trainee .group-name {
     color: #33D6AD;
 }
 
-.trainee .more-button {
+.trainee .official-button {
     background-color: #33D6AD;
+    color: #fff;
+    border: 1px solid #33D6AD;
 }
 
 
@@ -265,5 +301,15 @@ body {
     }
     .calendar-button span {
         font-size: 9px;
+    }
+    .action-buttons {
+        right: 15px;
+        bottom: 15px;
+        /* モバイル用も下部に配置 */
+    }
+    .movie-button,
+    .official-button {
+        padding: 6px 12px;
+        font-size: 0.8rem;
     }
 }
