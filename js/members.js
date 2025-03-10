@@ -279,10 +279,10 @@ document.addEventListener('DOMContentLoaded', function() {
             "モーニング娘。'25": "morningmusume",
             "アンジュルム": "angerme",
             "Juice=Juice": "juicejuice",
-            "つばきファクトリー": "tsubaki",
+            "つばきファクトリー": "tsubakifactory",
             "BEYOOOOONDS": "beyooooonds",
-            "OCHA NORMA": "ocha_norma",
-            "ロージークロニクル": "rosy_chronicle",
+            "OCHA NORMA": "ochanorma",
+            "ロージークロニクル": "rosychronicle",
             "ハロプロ研修生": "trainees"
         };
 
