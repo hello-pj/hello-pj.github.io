@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 画像パスの生成
             const groupPath = convertGroupNameToPath(member["グループ名"]);
             const memberPath = convertMemberNameToPath(member["メンバー名"], member["公式プロフィールURL"]);
-            const imagePath = `img/members/${groupPath}/${convertMemberNameToPath(member["メンバー名"], member["公式プロフィールURL"])}.jpg`;
+            const imagePath = `../img/members/${groupPath}/${convertMemberNameToPath(member["メンバー名"], member["公式プロフィールURL"])}.jpg`;
 
             // カードのHTMLを設定
             card.innerHTML = `
@@ -188,12 +188,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // 画像パスの設定
         const groupPath = convertGroupNameToPath(member["グループ名"]);
         const memberPath = convertMemberNameToPath(member["メンバー名"]);
-        const imagePath = `img/members/${groupPath}/${convertMemberNameToPath(member["メンバー名"], member["公式プロフィールURL"])}.jpg`;
+        const imagePath = `../img/members/${groupPath}/${convertMemberNameToPath(member["メンバー名"], member["公式プロフィールURL"])}.jpg`;
 
         // モーダルの各要素を設定
         document.getElementById('modal-image').src = imagePath;
         document.getElementById('modal-image').onerror = function() {
-            this.src = 'img/members/default.jpg';
+            this.src = '../img/members/default.jpg';
         };
         document.getElementById('modal-color-tag').style.backgroundColor = member["メンバーカラー"] || '#999';
         document.getElementById('modal-name').textContent = member["メンバー名"] || '';
