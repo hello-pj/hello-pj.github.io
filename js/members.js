@@ -31,13 +31,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // メンバーカラーグループ化（フィルタリング用）
     const colorGroups = {
-        "赤系": ["赤", "ピンク", "ホットピンク", "チェリーピンク", "コーラル", "ワインレッド"],
-        "青系": ["青", "水色", "ブルー", "ネイビー", "ライトブルー", "スカイブルー"],
-        "緑系": ["緑", "黄緑", "ミント", "エメラルド"],
-        "黄系": ["黄", "オレンジ", "ゴールド", "イエロー"],
-        "紫系": ["紫", "ラベンダー", "パープル", "ピーチパープル"],
-        "その他": ["白", "黒", "シルバー", "グレー", "ベージュ", "ブラウン"]
-    };
+        "赤系": [
+            "ピュアレッド", "ライトレッド", "イタリアンレッド", "赤",
+            "ピンク", "ホットピンク", "ライトピンク", "チェリーピンク",
+            "コーラル", "ワインレッド", "ローズ", "コーラルピンク", "ピーチ"
+        ],
+        "青系": [
+            "シーブルー", "アクアブルー", "ロイヤルブルー", "ライトブルー",
+            "ミディアムブルー", "青", "水色", "ブルー", "ネイビー", "スカイブルー", "ターコイズ"
+        ],
+        "緑系": [
+            "黄緑", "ブライトグリーン", "ミントグリーン", "グリーン",
+            "エメラルドグリーン", "ライトグリーン", "ミント", "エメラルド", "セージグリーン"
+        ],
+        "黄系": [
+            "デイジー", "オレンジ", "イエロー", "ゴールドイエロー", "マスタード",
+            "黄", "ゴールド"
+        ],
+        "紫系": [
+            "ラベンダー", "パープル", "ライトパープル", "ピーチパープル",
+            "プラムパープル"
+        ],
+        "白系": [
+            "白", "ホワイト", "黒", "シルバー", "グレー", "ベージュ",
+            "ブラウン", "アイボリー", "ミルクティー"
+        ]
+    }
 
     // APIからメンバーデータを取得
     async function fetchMembers() {
@@ -64,6 +83,9 @@ document.addEventListener('DOMContentLoaded', function() {
     async function initializeMembers() {
         allMembers = await fetchMembers();
 
+        // 追加: 血液型の値を確認するコンソールログ
+        console.log('血液型の値:', allMembers.map(member => member["血液型"]));
+
         if (allMembers.length > 0) {
             // フィルター項目の設定
             setupFilterOptions();
@@ -88,17 +110,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // 都道府県フィルターの設定
         const prefectures = [...new Set(allMembers.map(member => {
-            // 出身地から都道府県を抽出
-            const prefecture = String(member["出身地"] || "").split(' ')[0];
+            // 全角スペースや改行を除去し、最初の部分を取得
+            const location = String(member["出身地"] || "").trim();
+            const prefecture = location.split(/[\s　]/)[0]
+                .replace('県', '')
+                .replace('都', '')
+                .replace('府', '');
             return prefecture;
-        }))].filter(Boolean).sort();
+        }))].filter(Boolean);
 
-        prefectures.forEach(prefecture => {
+        // 北から南へ並べ替える都道府県リスト
+        const prefectureOrder = [
+            '北海道', '青森', '秋田', '岩手', '宮城', '山形', '福島',
+            '茨城', '栃木', '群馬', '埼玉', '千葉', '東京', '神奈川', '山梨',
+            '新潟', '長野', '富山', '石川', '福井', '岐阜', '愛知', '静岡',
+            '三重', '滋賀', '京都', '大阪', '兵庫', '奈良', '和歌山',
+            '鳥取', '島根', '岡山', '広島', '山口',
+            '徳島', '香川', '愛媛', '高知',
+            '福岡', '佐賀', '長崎', '熊本', '大分', '宮崎', '鹿児島', '沖縄'
+        ];
+
+        // 地域内での順序を保持しつつ、フィルターに存在する都道府県のみをソート
+        const sortedPrefectures = prefectureOrder.filter(pref => prefectures.includes(pref));
+
+        sortedPrefectures.forEach(prefecture => {
             const option = document.createElement('option');
             option.value = prefecture;
             option.textContent = prefecture;
             prefectureFilter.appendChild(option);
         });
+
 
         // メンバーカラーフィルターの設定
         const colorNames = [...new Set(allMembers.map(member => member["メンバーカラー名"]))].filter(Boolean).sort();
@@ -145,10 +186,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 filteredMembers = [...allMembers].reverse().filter(member => filteredMembers.includes(member));
                 break;
             case 'name_asc':
-                filteredMembers.sort((a, b) => String(a["メンバー名"]).localeCompare(String(b["メンバー名"]), 'ja'));
+                filteredMembers.sort((a, b) => {
+                    const readingA = a["メンバー名（読み）"] || a["メンバー名"];
+                    const readingB = b["メンバー名（読み）"] || b["メンバー名"];
+                    return readingA.localeCompare(readingB, 'ja');
+                });
                 break;
             case 'name_desc':
-                filteredMembers.sort((a, b) => String(b["メンバー名"]).localeCompare(String(a["メンバー名"]), 'ja'));
+                filteredMembers.sort((a, b) => {
+                    const readingA = a["メンバー名（読み）"] || a["メンバー名"];
+                    const readingB = b["メンバー名（読み）"] || b["メンバー名"];
+                    return readingB.localeCompare(readingA, 'ja');
+                });
                 break;
             case 'birthday_asc':
                 filteredMembers.sort((a, b) => {
@@ -412,8 +461,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // 血液型フィルター
-            if (blood !== 'all' && member["血液型"] !== blood) {
-                return false;
+            if (blood !== 'all') {
+                // 血液型の末尾の「型」を取り除いて比較
+                const memberBloodType = member["血液型"].replace('型', '');
+                if (memberBloodType !== blood) {
+                    return false;
+                }
             }
 
             // 出身地フィルター
@@ -431,8 +484,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     return colorList.some(c => String(member["メンバーカラー名"] || "").includes(c));
                 }
                 // 特定の色名でのフィルタリング
-                else if (member["メンバーカラー名"] !== color) {
-                    return false;
+                else {
+                    // メンバーカラー名が完全一致するかを確認
+                    return String(member["メンバーカラー名"] || "") === color;
                 }
             }
 
