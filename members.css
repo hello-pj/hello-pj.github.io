@@ -189,12 +189,17 @@ body {
     height: 250px;
     overflow: hidden;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .card-img-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center top;
+    /* 画像の上部を中心に配置 */
     transition: transform 0.5s ease;
 }
 

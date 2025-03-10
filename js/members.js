@@ -240,24 +240,29 @@ document.addEventListener('DOMContentLoaded', function() {
             // グループ名を英語表記に変換
             const groupPath = convertGroupNameToPath(member["グループ名"]);
             const memberPath = convertMemberNameToPath(member["メンバー名"]);
-            const imagePath = `img/members/${groupPath}/${memberPath}.jpg`;
+            const imagePath = `img/members/${groupPath}/${convertMemberNameToPath(member["メンバー名"], member["公式プロフィールURL"])}.jpg`;
+
+            // デバッグ用のコンソールログ
+            console.log('グループパス:', groupPath);
+            console.log('メンバーパス:', memberPath);
+            console.log('画像パス:', imagePath);
 
             // カードのHTMLを設定
             card.innerHTML = `
-                <div class="card-img-container">
-                    <img src="${imagePath}" alt="${member["メンバー名"]}" onerror="this.src='img/members/default.jpg'">
-                    <div class="color-tag" style="background-color: ${member["メンバーカラー"] || '#999'}"></div>
-                    <div class="group-badge" style="background-color: ${groupInfo[member["グループ名"]] || '#999'}">${member["グループ名"]}</div>
+            <div class="card-img-container">
+                <img src="${imagePath}" alt="${member["メンバー名"]}" onerror="this.src='img/members/default.jpg'; console.log('画像読み込みエラー');">
+                <div class="color-tag" style="background-color: ${member["メンバーカラー"] || '#999'}"></div>
+                <div class="group-badge" style="background-color: ${groupInfo[member["グループ名"]] || '#999'}">${member["グループ名"]}</div>
+            </div>
+            <div class="card-content">
+                <h3 class="member-name">${member["メンバー名"]}</h3>
+                <p class="member-reading">${member["メンバー名（読み）"] || ''}</p>
+                <div class="member-basic-info">
+                    <span class="member-birthday">${formatBirthday(member["誕生日"])}</span>
+                    <span class="member-blood">${member["血液型"] || ''}</span>
                 </div>
-                <div class="card-content">
-                    <h3 class="member-name">${member["メンバー名"]}</h3>
-                    <p class="member-reading">${member["メンバー名（読み）"] || ''}</p>
-                    <div class="member-basic-info">
-                        <span class="member-birthday">${formatBirthday(member["誕生日"])}</span>
-                        <span class="member-blood">${member["血液型"] || ''}</span>
-                    </div>
-                </div>
-            `;
+            </div>
+        `;
 
             // カードクリック時の詳細表示
             card.addEventListener('click', () => {
@@ -285,69 +290,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // メンバー名をパス用の英語表記に変換
-    function convertMemberNameToPath(memberName) {
-        // スペースや特殊文字を削除してアンダースコアに置き換える
-        // ここは必要に応じて辞書形式のマッピングに置き換えることもできます
-        if (!memberName) return "unknown";
+    function convertMemberNameToPath(memberName, publicProfileUrl) {
+        // 公式プロフィールURLから末尾の名前部分を抽出
+        if (publicProfileUrl) {
+            const matches = publicProfileUrl.match(/profile\/(.+)\/?$/);
+            if (matches && matches[1]) {
+                // 末尾の「/」を削除
+                return matches[1].replace(/\/$/, '');
+            }
+        }
 
+        // URLがない場合のフォールバック
         return String(memberName)
             .toLowerCase()
             .replace(/\s+/g, '_')
-            .replace(/[^\w\s]/g, '')
-            .replace(/[ぁ-ん]/g, (match) => {
-                // 日本語をローマ字に変換する簡易的な処理
-                // 実際には完全な日本語→ローマ字変換ライブラリを使用するか
-                // 予めマッピング表を用意する方が良いでしょう
-                const kanaMap = {
-                    'あ': 'a',
-                    'い': 'i',
-                    'う': 'u',
-                    'え': 'e',
-                    'お': 'o',
-                    'か': 'ka',
-                    'き': 'ki',
-                    'く': 'ku',
-                    'け': 'ke',
-                    'こ': 'ko',
-                    'さ': 'sa',
-                    'し': 'shi',
-                    'す': 'su',
-                    'せ': 'se',
-                    'そ': 'so',
-                    'た': 'ta',
-                    'ち': 'chi',
-                    'つ': 'tsu',
-                    'て': 'te',
-                    'と': 'to',
-                    'な': 'na',
-                    'に': 'ni',
-                    'ぬ': 'nu',
-                    'ね': 'ne',
-                    'の': 'no',
-                    'は': 'ha',
-                    'ひ': 'hi',
-                    'ふ': 'fu',
-                    'へ': 'he',
-                    'ほ': 'ho',
-                    'ま': 'ma',
-                    'み': 'mi',
-                    'む': 'mu',
-                    'め': 'me',
-                    'も': 'mo',
-                    'や': 'ya',
-                    'ゆ': 'yu',
-                    'よ': 'yo',
-                    'ら': 'ra',
-                    'り': 'ri',
-                    'る': 'ru',
-                    'れ': 're',
-                    'ろ': 'ro',
-                    'わ': 'wa',
-                    'を': 'wo',
-                    'ん': 'n'
-                };
-                return kanaMap[match] || match;
-            });
+            .normalize('NFKD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^\w\s]/g, '');
     }
 
     // 誕生日のフォーマット（YYYY/MM/DD形式に変更）
@@ -375,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 画像パスの設定
         const groupPath = convertGroupNameToPath(member["グループ名"]);
         const memberPath = convertMemberNameToPath(member["メンバー名"]);
-        const imagePath = `img/members/${groupPath}/${memberPath}.jpg`;
+        const imagePath = `img/members/${groupPath}/${convertMemberNameToPath(member["メンバー名"], member["公式プロフィールURL"])}.jpg`;
 
         // モーダルの各要素を設定
         document.getElementById('modal-image').src = imagePath;
