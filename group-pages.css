@@ -157,6 +157,74 @@
 }
 
 
+/* 共通の円形ボタンスタイル - Calendar button と Members search button 共通 */
+
+.round-nav-button {
+    position: fixed;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1100;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: white;
+    border: 2px solid white;
+    text-decoration: none;
+}
+
+.round-nav-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.round-nav-button svg {
+    width: 30px;
+    height: 30px;
+    stroke: white;
+    stroke-width: 2;
+    margin-bottom: 2px;
+}
+
+.round-nav-button span {
+    font-size: 10px;
+    font-weight: bold;
+    margin-top: 1px;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+
+/* Calendar button 固有スタイル */
+
+.calendar-button {
+    top: 20px;
+    right: 20px;
+    background-color: #FF0066;
+}
+
+.calendar-button:hover {
+    background-color: #FF1A75;
+}
+
+
+/* Members search button 固有スタイル */
+
+.members-search-button {
+    top: 20px;
+    left: 20px;
+    background-color: #33D6AD;
+    /* ハロプロ研修生のカラー */
+}
+
+.members-search-button:hover {
+    background-color: #40E8BF;
+}
+
+
 /* レスポンシブ対応 */
 
 @media (max-width: 768px) {
@@ -185,5 +253,25 @@
     }
     .nav-container {
         flex-wrap: wrap;
+    }
+    /* 共通の円形ボタン（モバイル用）- 64×64ピクセルに変更 */
+    .round-nav-button {
+        width: 64px;
+        height: 64px;
+        top: 10px;
+    }
+    .round-nav-button svg {
+        width: 26px;
+        height: 26px;
+    }
+    .round-nav-button span {
+        font-size: 9px;
+    }
+    /* 位置の調整 */
+    .calendar-button {
+        right: 10px;
+    }
+    .members-search-button {
+        left: 10px;
     }
 }

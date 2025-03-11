@@ -44,7 +44,6 @@
         // 次の広告を表示
         adSlides[currentAdIndex].classList.add('active');
 
-        console.log('広告切り替え: ' + (currentAdIndex + 1) + '/' + adSlides.length);
     }
 
     // DOMが読み込まれた後に実行

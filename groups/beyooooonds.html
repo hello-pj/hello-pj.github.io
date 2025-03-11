@@ -68,16 +68,6 @@
         <a href="../index.html" style="color: white; text-decoration: none;">BEYOOOOONDS</a>
     </div>
 
-    <!-- カレンダーへのショートカットボタン -->
-    <a href="../calendar" class="calendar-button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line>
-            <line x1="8" y1="2" x2="8" y2="6"></line>
-            <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
-        <span>カレンダー</span>
-    </a>
 
     <!-- グループヘッダー -->
     <div class="group-header">
@@ -89,9 +79,31 @@
     <img src="../img/beyooooonds_image.jpg" alt="BEYOOOOONDS" class="group-image">
 
     <!-- ナビゲーションボタン -->
+    <!-- ハロメン検索ボタン -->
+    <a href="../members.html" class="members-search-button round-nav-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        <line x1="11" y1="8" x2="11" y2="14"></line>
+        <line x1="8" y1="11" x2="14" y2="11"></line>
+    </svg>
+        <span>ハロメン検索</span>
+    </a>
+
+    <!-- カレンダーボタン-->
+    <a href="../calendar" class="calendar-button round-nav-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+    </svg>
+        <span>カレンダー</span>
+    </a>
+
+    <!-- ナビゲーションを修正 - 全メンバー一覧ボタンを削除し、TOPに戻るボタンのみ中央配置 -->
     <div class="nav-container">
-        <a href="../index.html" class="back-button home-btn">TOPに戻る</a>
-        <a href="../members.html" class="back-button members-btn">全メンバー一覧</a>
+        <a href="/" class="back-button home-btn">TOPに戻る</a>
     </div>
 
     <!-- 検索結果カウントと読み込み中表示 -->
