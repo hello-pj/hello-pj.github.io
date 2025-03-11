@@ -405,48 +405,90 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupSwipeGestures() {
-        // Swipe handling
-        calendarEl.addEventListener('touchstart', function(e) {
-            touchStartX = e.changedTouches[0].screenX;
-        }, false);
+        // 既存のイベントリスナーが残っていると重複するため、一度削除
+        try {
+            calendarEl.removeEventListener('touchstart', handleTouchStart);
+            calendarEl.removeEventListener('touchend', handleTouchEnd);
+            calendarEl.removeEventListener('touchmove', handleTouchMove);
+        } catch (e) {
+            // エラーは無視
+        }
 
-        calendarEl.addEventListener('touchend', function(e) {
-            touchEndX = e.changedTouches[0].screenX;
+        // グローバルスコープに変数を定義
+        window.touchStartX = 0;
+        window.touchEndX = 0;
+        window.minSwipeDistance = 50;
+
+        // スワイプインジケーター
+        var swipeIndicator = document.getElementById('swipe-indicator');
+        if (!swipeIndicator) {
+            swipeIndicator = document.createElement('div');
+            swipeIndicator.id = 'swipe-indicator';
+            swipeIndicator.style.position = 'fixed';
+            swipeIndicator.style.top = '50%';
+            swipeIndicator.style.transform = 'translateY(-50%)';
+            swipeIndicator.style.padding = '10px 15px';
+            swipeIndicator.style.background = 'rgba(0, 0, 0, 0.5)';
+            swipeIndicator.style.color = 'white';
+            swipeIndicator.style.borderRadius = '5px';
+            swipeIndicator.style.fontSize = '24px';
+            swipeIndicator.style.fontWeight = 'bold';
+            swipeIndicator.style.zIndex = '1500';
+            swipeIndicator.style.opacity = '0';
+            swipeIndicator.style.transition = 'opacity 0.2s ease';
+            document.body.appendChild(swipeIndicator);
+        }
+
+        // 名前付き関数を使用してイベントリスナーを登録
+        function handleTouchStart(e) {
+            window.touchStartX = e.changedTouches[0].screenX;
+        }
+
+        function handleTouchEnd(e) {
+            window.touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
-        }, false);
+        }
 
-        // Swipe indicator
-        var swipeIndicator = document.createElement('div');
-        swipeIndicator.id = 'swipe-indicator';
-        document.body.appendChild(swipeIndicator);
+        function handleTouchMove(e) {
+            if (e.changedTouches && e.changedTouches[0]) {
+                var currentX = e.changedTouches[0].screenX;
+                var difference = currentX - window.touchStartX;
 
-        // Visual feedback during swipe
-        calendarEl.addEventListener('touchmove', function(e) {
-            var currentX = e.changedTouches[0].screenX;
-            var difference = currentX - touchStartX;
+                // 水平方向の動きが十分にある場合のみインジケータを表示
+                if (Math.abs(difference) > 20) {
+                    var opacity = Math.min(Math.abs(difference) / 200, 0.3);
+                    var direction = difference > 0 ? '←' : '→';
 
-            if (Math.abs(difference) > 20) {
-                var opacity = Math.min(Math.abs(difference) / 200, 0.3);
-                var direction = difference > 0 ? '←' : '→';
-
-                swipeIndicator.style.opacity = opacity;
-                swipeIndicator.style.left = difference > 0 ? '20px' : 'auto';
-                swipeIndicator.style.right = difference < 0 ? '20px' : 'auto';
-                swipeIndicator.textContent = direction;
-                swipeIndicator.classList.add('active');
+                    swipeIndicator.style.opacity = opacity;
+                    swipeIndicator.style.left = difference > 0 ? '20px' : 'auto';
+                    swipeIndicator.style.right = difference < 0 ? '20px' : 'auto';
+                    swipeIndicator.textContent = direction;
+                    swipeIndicator.classList.add('active');
+                }
             }
-        }, false);
+        }
 
+        // イベントリスナーを登録
+        calendarEl.addEventListener('touchstart', handleTouchStart, { passive: true });
+        calendarEl.addEventListener('touchend', handleTouchEnd, { passive: true });
+        calendarEl.addEventListener('touchmove', handleTouchMove, { passive: true });
+
+        // インジケーターを非表示にするためのリスナー
         calendarEl.addEventListener('touchend', function() {
-            swipeIndicator.classList.remove('active');
-            swipeIndicator.style.opacity = 0;
-        }, false);
+            if (swipeIndicator) {
+                swipeIndicator.classList.remove('active');
+                swipeIndicator.style.opacity = '0';
+            }
+        }, { passive: true });
+
+        console.log("カレンダーの水平スワイプ処理を初期化しました");
     }
 
     function handleSwipe() {
-        var swipeDistance = touchEndX - touchStartX;
+        // 水平方向のスワイプのみをチェック
+        var swipeDistance = window.touchEndX - window.touchStartX;
 
-        if (Math.abs(swipeDistance) >= minSwipeDistance) {
+        if (Math.abs(swipeDistance) >= window.minSwipeDistance) {
             // 左スワイプ（次の期間へ）
             if (swipeDistance < 0) {
                 calendar.next();
