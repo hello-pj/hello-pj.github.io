@@ -180,12 +180,17 @@ function formatEventsForXSharing(date, events) {
     // 日付のフォーマット
     const formattedDate = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日（${weekdays[date.getDay()]}）`;
 
-    // 投稿のベーステキスト (約80文字)
-    let xText = `【ハロプロイベント情報】\n🎶 ${formattedDate}の出演グループはこちら！\n`;
+    // 投稿のベーステキスト
+    let xText = `【ハロプロイベント情報】\n${formattedDate}\n`;
 
-    // 出演グループを収集 (重複を避けるためにセットを使用)
-    const groups = new Set();
+    // イベントを名前でグループ化（同じイベント名は一度だけ表示）
+    const uniqueEvents = new Map(); // イベント名をキーにして、関連グループを配列で保持
+
     events.forEach(event => {
+        // イベント名を取得
+        const eventTitle = event.title;
+
+        // グループ名を取得
         let groupName = '';
         if (event.extendedProps && event.extendedProps.group) {
             groupName = event.extendedProps.group;
@@ -193,42 +198,50 @@ function formatEventsForXSharing(date, events) {
             groupName = event.group;
         }
 
-        // HELLO! PROJECTも含めて全てのグループを表示
-        if (groupName) {
-            groups.add(groupName);
+        // X用のグループ名変換
+        const xGroupName = convertGroupNameForX(groupName);
+
+        // 既存のエントリを取得するか、新しいエントリを作成
+        if (!uniqueEvents.has(eventTitle)) {
+            uniqueEvents.set(eventTitle, [xGroupName]);
+        } else {
+            // 同じグループが重複しないようにチェック
+            const groups = uniqueEvents.get(eventTitle);
+            if (!groups.includes(xGroupName)) {
+                groups.push(xGroupName);
+            }
         }
     });
 
-    // グループごとに行を追加 (X用のグループ名変換を適用)
-    const usedGroupNames = new Set(); // 既に使用したグループ名を追跡
-    groups.forEach(group => {
-        const xGroupName = convertGroupNameForX(group);
-        xText += `✨ #${xGroupName}\n`;
+    // 各ユニークイベントを表示
+    uniqueEvents.forEach((groups, eventTitle) => {
+        // イベント名を追加
+        xText += `✨${eventTitle}\n`;
 
-        // 使用したグループ名を記録
-        usedGroupNames.add(xGroupName.toLowerCase());
+        // 関連するグループをハッシュタグ付きで追加
+        groups.forEach(group => {
+            // 「HELLO! PROJECT」はスキップ（全体イベントの場合は個別グループだけ表示）
+            if (group.toLowerCase() !== 'helloproject') {
+                xText += `#${group}\n`;
+            }
+        });
     });
 
-    // 最後の部分 - 重複をチェック
-    let footer = `\n📅 詳細情報はカレンダーをチェック✅️\nhttps://hello-pj.github.io/calendar\n`;
+    // フッター部分
+    let footer = `\n📅詳細を✅️\nhttps://hello-pj.github.io/calendar`;
 
-    // 'helloproject'がグループ名で使われていなければ追加
-    if (!usedGroupNames.has('helloproject')) {
-        footer += `#helloproject `;
-    }
-
-    footer += `#ハロプロ`;
+    // 最後に #ハロプロ タグを追加
+    footer += `\n#ハロプロ`;
 
     // Twitter文字数制限を考慮 (280文字)
     // 現在のテキスト + フッターの長さを計算
     if ((xText + footer).length > 280) {
-        // 文字数オーバーする場合はハッシュタグを省略
-        return xText + `\n📅 詳細情報はカレンダーをチェック✅️\nhttps://hello-pj.github.io/calendar`;
+        // 文字数オーバーする場合はフッターを短縮
+        return xText + `\n📅詳細を✅️\nhttps://hello-pj.github.io/calendar`;
     } else {
         return xText + footer;
     }
 }
-
 // 3. Function to share a single event
 function shareEvent(event, displayDate) {
     if (navigator.share) {
