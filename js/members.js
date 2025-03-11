@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const bloodFilter = document.getElementById('blood-filter');
     const prefectureFilter = document.getElementById('prefecture-filter');
     const colorFilter = document.getElementById('color-filter');
+    const birthMonthFilter = document.getElementById('birth-month-filter');
     const sortOption = document.getElementById('sort-option');
     const resetButton = document.getElementById('reset-button');
     const resultCount = document.getElementById('result-count');
@@ -83,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
     async function initializeMembers() {
         allMembers = await fetchMembers();
 
-
         if (allMembers.length > 0) {
             // フィルター項目の設定
             setupFilterOptions();
@@ -138,7 +138,6 @@ document.addEventListener('DOMContentLoaded', function() {
             prefectureFilter.appendChild(option);
         });
 
-
         // メンバーカラーフィルターの設定
         const colorNames = [...new Set(allMembers.map(member => member["メンバーカラー名"]))].filter(Boolean).sort();
 
@@ -158,16 +157,16 @@ document.addEventListener('DOMContentLoaded', function() {
             colorFilter.appendChild(option);
         });
 
-        // ソートオプションを更新
+        // ソートオプションを更新（年齢順のラベルを変更）
         const sortOption = document.getElementById('sort-option');
         sortOption.innerHTML = `
-        <option value="default_asc">デフォルト（昇順）</option>
-        <option value="default_desc">デフォルト（降順）</option>
-        <option value="name_asc">名前（昇順）</option>
-        <option value="name_desc">名前（降順）</option>
-        <option value="birthday_asc">誕生日（昇順）</option>
-        <option value="birthday_desc">誕生日（降順）</option>
-    `;
+            <option value="default_asc">デフォルト（昇順）</option>
+            <option value="default_desc">デフォルト（降順）</option>
+            <option value="name_asc">名前（昇順）</option>
+            <option value="name_desc">名前（降順）</option>
+            <option value="birthday_asc">年齢順（昇順）</option>
+            <option value="birthday_desc">年齢順（降順）</option>
+        `;
     }
 
     // メンバーのソート
@@ -405,6 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const blood = bloodFilter.value;
         const prefecture = prefectureFilter.value;
         const color = colorFilter.value;
+        const birthMonth = birthMonthFilter.value;
 
         filteredMembers = allMembers.filter(member => {
             // グループフィルター
@@ -442,6 +442,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
+            // 誕生月フィルター（新規追加）
+            if (birthMonth !== 'all') {
+                try {
+                    const date = new Date(member["誕生日"]);
+                    if (isNaN(date.getTime())) return false;
+
+                    // 月を確認（getMonth()は0-11を返すため、+1して比較）
+                    if (date.getMonth() + 1 !== parseInt(birthMonth)) {
+                        return false;
+                    }
+                } catch (e) {
+                    // 日付解析に失敗した場合、そのメンバーを除外
+                    return false;
+                }
+            }
+
             return true;
         });
 
@@ -452,6 +468,7 @@ document.addEventListener('DOMContentLoaded', function() {
         displayMembers();
         updateResultCount();
     }
+
     // 検索結果数の更新
     function updateResultCount() {
         resultCount.textContent = `${filteredMembers.length}人のメンバーが表示されています`;
@@ -463,6 +480,7 @@ document.addEventListener('DOMContentLoaded', function() {
         bloodFilter.value = 'all';
         prefectureFilter.value = 'all';
         colorFilter.value = 'all';
+        birthMonthFilter.value = 'all';
         sortOption.value = 'default_asc'; // デフォルトソートを初期値に
 
         filteredMembers = [...allMembers];
@@ -476,6 +494,7 @@ document.addEventListener('DOMContentLoaded', function() {
     bloodFilter.addEventListener('change', applyFilters);
     prefectureFilter.addEventListener('change', applyFilters);
     colorFilter.addEventListener('change', applyFilters);
+    birthMonthFilter.addEventListener('change', applyFilters);
     sortOption.addEventListener('change', () => {
         sortMembers();
         displayMembers();
