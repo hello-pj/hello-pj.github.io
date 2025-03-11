@@ -17,6 +17,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingSpinner = document.getElementById('loading-spinner');
     const modal = document.getElementById('member-modal');
     const closeModal = document.querySelector('.close-modal');
+    const nameSearchInput = document.getElementById('name-search');
+
+    let searchTimeout;
+    nameSearchInput.addEventListener('input', function() {
+        // 前の検索タイマーをクリア
+        clearTimeout(searchTimeout);
+
+        // 300ms後にフィルターを適用（連続入力による負荷を軽減）
+        searchTimeout = setTimeout(applyFilters, 300);
+    });
 
     // グループ情報（グループ名とカラー）
     const groupInfo = {
@@ -57,6 +67,84 @@ document.addEventListener('DOMContentLoaded', function() {
             "白", "ホワイト", "黒", "シルバー", "グレー", "ベージュ",
             "ブラウン", "アイボリー", "ミルクティー"
         ]
+    }
+
+    // 検索用のユーティリティ関数を追加
+    // ひらがな・カタカナ・漢字の相互変換と検索用ユーティリティ
+    const kanaConversionMap = {
+        'あ': 'ア',
+        'い': 'イ',
+        'う': 'ウ',
+        'え': 'エ',
+        'お': 'オ',
+        'か': 'カ',
+        'き': 'キ',
+        'く': 'ク',
+        'け': 'ケ',
+        'こ': 'コ',
+        'さ': 'サ',
+        'し': 'シ',
+        'す': 'ス',
+        'せ': 'セ',
+        'そ': 'ソ',
+        'た': 'タ',
+        'ち': 'チ',
+        'つ': 'ツ',
+        'て': 'テ',
+        'と': 'ト',
+        'な': 'ナ',
+        'に': 'ニ',
+        'ぬ': 'ヌ',
+        'ね': 'ネ',
+        'の': 'ノ',
+        'は': 'ハ',
+        'ひ': 'ヒ',
+        'ふ': 'フ',
+        'へ': 'ヘ',
+        'ほ': 'ホ',
+        'ま': 'マ',
+        'み': 'ミ',
+        'む': 'ム',
+        'め': 'メ',
+        'も': 'モ',
+        'や': 'ヤ',
+        'ゆ': 'ユ',
+        'よ': 'ヨ',
+        'ら': 'ラ',
+        'り': 'リ',
+        'る': 'ル',
+        'れ': 'レ',
+        'ろ': 'ロ',
+        'わ': 'ワ',
+        'を': 'ヲ',
+        'ん': 'ン'
+    };
+
+    // ひらがなをカタカナに変換
+    function hiraganaToKatakana(str) {
+        return str.split('').map(char => kanaConversionMap[char] || char).join('');
+    }
+
+    // 検索文字列が対象の文字列に含まれるかをチェック
+    function matchSearch(searchStr, targetStr) {
+        if (!searchStr) return true;
+
+        // 全角半角の統一と大文字・小文字の区別をなくす
+        const normalizedSearch = searchStr
+            .toLowerCase()
+            .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+            .trim();
+
+        const normalizedTarget = targetStr
+            .toLowerCase()
+            .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+            .trim();
+
+        // 漢字名、よみがな（カタカナ）、よみがな（ひらがな）をそれぞれ検索
+        const searchKatakana = hiraganaToKatakana(normalizedSearch);
+
+        return normalizedTarget.includes(normalizedSearch) ||
+            normalizedTarget.includes(searchKatakana);
     }
 
     // APIからメンバーデータを取得
@@ -405,8 +493,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const prefecture = prefectureFilter.value;
         const color = colorFilter.value;
         const birthMonth = birthMonthFilter.value;
+        const searchQuery = document.getElementById('name-search').value;
 
         filteredMembers = allMembers.filter(member => {
+            // 既存のフィルター条件
             // グループフィルター
             if (group !== 'all' && member["グループ名"] !== group) {
                 return false;
@@ -414,7 +504,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // 血液型フィルター
             if (blood !== 'all') {
-                // 血液型の末尾の「型」を取り除いて比較
                 const memberBloodType = member["血液型"].replace('型', '');
                 if (memberBloodType !== blood) {
                     return false;
@@ -428,32 +517,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // メンバーカラーフィルター
             if (color !== 'all') {
-                // 色グループによるフィルタリング
                 if (color.startsWith('group_')) {
                     const colorGroupName = color.replace('group_', '');
                     const colorList = colorGroups[colorGroupName] || [];
 
-                    return colorList.some(c => String(member["メンバーカラー名"] || "").includes(c));
-                }
-                // 特定の色名でのフィルタリング
-                else {
-                    // メンバーカラー名が完全一致するかを確認
-                    return String(member["メンバーカラー名"] || "") === color;
+                    if (!colorList.some(c => String(member["メンバーカラー名"] || "").includes(c))) {
+                        return false;
+                    }
+                } else {
+                    if (String(member["メンバーカラー名"] || "") !== color) {
+                        return false;
+                    }
                 }
             }
 
-            // 誕生月フィルター（新規追加）
+            // 誕生月フィルター
             if (birthMonth !== 'all') {
                 try {
                     const date = new Date(member["誕生日"]);
-                    if (isNaN(date.getTime())) return false;
-
-                    // 月を確認（getMonth()は0-11を返すため、+1して比較）
-                    if (date.getMonth() + 1 !== parseInt(birthMonth)) {
+                    if (isNaN(date.getTime()) || date.getMonth() + 1 !== parseInt(birthMonth)) {
                         return false;
                     }
                 } catch (e) {
-                    // 日付解析に失敗した場合、そのメンバーを除外
+                    return false;
+                }
+            }
+
+            // 名前検索フィルター（新規追加）
+            if (searchQuery) {
+                const nameMatches =
+                    matchSearch(searchQuery, member["メンバー名"]) ||
+                    matchSearch(searchQuery, member["メンバー名（読み）"]);
+
+                if (!nameMatches) {
                     return false;
                 }
             }
@@ -468,7 +564,6 @@ document.addEventListener('DOMContentLoaded', function() {
         displayMembers();
         updateResultCount();
     }
-
     // 検索結果数の更新
     function updateResultCount() {
         resultCount.textContent = `${filteredMembers.length}人のメンバーが表示されています`;
