@@ -245,6 +245,7 @@
     <script>
         // ページがスクロールされたときにヘッダーのタイトルを表示/非表示する
         document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('#header a');
             const groupHeader = document.querySelector('.group-header');
 
             // 初期状態（ページトップ）ではヘッダータイトルを非表示
