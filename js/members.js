@@ -475,9 +475,15 @@ document.addEventListener('DOMContentLoaded', function() {
             profileLink.style.display = 'none';
         }
 
+        window.currentMember = member; // 現在表示中のメンバー情報をグローバル変数に保存
+        if (window.addMemberSchema) {
+            window.addMemberSchema(member);
+        }
+
         // モーダルを表示
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden'; // 背景スクロール防止
+
     }
 
     // モーダルを閉じる
