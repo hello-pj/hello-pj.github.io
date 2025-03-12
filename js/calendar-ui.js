@@ -424,6 +424,7 @@ var CalendarUI = (function() {
         var eventDescription = document.getElementById('event-description');
         var eventGroup = document.getElementById('event-group');
         var eventImage = document.getElementById('event-image');
+        var eventImageWebp = document.getElementById('event-image-webp');
 
         eventTitle.textContent = event.title;
 
@@ -626,8 +627,29 @@ var CalendarUI = (function() {
 
         eventGroup.textContent = groupText;
 
-        // 画像のソースを設定
-        eventImage.src = CalendarData.groupImages[groupText] || 'img/default_image.jpg';
+        // 画像のソースを設定 (WebP対応)
+        // CalendarDataのgetOptimalGroupImagePath関数を使用
+        if (CalendarData && typeof CalendarData.getOptimalGroupImagePath === 'function') {
+            const imageSrc = CalendarData.getOptimalGroupImagePath(groupText);
+
+            // WebP source要素を持つpicture要素を使う場合
+            if (eventImageWebp) {
+                // WebP対応ブラウザ用のsource要素を更新
+                if (window.ImageHelper && ImageHelper.checkWebPSupport()) {
+                    const webpSrc = imageSrc.replace(/\.(jpg|jpeg|png)$/, '.webp');
+                    eventImageWebp.srcset = webpSrc;
+                }
+                eventImage.src = imageSrc;
+            } else {
+                // 通常のimg要素のみの場合
+                eventImage.src = imageSrc;
+            }
+        } else {
+            // 従来の方法にフォールバック
+            eventImage.src = CalendarData && CalendarData.groupImages ?
+                CalendarData.groupImages[groupText] || 'img/default_image.jpg' :
+                'img/default_image.jpg';
+        }
 
         // Find or create a container for the share button
         var shareButtonContainer = document.getElementById('share-button-container');
@@ -679,8 +701,6 @@ var CalendarUI = (function() {
 
         // Add the share button to the container
         shareButtonContainer.appendChild(shareButton);
-
-
 
         // 詳細パネルを表示
         eventDetailsEl.classList.add('show');

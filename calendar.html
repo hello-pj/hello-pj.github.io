@@ -60,6 +60,8 @@
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
     <link rel="stylesheet" href="common.css">
     <link rel="stylesheet" href="calendar.css">
+
+    <script src="js/webp-support.js"></script>
 </head>
 
 <body>
@@ -94,7 +96,10 @@
         <!-- イベント詳細パネル部分 -->
         <div id="event-details">
             <div id="close-details"></div>
-            <img id="event-image" src="img/default_image.jpg" alt="Event Image">
+            <picture>
+                <source id="event-image-webp" srcset="img/default_image.webp" type="image/webp">
+                <img id="event-image" src="img/default_image.jpg" alt="Event Image">
+            </picture>
             <h2>イベント詳細</h2>
             <p><strong>タイトル:</strong> <span id="event-title"></span></p>
             <p><strong>日付:</strong> <span id="event-date"></span></p>

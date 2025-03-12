@@ -13,7 +13,7 @@ var CalendarData = (function() {
         "ハロプロ研修生": "#33D6AD"
     };
 
-    // Group images
+    // Group images with WebP support
     var groupImages = {
         "HELLO! PROJECT": "img/hello_project_image.jpg",
         "モーニング娘。'25": "img/morning_musume_image.jpg",
@@ -25,6 +25,21 @@ var CalendarData = (function() {
         "ロージークロニクル": "img/rosy_chronicle_image.jpg",
         "ハロプロ研修生": "img/hello_project_trainees_image.jpg"
     };
+
+    // WebP対応版の画像パスを取得
+    function getOptimalGroupImagePath(group) {
+        if (!groupImages[group]) {
+            return "img/default_image.jpg";
+        }
+
+        // ImageHelperが利用可能な場合はWebP対応パスを返す
+        if (window.ImageHelper) {
+            return ImageHelper.getOptimalImagePath(groupImages[group], true);
+        }
+
+        // 利用不可の場合は元の画像パスを返す
+        return groupImages[group];
+    }
 
     // Set of active groups for filtering
     var activeGroups = new Set(Object.keys(groupColors));
@@ -90,6 +105,7 @@ var CalendarData = (function() {
     return {
         groupColors: groupColors,
         groupImages: groupImages,
+        getOptimalGroupImagePath: getOptimalGroupImagePath,
         activeGroups: activeGroups,
         fetchEventData: fetchEventData
     };

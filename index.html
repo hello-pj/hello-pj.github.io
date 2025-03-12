@@ -65,6 +65,10 @@
         document.write('<link rel="stylesheet" href="common.css' + window.cacheBuster + '">');
         document.write('<link rel="stylesheet" href="index.css' + window.cacheBuster + '">');
     </script>
+
+    <!-- WebP対応スクリプトを追加（service-workerのキャッシュ考慮でも早めに読み込む） -->
+    <script src="js/webp-support.js"></script>
+
 </head>
 
 <body>
@@ -100,7 +104,10 @@
             <div class="group-card morning-musume">
                 <a href="/groups/morningmusume.html">
                     <div class="group-image">
-                        <img src="img/morning_musume_image.jpg" alt="モーニング娘。'25">
+                        <picture>
+                            <source srcset="img/morning_musume_image.webp" type="image/webp">
+                            <img src="img/morning_musume_image.jpg" alt="モーニング娘。'25">
+                        </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@morningmusume" class="movie-button">
                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
@@ -125,7 +132,10 @@
             <div class="group-card angerme">
                 <a href="/groups/angerme.html">
                     <div class="group-image">
-                        <img src="img/angerme_image.jpg" alt="アンジュルム">
+                        <picture>
+                            <source srcset="img/angerme_image.webp" type="image/webp">
+                            <img src="img/angerme_image.jpg" alt="アンジュルム">
+                        </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@angerme" class="movie-button">
                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
@@ -150,7 +160,10 @@
             <div class="group-card juice-juice">
                 <a href="/groups/juicejuice.html">
                     <div class="group-image">
-                        <img src="img/juice_juice_image.jpg" alt="Juice=Juice">
+                        <picture>
+                            <source srcset="img/juice_juice_image.webp" type="image/webp">
+                            <img src="img/juice_juice_image.jpg" alt="Juice=Juice">
+                        </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@juicejuice" class="movie-button">
                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
@@ -175,7 +188,10 @@
             <div class="group-card tsubaki">
                 <a href="/groups/tsubakifactory.html">
                     <div class="group-image">
-                        <img src="img/tsubaki_factory_image.jpg" alt="つばきファクトリー">
+                        <picture>
+                            <source srcset="img/tsubaki_factory_image.webp" type="image/webp">
+                            <img src="img/tsubaki_factory_image.jpg" alt="つばきファクトリー">
+                        </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@tsubakifactory" class="movie-button">
                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
@@ -200,7 +216,10 @@
             <div class="group-card beyooooonds">
                 <a href="/groups/beyooooonds.html">
                     <div class="group-image">
-                        <img src="img/beyooooonds_image.jpg" alt="BEYOOOOONDS">
+                        <picture>
+                            <source srcset="img/beyooooonds_image.webp" type="image/webp">
+                            <img src="img/beyooooonds_image.jpg" alt="BEYOOOOONDS">
+                        </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@BEYOOOOONDS" class="movie-button">
                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
@@ -225,7 +244,10 @@
             <div class="group-card ocha-norma">
                 <a href="/groups/ochanorma.html">
                     <div class="group-image">
-                        <img src="img/ocha_norma_image.jpg" alt="OCHA NORMA">
+                        <picture>
+                            <source srcset="img/ocha_norma_imag.webp" type="image/webp">
+                            <img src="img/ocha_norma_image.jpg" alt="OCHA NORMA">
+                        </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@OCHANORMA" class="movie-button">
                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
@@ -250,7 +272,10 @@
             <div class="group-card rosy-chronicle">
                 <a href="/groups/rosychronicle.html">
                     <div class="group-image">
-                        <img src="img/rosy_chronicle_image.jpg" alt="ロージークロニクル">
+                        <picture>
+                            <source srcset="img/rosy_chronicle_image.webp" type="image/webp">
+                            <img src="img/rosy_chronicle_image.jpg" alt="ロージークロニクル">
+                        </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@RosyChronicle" class="movie-button">
                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
@@ -275,7 +300,10 @@
             <div class="group-card trainee">
                 <a href="https://www.helloproject.com/helloprokenshusei/">
                     <div class="group-image">
-                        <img src="img/hello_project_trainees_image.jpg" alt="ハロプロ研修生">
+                        <picture>
+                            <source srcset="img/hello_project_trainees_image.webp" type="image/webp">
+                            <img src="img/hello_project_trainees_image.jpg" alt="ハロプロ研修生">
+                        </picture>
                         <div class="action-buttons">
                             <a href="https://www.helloproject.com/helloprokenshusei/" class="official-button">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
