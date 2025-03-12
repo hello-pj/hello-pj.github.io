@@ -64,6 +64,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // グループナビゲーションがある場合は、現在のグループにactiveクラスを追加
+    const groupLinks = document.querySelectorAll('.group-nav-item');
+    if (groupLinks.length > 0) {
+        groupLinks.forEach(link => {
+            if (link.getAttribute('href').includes(groupId)) {
+                link.classList.add('active');
+            }
+        });
+    }
+
     // メンバーデータの初期化と表示
     async function initializeMembers() {
         allMembers = await fetchMembers();
