@@ -22,7 +22,7 @@ var CalendarData = (function() {
         "つばきファクトリー": "img/tsubaki_factory_image.jpg",
         "BEYOOOOONDS": "img/beyooooonds_image.jpg",
         "OCHA NORMA": "img/ocha_norma_image.jpg",
-        "ロージークロニクル": "img/rouge_chronicle_image.jpg",
+        "ロージークロニクル": "img/rosy_chronicle_image.jpg",
         "ハロプロ研修生": "img/hello_project_trainees_image.jpg"
     };
 

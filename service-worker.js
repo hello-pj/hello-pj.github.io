@@ -25,7 +25,7 @@ const urlsToCache = [
     '/img/tsubaki_factory_image.jpg',
     '/img/beyooooonds_image.jpg',
     '/img/ocha_norma_image.jpg',
-    '/img/rouge_chronicle_image.jpg',
+    '/img/rosy_chronicle_image.jpg',
     '/img/hello_project_trainees_image.jpg',
     '/img/hello_project_image.jpg',
     '/img/bnr_calendar.png'
