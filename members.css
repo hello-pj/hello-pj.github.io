@@ -162,9 +162,12 @@ body {
 
 .search-status {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    /* 左寄せに変更 */
     align-items: center;
     margin: 0 20px 15px 20px;
+    gap: 10px;
+    /* スピナーとテキストの間隔を設定 */
 }
 
 #result-count {
@@ -180,6 +183,8 @@ body {
     border-top-color: #0073e6;
     animation: spin 1s linear infinite;
     display: none;
+    flex-shrink: 0;
+    /* サイズを維持 */
 }
 
 @keyframes spin {
