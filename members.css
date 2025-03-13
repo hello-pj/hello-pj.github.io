@@ -308,6 +308,8 @@ body {
 }
 
 .modal-content {
+    position: relative;
+    /* この行を追加 */
     background-color: white;
     margin: 50px auto;
     width: 90%;
@@ -331,7 +333,6 @@ body {
 
 .close-modal {
     position: absolute;
-    top: 15px;
     right: 20px;
     font-size: 30px;
     cursor: pointer;
