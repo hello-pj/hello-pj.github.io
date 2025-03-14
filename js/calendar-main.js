@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'ja',
+                firstDay: 1, // 月曜日始まりに設定 (0=日曜、1=月曜、...)
                 headerToolbar: {
                     left: 'title',
                     right: 'prev,next today,dayGridMonth,timeGridWeek,timeGridDay'
