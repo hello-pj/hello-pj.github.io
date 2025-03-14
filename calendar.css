@@ -178,6 +178,26 @@ body {
 }
 
 
+/* イベント詳細の見出しとその親コンテナの位置関係を調整 */
+
+#event-details h2 {
+    padding-right: 40px;
+    /* お気に入りボタンのためのスペース確保 */
+    position: relative;
+    /* 相対配置 */
+}
+
+
+/* タイトルを含む親divに適切な位置関係を設定 */
+
+#event-details div[style*="position: relative"] {
+    width: 100%;
+    /* 幅を確保 */
+    margin-bottom: 10px;
+    /* 下部に余白を追加 */
+}
+
+
 /* イベント画像 */
 
 #event-image {
@@ -743,6 +763,8 @@ body {
     color: #ccc;
     transition: all 0.2s ease;
     user-select: none;
+    z-index: 10;
+    /* 高いz-indexで確実に前面に表示 */
 }
 
 .favorite-button.active {
