@@ -15,9 +15,9 @@ var EventFavorites = (function() {
                 // nullとundefinedを除外
                 const validFavorites = parsedFavorites.filter(id => id !== null && id !== undefined && id !== 'null' && id !== 'undefined');
                 favoriteEvents = new Set(validFavorites);
-                console.log('初期化したお気に入り:', Array.from(favoriteEvents));
+                //console.log('初期化したお気に入り:', Array.from(favoriteEvents));
             } catch (e) {
-                console.error('お気に入りデータの読み込みに失敗しました:', e);
+                //console.error('お気に入りデータの読み込みに失敗しました:', e);
                 favoriteEvents = new Set();
             }
         }
@@ -52,7 +52,7 @@ var EventFavorites = (function() {
 
         // 文字列型に変換して扱う
         eventId = String(eventId);
-        console.log('toggleFavorite呼び出し - イベントID:', eventId);
+        //console.log('toggleFavorite呼び出し - イベントID:', eventId);
 
         if (favoriteEvents.has(eventId)) {
             console.log('お気に入りから削除:', eventId);
@@ -64,7 +64,7 @@ var EventFavorites = (function() {
 
         // ローカルストレージに保存
         saveFavorites();
-        console.log('現在のお気に入り一覧:', Array.from(favoriteEvents));
+        //console.log('現在のお気に入り一覧:', Array.from(favoriteEvents));
         return favoriteEvents.has(eventId);
     }
 

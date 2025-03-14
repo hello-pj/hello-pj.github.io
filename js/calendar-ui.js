@@ -245,7 +245,7 @@ var CalendarUI = (function() {
                 var favoriteIcon = document.createElement('span');
                 favoriteIcon.className = 'event-list-favorite';
                 const isFav = window.EventFavorites && window.EventFavorites.isFavorite(eventId);
-                console.log('リストでのお気に入りチェック - イベントID:', eventId, 'お気に入り:', isFav);
+                //console.log('リストでのお気に入りチェック - イベントID:', eventId, 'お気に入り:', isFav);
 
                 favoriteIcon.textContent = isFav ? '★' : '☆';
                 favoriteIcon.style.color = isFav ? '#FFD700' : '#ccc';
@@ -256,11 +256,11 @@ var CalendarUI = (function() {
                 // お気に入りアイコンのクリックイベント
                 favoriteIcon.addEventListener('click', function(e) {
                     e.stopPropagation(); // 親要素へのクリックイベントの伝播を防止
-                    console.log('リストでお気に入りアイコンがクリックされました - イベントID:', eventId);
+                    //console.log('リストでお気に入りアイコンがクリックされました - イベントID:', eventId);
 
                     if (window.EventFavorites) {
                         const isFavorite = window.EventFavorites.toggleFavorite(eventId);
-                        console.log('トグル後の状態:', isFavorite);
+                        //console.log('トグル後の状態:', isFavorite);
 
                         favoriteIcon.textContent = isFavorite ? '★' : '☆';
                         favoriteIcon.style.color = isFavorite ? '#FFD700' : '#ccc';
@@ -423,9 +423,9 @@ var CalendarUI = (function() {
         var eventImageWebp = document.getElementById('event-image-webp');
 
         // デバッグ: イベントオブジェクトの構造を確認
-        console.log('イベントオブジェクト:', event);
+        //console.log('イベントオブジェクト:', event);
         if (event._def) {
-            console.log('イベント内部構造:', event._def);
+            //console.log('イベント内部構造:', event._def);
         }
 
         // FullCalendarのイベントオブジェクトから情報を取得するヘルパー関数
@@ -671,19 +671,19 @@ var CalendarUI = (function() {
         let eventId;
         if (event.id) {
             eventId = event.id;
-            console.log('詳細パネルで既存のイベントIDを使用:', eventId);
+            //console.log('詳細パネルで既存のイベントIDを使用:', eventId);
         } else if (event.extendedProps && event.extendedProps.eventId) {
             // extendedPropsからIDを取得
             eventId = event.extendedProps.eventId;
-            console.log('詳細パネルでextendedPropsからイベントIDを取得:', eventId);
+            //console.log('詳細パネルでextendedPropsからイベントIDを取得:', eventId);
         } else if (event._def && event._def.publicId) {
             // FullCalendarの内部構造からIDを取得
             eventId = event._def.publicId;
-            console.log('詳細パネルでFullCalendarの内部IDを使用:', eventId);
+            //console.log('詳細パネルでFullCalendarの内部IDを使用:', eventId);
         } else if (window.tempEventId) {
             // 一時保存されたIDを使用
             eventId = window.tempEventId;
-            console.log('詳細パネルで一時保存されたイベントIDを使用:', eventId);
+            //console.log('詳細パネルで一時保存されたイベントIDを使用:', eventId);
             // 使用後はクリア
             window.tempEventId = null;
         } else {
@@ -696,13 +696,13 @@ var CalendarUI = (function() {
                 new Date().toISOString().split('T')[0];
 
             eventId = 'event-' + safeTitle + '-' + dateStr + '-' + Math.random().toString(36).substr(2, 5);
-            console.log('詳細パネルで新規イベントIDを生成:', eventId);
+            //console.log('詳細パネルで新規イベントIDを生成:', eventId);
         }
 
         // nullやundefinedを避ける最終チェック
         if (!eventId) {
             eventId = 'event-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
-            console.log('詳細パネルでフォールバックイベントIDを生成:', eventId);
+            //console.log('詳細パネルでフォールバックイベントIDを生成:', eventId);
         }
 
         // グローバル変数に現在のイベントIDを保存
@@ -713,7 +713,7 @@ var CalendarUI = (function() {
         if (favoriteButton && window.EventFavorites) {
             // イベントがお気に入りかどうかで表示を切り替え
             const isFav = window.EventFavorites.isFavorite(eventId);
-            console.log('詳細パネルでのお気に入りチェック - イベントID:', eventId, 'お気に入り:', isFav);
+            //console.log('詳細パネルでのお気に入りチェック - イベントID:', eventId, 'お気に入り:', isFav);
 
             if (isFav) {
                 favoriteButton.classList.add('active');
@@ -726,10 +726,10 @@ var CalendarUI = (function() {
             // クリックイベントハンドラを設定
             favoriteButton.onclick = function(e) {
                 e.stopPropagation(); // イベントバブリングを防ぐ
-                console.log('詳細パネルでお気に入りボタンがクリックされました - イベントID:', eventId);
+                //console.log('詳細パネルでお気に入りボタンがクリックされました - イベントID:', eventId);
 
                 const isFavorite = window.EventFavorites.toggleFavorite(eventId);
-                console.log('トグル後の状態:', isFavorite);
+                //console.log('トグル後の状態:', isFavorite);
 
                 if (isFavorite) {
                     favoriteButton.classList.add('active');

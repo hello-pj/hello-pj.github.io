@@ -505,7 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, { passive: true });
 
-        console.log("カレンダーの水平スワイプ処理を初期化しました");
+        //console.log("カレンダーの水平スワイプ処理を初期化しました");
     }
 
     function handleSwipe() {
@@ -569,7 +569,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (showOnlyFavorites) {
                 // イベントIDを確実に取得
                 const eventId = event.id || '';
-                console.log('フィルターでイベントID確認:', eventId, 'お気に入り判定:', EventFavorites.isFavorite(eventId));
+                //console.log('フィルターでイベントID確認:', eventId, 'お気に入り判定:', EventFavorites.isFavorite(eventId));
                 if (!EventFavorites.isFavorite(eventId)) {
                     return false;
                 }
@@ -578,7 +578,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return true;
         });
 
-        console.log('フィルター後のイベント数:', filteredEvents.length);
+        //console.log('フィルター後のイベント数:', filteredEvents.length);
 
         filteredEvents.forEach(function(event) {
             calendar.addEvent(event);
@@ -780,7 +780,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 calendar.setOption('datesSet', ensureHeaderVisibility);
             }
         } catch (e) {
-            console.log('カレンダーイベントリスナーの設定中にエラーが発生しました:', e);
+            //console.log('カレンダーイベントリスナーの設定中にエラーが発生しました:', e);
         }
     }
 
