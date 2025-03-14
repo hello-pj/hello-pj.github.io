@@ -730,3 +730,54 @@ body {
         padding: 15px;
     }
 }
+
+
+/* お気に入りアイコンスタイル */
+
+.favorite-button {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    font-size: 24px;
+    cursor: pointer;
+    color: #ccc;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.favorite-button.active {
+    color: #FFD700;
+}
+
+.favorite-button:hover {
+    transform: scale(1.1);
+}
+
+
+/* イベントリスト内のお気に入りアイコン */
+
+.event-list-favorite {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    font-size: 18px;
+    transition: all 0.2s ease;
+}
+
+.event-list-favorite:hover {
+    transform: scale(1.1);
+}
+
+
+/* お気に入りフィルターボタン */
+
+.favorite-filter {
+    background-color: #FFD700;
+    color: #333;
+}
+
+.favorite-filter:not(.active) {
+    background-color: #ddd !important;
+    color: #666;
+}

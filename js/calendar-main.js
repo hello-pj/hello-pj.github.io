@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendar; // カレンダーインスタンス
     var isMobile = window.innerWidth <= 768; // 現在のビューがモバイルかどうか
     var currentEvents = []; // イベントデータを保持する変数
+    var showOnlyFavorites = false; // お気に入りのみ表示するかどうかのフラグ
+    var currentEventId = null; // 現在表示中のイベントのID
 
     // イベントリストから詳細パネルが開かれたかどうかを追跡するグローバルフラグ
     window.detailOpenedFromList = false;
@@ -532,10 +534,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // updateCalendarEvents関数をお気に入りフィルターに対応するよう修正
     function updateCalendarEvents(calendar, events) {
         calendar.removeAllEvents();
         var filteredEvents = events.filter(function(event) {
-            return CalendarData.activeGroups.has(event.group);
+            // グループフィルターのチェック
+            if (!CalendarData.activeGroups.has(event.group)) {
+                return false;
+            }
+
+            // お気に入りフィルターのチェック
+            if (showOnlyFavorites && !EventFavorites.isFavorite(event.id)) {
+                return false;
+            }
+
+            return true;
         });
         filteredEvents.forEach(function(event) {
             calendar.addEvent(event);
@@ -557,6 +570,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // グループフィルターをクリア
         groupFiltersContainer.innerHTML = '';
+
+        // お気に入りフィルタボタンを追加
+        var favoriteButton = document.createElement('div');
+        favoriteButton.classList.add('group-filter');
+        favoriteButton.textContent = 'お気に入り';
+        favoriteButton.style.backgroundColor = '#FFD700';
+        favoriteButton.style.color = '#333';
+        favoriteButton.onclick = function() {
+            showOnlyFavorites = !showOnlyFavorites;
+            if (showOnlyFavorites) {
+                favoriteButton.classList.add('active');
+            } else {
+                favoriteButton.classList.remove('active');
+            }
+            updateCalendarEvents(calendar, currentEvents);
+        };
+        groupFiltersContainer.appendChild(favoriteButton);
 
         // グループフィルターを作成
         Object.keys(CalendarData.groupColors).forEach(function(group) {

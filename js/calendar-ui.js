@@ -184,7 +184,7 @@ var CalendarUI = (function() {
             noEventEl.textContent = 'この日のイベントはありません';
             eventListEl.appendChild(noEventEl);
         } else {
-            events.forEach(function(event) {
+            events.forEach(function(event, index) {
                 var eventItem = document.createElement('div');
                 eventItem.className = 'event-list-item';
 
@@ -226,12 +226,40 @@ var CalendarUI = (function() {
                     groupValue = event.extendedProps.group;
                 }
 
+                // お気に入りアイコン用のspan要素
+                var favoriteIcon = document.createElement('span');
+                favoriteIcon.className = 'event-list-favorite';
+                favoriteIcon.textContent = window.EventFavorites && window.EventFavorites.isFavorite(event.id) ? '★' : '☆';
+                favoriteIcon.style.color = window.EventFavorites && window.EventFavorites.isFavorite(event.id) ? '#FFD700' : '#ccc';
+                favoriteIcon.style.fontSize = '18px';
+                favoriteIcon.style.marginRight = '8px';
+                favoriteIcon.style.cursor = 'pointer';
+
+                // お気に入りアイコンのクリックイベント
+                favoriteIcon.addEventListener('click', function(e) {
+                    e.stopPropagation(); // 親要素へのクリックイベントの伝播を防止
+                    if (window.EventFavorites) {
+                        const isFavorite = window.EventFavorites.toggleFavorite(event.id);
+                        favoriteIcon.textContent = isFavorite ? '★' : '☆';
+                        favoriteIcon.style.color = isFavorite ? '#FFD700' : '#ccc';
+
+                        // お気に入りフィルターが適用されている場合はカレンダーを更新
+                        if (window.showOnlyFavorites) {
+                            window.updateCalendarEvents(window.calendar, window.currentEvents);
+                        }
+                    }
+                });
+
+                // イベントリストの内容を作成
                 eventItem.innerHTML =
                     '<div class="event-list-time">' + formattedTime + '</div>' +
                     '<div class="event-list-content">' +
                     '<div class="event-list-title">' + event.title + '</div>' +
                     '<div class="event-list-group" style="color: ' + CalendarData.groupColors[groupValue] + '">' + groupValue + '</div>' +
                     '</div>';
+
+                // お気に入りアイコンを挿入
+                eventItem.insertBefore(favoriteIcon, eventItem.firstChild);
 
                 // ここが重要: タップ機能を追加
                 eventItem.addEventListener('click', function(e) {
@@ -353,62 +381,6 @@ var CalendarUI = (function() {
             shareAllButtonContainer.appendChild(shareAllButton);
             shareAllButtonContainer.appendChild(xShareButton);
         }
-        // Also add share buttons to each event in the list
-        var eventItems = document.querySelectorAll('.event-list-item');
-        eventItems.forEach(function(item, index) {
-            // Create a small share button
-            var shareItemButton = document.createElement('button');
-            shareItemButton.className = 'share-item-button';
-            shareItemButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>';
-            shareItemButton.style.backgroundColor = 'transparent';
-            shareItemButton.style.color = '#0073e6';
-            shareItemButton.style.border = 'none';
-            shareItemButton.style.padding = '6px';
-            shareItemButton.style.margin = '0';
-            shareItemButton.style.cursor = 'pointer';
-            shareItemButton.style.borderRadius = '50%';
-            shareItemButton.style.display = 'flex';
-            shareItemButton.style.alignItems = 'center';
-            shareItemButton.style.justifyContent = 'center';
-
-            // Add the button to the item
-            var contentDiv = item.querySelector('.event-list-content');
-            if (contentDiv) {
-                // Create a container for the content and share button
-                var containerDiv = document.createElement('div');
-                containerDiv.style.display = 'flex';
-                containerDiv.style.justifyContent = 'space-between';
-                containerDiv.style.alignItems = 'center';
-                containerDiv.style.width = '100%';
-
-                // Move the content into the container
-                item.removeChild(contentDiv);
-                containerDiv.appendChild(contentDiv);
-
-                // Add the share button to the container
-                containerDiv.appendChild(shareItemButton);
-
-                // Add the container back to the item
-                item.appendChild(containerDiv);
-            } else {
-                item.appendChild(shareItemButton);
-            }
-
-            // Add click event listener to share just this event
-            shareItemButton.addEventListener('click', function(e) {
-                e.stopPropagation(); // Prevent opening the event details
-
-                // Format the date for sharing
-                var formattedDate = date.getFullYear() + '年' +
-                    (date.getMonth() + 1) + '月' +
-                    date.getDate() + '日 (' +
-                    weekdayNames[date.getDay()] + ')';
-
-                // Share just this event
-                EventSharing.shareEvent(events[index], formattedDate);
-            });
-        });
-
 
         // イベントリストコンテナを表示
         eventListContainer.classList.add('show');
@@ -651,6 +623,37 @@ var CalendarUI = (function() {
                 'img/default_image.jpg';
         }
 
+        // お気に入りボタンの状態を設定
+        var favoriteButton = document.getElementById('favorite-button');
+        if (favoriteButton && window.EventFavorites) {
+            // イベントがお気に入りかどうかで表示を切り替え
+            if (window.EventFavorites.isFavorite(event.id)) {
+                favoriteButton.classList.add('active');
+                favoriteButton.textContent = '★';
+            } else {
+                favoriteButton.classList.remove('active');
+                favoriteButton.textContent = '☆';
+            }
+
+            // クリックイベントハンドラを設定（以前のハンドラを削除して再設定）
+            favoriteButton.onclick = function(e) {
+                e.stopPropagation(); // イベントバブリングを防ぐ
+                const isFavorite = window.EventFavorites.toggleFavorite(event.id);
+                if (isFavorite) {
+                    favoriteButton.classList.add('active');
+                    favoriteButton.textContent = '★';
+                } else {
+                    favoriteButton.classList.remove('active');
+                    favoriteButton.textContent = '☆';
+                }
+
+                // お気に入りフィルターが適用されている場合はカレンダーを更新
+                if (window.showOnlyFavorites) {
+                    window.updateCalendarEvents(window.calendar, window.currentEvents);
+                }
+            };
+        }
+
         // Find or create a container for the share button
         var shareButtonContainer = document.getElementById('share-button-container');
         if (!shareButtonContainer) {
@@ -710,7 +713,6 @@ var CalendarUI = (function() {
             document.getElementById('overlay').style.display = 'block';
         }
     }
-
     // Return public API
     return {
         weekdayNames: weekdayNames,

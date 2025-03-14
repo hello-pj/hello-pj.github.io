@@ -94,13 +94,16 @@
             </div>
         </div>
         <!-- イベント詳細パネル部分 -->
+        <!-- イベント詳細パネル部分 -->
         <div id="event-details">
             <div id="close-details"></div>
             <picture>
                 <source id="event-image-webp" srcset="img/default_image.webp" type="image/webp">
                 <img id="event-image" src="img/default_image.jpg" alt="Event Image">
             </picture>
-            <h2>イベント詳細</h2>
+            <div style="position: relative;">
+                <h2>イベント詳細<span id="favorite-button" class="favorite-button">☆</span></h2>
+            </div>
             <p><strong>タイトル:</strong> <span id="event-title"></span></p>
             <p><strong>日付:</strong> <span id="event-date"></span></p>
             <p><strong>場所:</strong> <span id="event-location"></span></p>
@@ -187,6 +190,8 @@
     <script src="/pwa-register.js"></script>
     <script src="/install-banner.js"></script>
     <script src="js/ad-rotation.js"></script>
+    <script src="js/favorites.js"></script>
+
     <!-- オフライン状態を検知するスクリプト -->
     <script>
         // オンライン/オフライン状態を検知
