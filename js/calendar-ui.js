@@ -188,6 +188,21 @@ var CalendarUI = (function() {
                 var eventItem = document.createElement('div');
                 eventItem.className = 'event-list-item';
 
+                // イベントIDを確実に取得
+                let eventId = event.id;
+                if (!eventId) {
+                    // IDがない場合は一意のIDを生成して設定
+                    const dateStr = typeof event.start === 'string' ? event.start.split('T')[0] :
+                        (event.start instanceof Date ? event.start.toISOString().split('T')[0] : '');
+                    eventId = 'event-' + index + '-' + dateStr + '-' + Date.now();
+                    event.id = eventId;
+                } else {
+                    //console.log('リストで既存のイベントIDを使用:', eventId);
+                }
+
+                // データ属性としてDOMに保存
+                eventItem.dataset.eventId = eventId;
+
                 // 時間表示の処理
                 var formattedTime;
                 if (event.allDay) {
@@ -229,8 +244,11 @@ var CalendarUI = (function() {
                 // お気に入りアイコン用のspan要素
                 var favoriteIcon = document.createElement('span');
                 favoriteIcon.className = 'event-list-favorite';
-                favoriteIcon.textContent = window.EventFavorites && window.EventFavorites.isFavorite(event.id) ? '★' : '☆';
-                favoriteIcon.style.color = window.EventFavorites && window.EventFavorites.isFavorite(event.id) ? '#FFD700' : '#ccc';
+                const isFav = window.EventFavorites && window.EventFavorites.isFavorite(eventId);
+                console.log('リストでのお気に入りチェック - イベントID:', eventId, 'お気に入り:', isFav);
+
+                favoriteIcon.textContent = isFav ? '★' : '☆';
+                favoriteIcon.style.color = isFav ? '#FFD700' : '#ccc';
                 favoriteIcon.style.fontSize = '18px';
                 favoriteIcon.style.marginRight = '8px';
                 favoriteIcon.style.cursor = 'pointer';
@@ -238,8 +256,12 @@ var CalendarUI = (function() {
                 // お気に入りアイコンのクリックイベント
                 favoriteIcon.addEventListener('click', function(e) {
                     e.stopPropagation(); // 親要素へのクリックイベントの伝播を防止
+                    console.log('リストでお気に入りアイコンがクリックされました - イベントID:', eventId);
+
                     if (window.EventFavorites) {
-                        const isFavorite = window.EventFavorites.toggleFavorite(event.id);
+                        const isFavorite = window.EventFavorites.toggleFavorite(eventId);
+                        console.log('トグル後の状態:', isFavorite);
+
                         favoriteIcon.textContent = isFavorite ? '★' : '☆';
                         favoriteIcon.style.color = isFavorite ? '#FFD700' : '#ccc';
 
@@ -247,6 +269,9 @@ var CalendarUI = (function() {
                         if (window.showOnlyFavorites) {
                             window.updateCalendarEvents(window.calendar, window.currentEvents);
                         }
+
+                        // デバッグ: 現在のお気に入りリストを表示
+                        window.EventFavorites.debugShowFavorites();
                     }
                 });
 
@@ -310,7 +335,6 @@ var CalendarUI = (function() {
 
         // Clear previous buttons
         shareAllButtonContainer.innerHTML = '';
-
 
         // Only add the share buttons if there are events
         if (events.length > 0) {
@@ -398,13 +422,35 @@ var CalendarUI = (function() {
         var eventImage = document.getElementById('event-image');
         var eventImageWebp = document.getElementById('event-image-webp');
 
-        eventTitle.textContent = event.title;
+        // デバッグ: イベントオブジェクトの構造を確認
+        console.log('イベントオブジェクト:', event);
+        if (event._def) {
+            console.log('イベント内部構造:', event._def);
+        }
 
-        // 日付と時間の処理（変更なし）
+        // FullCalendarのイベントオブジェクトから情報を取得するヘルパー関数
+        function getEventProp(prop) {
+            if (event.extendedProps && event.extendedProps[prop] !== undefined) {
+                return event.extendedProps[prop];
+            }
+            if (event[prop] !== undefined) {
+                return event[prop];
+            }
+            // rawEventに対応（FullCalendarの内部構造）
+            if (event._def && event._def.extendedProps && event._def.extendedProps[prop] !== undefined) {
+                return event._def.extendedProps[prop];
+            }
+            return '';
+        }
+
+        // タイトルの設定
+        eventTitle.textContent = event.title || (event._def ? event._def.title : '');
+
+        // 日付と時間の処理
         var displayDate = '';
         var isAllDayEvent = false; // 終日イベントかどうかのフラグ
 
-        if (event.allDay) {
+        if (event.allDay || (event._def && event._def.allDay)) {
             // 終日イベントの処理
             isAllDayEvent = true; // 終日イベントフラグをセット
             var startStr = '';
@@ -493,20 +539,18 @@ var CalendarUI = (function() {
         eventDate.textContent = displayDate;
 
         // その他の情報を設定
-        var locationText = "";
-        var descriptionText = "";
-        var groupText = "";
+        var locationText = getEventProp('location');
+        var descriptionText = getEventProp('description');
+        var groupText = getEventProp('group');
 
-        // extendedProps のチェック
-        if (event.extendedProps) {
-            locationText = event.extendedProps.location || "";
-            descriptionText = event.extendedProps.description || "";
-            groupText = event.extendedProps.group || "";
-        } else {
-            // 直接プロパティ
-            locationText = event.location || "";
-            descriptionText = event.description || "";
-            groupText = event.group || "";
+        // グループがない場合はFCイベントから取得を試みる
+        if (!groupText && event._def && event._def.ui && event._def.ui.backgroundColor) {
+            // 色からグループを推測
+            Object.keys(CalendarData.groupColors).forEach(function(group) {
+                if (CalendarData.groupColors[group] === event._def.ui.backgroundColor) {
+                    groupText = group;
+                }
+            });
         }
 
         // 場所の表示（終日イベントでは非表示）
@@ -623,11 +667,55 @@ var CalendarUI = (function() {
                 'img/default_image.jpg';
         }
 
+        // イベントIDを確実に取得
+        let eventId;
+        if (event.id) {
+            eventId = event.id;
+            console.log('詳細パネルで既存のイベントIDを使用:', eventId);
+        } else if (event.extendedProps && event.extendedProps.eventId) {
+            // extendedPropsからIDを取得
+            eventId = event.extendedProps.eventId;
+            console.log('詳細パネルでextendedPropsからイベントIDを取得:', eventId);
+        } else if (event._def && event._def.publicId) {
+            // FullCalendarの内部構造からIDを取得
+            eventId = event._def.publicId;
+            console.log('詳細パネルでFullCalendarの内部IDを使用:', eventId);
+        } else if (window.tempEventId) {
+            // 一時保存されたIDを使用
+            eventId = window.tempEventId;
+            console.log('詳細パネルで一時保存されたイベントIDを使用:', eventId);
+            // 使用後はクリア
+            window.tempEventId = null;
+        } else {
+            // 新規IDを生成
+            const titleStr = event.title || (event._def ? event._def.title : 'event');
+            const safeTitle = titleStr.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+            const dateStr = event.start ?
+                (typeof event.start === 'string' ? event.start.split('T')[0] :
+                    (event.start instanceof Date ? event.start.toISOString().split('T')[0] : '')) :
+                new Date().toISOString().split('T')[0];
+
+            eventId = 'event-' + safeTitle + '-' + dateStr + '-' + Math.random().toString(36).substr(2, 5);
+            console.log('詳細パネルで新規イベントIDを生成:', eventId);
+        }
+
+        // nullやundefinedを避ける最終チェック
+        if (!eventId) {
+            eventId = 'event-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+            console.log('詳細パネルでフォールバックイベントIDを生成:', eventId);
+        }
+
+        // グローバル変数に現在のイベントIDを保存
+        window.currentEventId = eventId;
+
         // お気に入りボタンの状態を設定
         var favoriteButton = document.getElementById('favorite-button');
         if (favoriteButton && window.EventFavorites) {
             // イベントがお気に入りかどうかで表示を切り替え
-            if (window.EventFavorites.isFavorite(event.id)) {
+            const isFav = window.EventFavorites.isFavorite(eventId);
+            console.log('詳細パネルでのお気に入りチェック - イベントID:', eventId, 'お気に入り:', isFav);
+
+            if (isFav) {
                 favoriteButton.classList.add('active');
                 favoriteButton.textContent = '★';
             } else {
@@ -635,10 +723,14 @@ var CalendarUI = (function() {
                 favoriteButton.textContent = '☆';
             }
 
-            // クリックイベントハンドラを設定（以前のハンドラを削除して再設定）
+            // クリックイベントハンドラを設定
             favoriteButton.onclick = function(e) {
                 e.stopPropagation(); // イベントバブリングを防ぐ
-                const isFavorite = window.EventFavorites.toggleFavorite(event.id);
+                console.log('詳細パネルでお気に入りボタンがクリックされました - イベントID:', eventId);
+
+                const isFavorite = window.EventFavorites.toggleFavorite(eventId);
+                console.log('トグル後の状態:', isFavorite);
+
                 if (isFavorite) {
                     favoriteButton.classList.add('active');
                     favoriteButton.textContent = '★';
@@ -650,6 +742,11 @@ var CalendarUI = (function() {
                 // お気に入りフィルターが適用されている場合はカレンダーを更新
                 if (window.showOnlyFavorites) {
                     window.updateCalendarEvents(window.calendar, window.currentEvents);
+                }
+
+                // デバッグ: 現在のお気に入りリストを表示
+                if (window.EventFavorites.debugShowFavorites) {
+                    window.EventFavorites.debugShowFavorites();
                 }
             };
         }

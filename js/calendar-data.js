@@ -51,7 +51,15 @@ var CalendarData = (function() {
                 return response.json();
             })
             .then(function(events) {
-                return events.map(function(event) {
+
+                return events.map(function(event, index) {
+                    // IDの確認と設定
+                    var eventId = event.Id;
+                    if (!eventId) {
+                        // IDがない場合は生成する
+                        eventId = 'event-' + index + '-' + event.Subject.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+                    }
+
                     // 日付をUTCからJST(UTC+9)に変換
                     var utcDate = new Date(event['Start Date']);
                     var jstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
@@ -67,7 +75,7 @@ var CalendarData = (function() {
                     // All Day Event の処理
                     if (event['All Day Event'] === true || event['All Day Event'] === 'TRUE') {
                         return {
-                            id: event.Id,
+                            id: eventId, // 確実にIDを設定
                             title: event.Subject,
                             start: event['Start Date'], // 終日イベントは時間なしの日付だけを指定
                             end: event['End Date'] ? event['End Date'] : null, // 終了日があれば設定
@@ -75,7 +83,11 @@ var CalendarData = (function() {
                             location: event.Location,
                             description: event.Description,
                             group: event.Group,
-                            color: groupColors[event.Group] || '#000000'
+                            color: groupColors[event.Group] || '#000000',
+                            // extendedPropsにも保存
+                            extendedProps: {
+                                eventId: eventId
+                            }
                         };
                     } else {
                         // 時間指定のあるイベント
@@ -86,7 +98,7 @@ var CalendarData = (function() {
                         }
 
                         return {
-                            id: event.Id,
+                            id: eventId, // 確実にIDを設定
                             title: event.Subject,
                             start: event['Start Date'] + "T" + event['Start Time'],
                             end: event['End Date'] ? (event['End Date'] + "T" + (event['End Time'] ? event['End Time'].split('T')[1] : '23:59:59')) : null,
@@ -94,7 +106,11 @@ var CalendarData = (function() {
                             location: event.Location,
                             description: event.Description,
                             group: event.Group,
-                            color: groupColors[event.Group] || '#000000'
+                            color: groupColors[event.Group] || '#000000',
+                            // extendedPropsにも保存
+                            extendedProps: {
+                                eventId: eventId
+                            }
                         };
                     }
                 });

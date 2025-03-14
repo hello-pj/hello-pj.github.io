@@ -145,6 +145,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleEventClick(info) {
+        // イベントIDの確認と取得
+        let eventId = info.event.id;
+
+        // IDがない場合はextendedPropsから取得を試みる
+        if (!eventId && info.event.extendedProps && info.event.extendedProps.eventId) {
+            eventId = info.event.extendedProps.eventId;
+        }
+
+        // それでもIDがない場合は生成する
+        if (!eventId) {
+            eventId = 'event-' + info.event.title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '-' + Date.now();
+            // グローバル変数に一時保存
+            window.tempEventId = eventId;
+        }
+
+
         if (window.innerWidth <= 768) {
             // モバイルモードの場合
             // 現在のビューを取得
@@ -157,12 +173,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 CalendarUI.showEventList(info.event.start, sameDay, eventListContainer);
             } else {
                 // 日表示と週表示の場合は直接イベント詳細を表示
+                // FullCalendarのイベントオブジェクトをそのまま渡す
+                // イベントIDのみを追加情報として渡す
+                window.tempEventId = eventId;
                 CalendarUI.showEventDetails(info.event, info.el.textContent, eventDetails);
             }
         } else {
             // PCの場合、直接イベント詳細を表示
             // イベント要素のテキストコンテンツを取得（表示されている時間を含む）
             var displayText = info.el.textContent;
+            // FullCalendarのイベントオブジェクトをそのまま渡す
+            // イベントIDのみを追加情報として渡す
+            window.tempEventId = eventId;
             CalendarUI.showEventDetails(info.event, displayText, eventDetails);
         }
     }
@@ -544,12 +566,20 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // お気に入りフィルターのチェック
-            if (showOnlyFavorites && !EventFavorites.isFavorite(event.id)) {
-                return false;
+            if (showOnlyFavorites) {
+                // イベントIDを確実に取得
+                const eventId = event.id || '';
+                console.log('フィルターでイベントID確認:', eventId, 'お気に入り判定:', EventFavorites.isFavorite(eventId));
+                if (!EventFavorites.isFavorite(eventId)) {
+                    return false;
+                }
             }
 
             return true;
         });
+
+        console.log('フィルター後のイベント数:', filteredEvents.length);
+
         filteredEvents.forEach(function(event) {
             calendar.addEvent(event);
         });
