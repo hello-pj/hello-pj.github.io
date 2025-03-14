@@ -93,15 +93,28 @@ var CalendarUI = (function() {
         var weekday = weekdayNames[args.date.getDay()];
         var day = args.date.getDate();
 
-        // 曜日と日付を含むHTMLを返す
-        return {
-            html: '<div style="display: flex; flex-direction: column; align-items: center;">' +
-                '<div style="font-size: 0.8em; color: #666;">' + weekday + '</div>' +
-                '<div style="font-size: 1.2em; font-weight: bold;">' + day + '</div>' +
-                '</div>'
-        };
-    }
+        // 曜日のクラス名を判定
+        var weekdayClass = 'day-header-weekday';
+        if (args.date.getDay() === 0) {
+            weekdayClass += ' sunday';
+        } else if (args.date.getDay() === 6) {
+            weekdayClass += ' saturday';
+        }
 
+        // 祝日判定
+        if (JapaneseHolidays && typeof JapaneseHolidays.isHoliday === 'function' && JapaneseHolidays.isHoliday(args.date)) {
+            weekdayClass += ' holiday';
+        }
+
+        // 曜日と日付を含むHTMLを返す
+        var html = '<div style="display: flex; flex-direction: column; align-items: center;">' +
+            '<div class="' + weekdayClass + '" style="font-size: 0.8em;">' + weekday + '</div>' +
+            '<div style="font-size: 1.2em; font-weight: bold;">' + day + '</div>';
+
+        html += '</div>';
+
+        return { html: html };
+    }
     // Format event content based on mobile or desktop view
     function formatEventContent(arg, isMobile) {
         var isAllDay = arg.event.allDay;

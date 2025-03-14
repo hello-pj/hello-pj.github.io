@@ -91,6 +91,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 events: events.filter(function(event) {
                     return CalendarData.activeGroups.has(event.group);
                 }),
+                // 土日と祝日用のクラス名を追加
+                dayCellClassNames: function(arg) {
+                    const classes = [];
+                    const day = arg.date.getDay();
+
+                    // 土日の判定
+                    if (day === 0) {
+                        classes.push('fc-day-sun');
+                    } else if (day === 6) {
+                        classes.push('fc-day-sat');
+                    }
+
+                    // 祝日の判定
+                    if (JapaneseHolidays && typeof JapaneseHolidays.isHoliday === 'function' && JapaneseHolidays.isHoliday(arg.date)) {
+                        classes.push('fc-day-holiday');
+                    }
+
+                    return classes;
+                },
+
+                // モバイルモードか PC モードに応じてイベント表示をカスタマイズ
+                eventContent: function(arg) {
+                    return CalendarUI.formatEventContent(arg, isMobile);
+                },
                 // モバイルモードか PC モードに応じてイベント表示をカスタマイズ
                 eventContent: function(arg) {
                     return CalendarUI.formatEventContent(arg, isMobile);

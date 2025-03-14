@@ -150,6 +150,63 @@ body {
 }
 
 
+/* 土曜日の背景色 */
+
+.fc-day-sat {
+    background-color: rgba(220, 240, 255, 0.3);
+}
+
+
+/* 日曜日の背景色 */
+
+.fc-day-sun {
+    background-color: rgba(255, 220, 220, 0.3);
+}
+
+
+/* 月表示での土日のヘッダー色 */
+
+.fc-col-header-cell.fc-day-sat .fc-col-header-cell-cushion {
+    color: #0066cc;
+}
+
+.fc-col-header-cell.fc-day-sun .fc-col-header-cell-cushion {
+    color: #cc0000;
+}
+
+
+/* 週表示と日表示のカスタムヘッダー内で土日の色を設定 */
+
+.fc-day-sat .day-header-weekday {
+    color: #0066cc;
+}
+
+.fc-day-sun .day-header-weekday {
+    color: #cc0000;
+}
+
+
+/* 祝日の背景色 */
+
+.fc-day-holiday {
+    background-color: rgba(255, 210, 210, 0.4) !important;
+}
+
+
+/* 祝日の文字色 */
+
+.fc-col-header-cell.fc-day-holiday .fc-col-header-cell-cushion {
+    color: #cc0000;
+}
+
+
+/* 週表示と日表示のカスタムヘッダー内で祝日の色を設定 */
+
+.fc-day-holiday .day-header-weekday {
+    color: #cc0000;
+}
+
+
 /* カレンダー本体 */
 
 #calendar {
