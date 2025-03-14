@@ -34,7 +34,14 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="H!P カレンダー">
     <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
-    <meta name="description" content="モーニング娘。'25、アンジュルム、Juice=Juice、つばきファクトリー、BEYOOOOONDS、OCHA NORMA、ロージークロニクルなどハロー！プロジェクトの最新ライブ・コンサートスケジュールを一覧表示。公演日程、会場情報、リリースイベントなど最新情報を網羅。グループ別にフィルタリングも可能。">
+
+    <!-- LCP改善のための画像プリロード -->
+    <link rel="preload" href="img/morning_musume_image.webp" as="image" type="image/webp">
+    <link rel="preload" href="img/morning_musume_image.jpg" as="image" type="image/jpeg">
+    <link rel="preload" href="img/angerme_image.webp" as="image" type="image/webp">
+    <link rel="preload" href="img/juice_juice_image.webp" as="image" type="image/webp">
+
+    <meta name="description" content="モーニング娘。'25、アンジュルム、Juice=Juice、つばきファクトリー、BEYOOOOONDS、OCHA NORMAなどハロー！プロジェクトの最新ライブ・コンサートスケジュールを一覧表示。公演日程、会場情報、リリースイベントなど最新情報を網羅。グループ別にフィルタリングも可能。">
     <!-- 追加メタタグ -->
     <meta name="keywords" content="ハロプロ,Hello! Project,ハロー！プロジェクト,モーニング娘。,アンジュルム,Juice=Juice,つばきファクトリー,BEYOOOOONDS,OCHA NORMA,ロージークロニクル,ハロプロ研修生,イベント,ライブ,カレンダー">
     <meta name="author" content="Hello! Project Fan Calendar">
@@ -88,7 +95,7 @@
     </a>
 
     <!-- ハロメン検索ボタン -->
-    <a href="/members" class="members-button round-nav-button">
+    <a href="../members.html" class="members-button round-nav-button">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -106,7 +113,7 @@
                     <div class="group-image">
                         <picture>
                             <source srcset="img/morning_musume_image.webp" type="image/webp">
-                            <img src="img/morning_musume_image.jpg" alt="モーニング娘。'25">
+                            <img src="img/morning_musume_image.jpg" alt="モーニング娘。'25" width="400" height="300" loading="eager">
                         </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@morningmusume" class="movie-button">
@@ -134,7 +141,7 @@
                     <div class="group-image">
                         <picture>
                             <source srcset="img/angerme_image.webp" type="image/webp">
-                            <img src="img/angerme_image.jpg" alt="アンジュルム">
+                            <img src="img/angerme_image.jpg" alt="アンジュルム" width="400" height="300" loading="eager">
                         </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@angerme" class="movie-button">
@@ -162,7 +169,7 @@
                     <div class="group-image">
                         <picture>
                             <source srcset="img/juice_juice_image.webp" type="image/webp">
-                            <img src="img/juice_juice_image.jpg" alt="Juice=Juice">
+                            <img src="img/juice_juice_image.jpg" alt="Juice=Juice" width="400" height="300" loading="eager">
                         </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@juicejuice" class="movie-button">
@@ -190,7 +197,7 @@
                     <div class="group-image">
                         <picture>
                             <source srcset="img/tsubaki_factory_image.webp" type="image/webp">
-                            <img src="img/tsubaki_factory_image.jpg" alt="つばきファクトリー">
+                            <img src="img/tsubaki_factory_image.jpg" alt="つばきファクトリー" width="400" height="300" loading="lazy">
                         </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@tsubakifactory" class="movie-button">
@@ -218,7 +225,7 @@
                     <div class="group-image">
                         <picture>
                             <source srcset="img/beyooooonds_image.webp" type="image/webp">
-                            <img src="img/beyooooonds_image.jpg" alt="BEYOOOOONDS">
+                            <img src="img/beyooooonds_image.jpg" alt="BEYOOOOONDS" width="400" height="300" loading="lazy">
                         </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@BEYOOOOONDS" class="movie-button">
@@ -246,7 +253,7 @@
                     <div class="group-image">
                         <picture>
                             <source srcset="img/ocha_norma_image.webp" type="image/webp">
-                            <img src="img/ocha_norma_image.jpg" alt="OCHA NORMA">
+                            <img src="img/ocha_norma_image.jpg" alt="OCHA NORMA" width="400" height="300" loading="lazy">
                         </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@OCHANORMA" class="movie-button">
@@ -274,7 +281,7 @@
                     <div class="group-image">
                         <picture>
                             <source srcset="img/rosy_chronicle_image.webp" type="image/webp">
-                            <img src="img/rosy_chronicle_image.jpg" alt="ロージークロニクル">
+                            <img src="img/rosy_chronicle_image.jpg" alt="ロージークロニクル" width="400" height="300" loading="lazy">
                         </picture>
                         <div class="action-buttons">
                             <a href="https://www.youtube.com/@RosyChronicle" class="movie-button">
@@ -302,7 +309,7 @@
                     <div class="group-image">
                         <picture>
                             <source srcset="img/hello_project_trainees_image.webp" type="image/webp">
-                            <img src="img/hello_project_trainees_image.jpg" alt="ハロプロ研修生">
+                            <img src="img/hello_project_trainees_image.jpg" alt="ハロプロ研修生" width="400" height="300" loading="lazy">
                         </picture>
                         <div class="action-buttons">
                             <a href="https://www.helloproject.com/helloprokenshusei/" class="official-button">
