@@ -229,32 +229,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 const groupEvents = eventsForDate.filter(event => event.group === group.name);
 
                 if (groupEvents.length > 0) {
-                    // イベント情報をセルに追加
-                    groupEvents.forEach(event => {
+                    // イベントを会場ごとにグループ化
+                    const eventsByVenue = groupEventsByVenue(groupEvents);
+
+                    // 各会場のイベント情報をセルに追加
+                    Object.keys(eventsByVenue).forEach(venue => {
+                        const venueEvents = eventsByVenue[venue];
                         const eventDiv = document.createElement('div');
                         eventDiv.className = `event-cell group-${group.id}`;
 
-                        // 場所と開演時間を表示
+                        // 修正2: 会場名は括弧内の地名のみを表示
+                        let locationName = extractLocationName(venue);
+
+                        // イベント内容の生成
                         let eventContent = '';
 
-                        if (event.location) {
-                            eventContent += `<span class="event-venue">${event.location}</span>`;
-                        }
-
-                        // 開演時間の表示
-                        if (event.allDay) {
-                            // 終日イベントの場合はイベント名を表示
-                            eventContent += event.title;
+                        if (venueEvents[0].allDay || !hasEventTime(venueEvents)) {
+                            // 終日イベントまたは時間のないイベントの場合はイベント名を表示（省略あり）
+                            const eventTitle = venueEvents[0].title;
+                            // 修正3: イベント名を1行に収まるよう省略（最大25文字）
+                            eventContent = truncateText(eventTitle, 25);
                         } else {
-                            // 開演時間を表示
-                            const startTime = getEventTime(event.start);
-                            const endTime = event.end ? getEventTime(event.end) : '';
+                            // 地名の表示
+                            eventContent += `<span class="event-venue">${locationName}</span> `;
 
-                            if (startTime) {
-                                eventContent += `<span class="event-time">${startTime}${endTime ? '/' + endTime : ''}</span>`;
-                            } else {
-                                // 開演時間がない場合はイベント名を表示
-                                eventContent += event.title;
+                            // 修正1: 同じ会場の複数公演をまとめて開演時間を「/」でつなげる
+                            const times = venueEvents.map(event => getEventTime(event.start)).filter(Boolean);
+                            if (times.length > 0) {
+                                eventContent += `<span class="event-time">${times.join('/')}</span>`;
                             }
                         }
 
@@ -267,6 +269,51 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             scheduleTable.appendChild(row);
+        });
+    }
+
+    // イベントを会場ごとにグループ化する関数
+    function groupEventsByVenue(events) {
+        const eventsByVenue = {};
+
+        events.forEach(event => {
+            const venue = event.location || 'その他';
+
+            if (!eventsByVenue[venue]) {
+                eventsByVenue[venue] = [];
+            }
+
+            eventsByVenue[venue].push(event);
+        });
+
+        return eventsByVenue;
+    }
+
+    // 会場名から括弧内の地名を抽出する関数
+    function extractLocationName(venue) {
+        // 正規表現で括弧内の地名を抽出
+        const match = venue.match(/\(([^)]+)\)/);
+        if (match && match[1]) {
+            return match[1]; // 括弧内のテキストを返す
+        }
+
+        // 括弧がなければ会場名をそのまま返す（最大10文字）
+        return truncateText(venue, 10);
+    }
+
+    // テキストを指定の長さで切り詰める関数
+    function truncateText(text, maxLength) {
+        if (!text) return '';
+        if (text.length <= maxLength) return text;
+
+        return text.substring(0, maxLength - 1) + '…';
+    }
+
+    // イベントに時間情報があるかをチェックする関数
+    function hasEventTime(events) {
+        return events.some(event => {
+            const timeStr = getEventTime(event.start);
+            return timeStr && timeStr.length > 0;
         });
     }
 
