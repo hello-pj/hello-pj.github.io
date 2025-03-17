@@ -69,24 +69,23 @@ body {
 
 #schedule-controls {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.control-item {
-    display: flex;
-    align-items: center;
     gap: 10px;
 }
 
 #month-selector {
+    flex-grow: 1;
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
+    max-width: 200px;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 10px;
 }
 
 .control-button {
@@ -123,9 +122,7 @@ body {
 #schedule-table {
     width: 100%;
     table-layout: fixed;
-    /* 幅を固定 */
     border-collapse: separate;
-    /* 罫線を分離モードに */
     border-spacing: 0;
     font-size: 14px;
     background-color: white;
@@ -135,14 +132,12 @@ body {
 #schedule-table th,
 #schedule-table td {
     width: 135px;
-    /* グループごとの幅を固定 */
     min-width: 135px;
     max-width: 135px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     border: 1px solid #ddd;
-    /* 罫線を追加 */
     padding: 8px 6px;
 }
 
@@ -176,7 +171,6 @@ body {
 #schedule-table td.sunday,
 #schedule-table th.sunday {
     background-color: rgba(255, 220, 220, 0.3);
-    /* 薄い背景色 */
 }
 
 
@@ -185,7 +179,6 @@ body {
 #schedule-table td.saturday,
 #schedule-table th.saturday {
     background-color: rgba(220, 240, 255, 0.3);
-    /* 薄い背景色 */
 }
 
 
@@ -203,52 +196,44 @@ body {
 
 /* グループごとの背景色 */
 
+.group-hello {
+    background-color: rgba(3, 95, 159, 0.1);
+    border-left: 3px solid #035F9F;
+}
+
 .group-morning {
     background-color: rgba(232, 1, 18, 0.1);
-    /* 薄く */
     border-left: 3px solid #E80112;
 }
 
 .group-angerme {
     background-color: rgba(0, 145, 210, 0.1);
-    /* 薄く */
     border-left: 3px solid #0091D2;
 }
 
 .group-juice {
     background-color: rgba(97, 26, 133, 0.1);
-    /* 薄く */
     border-left: 3px solid #611A85;
 }
 
 .group-tsubaki {
     background-color: rgba(242, 158, 194, 0.1);
-    /* 薄く */
     border-left: 3px solid #F29EC2;
 }
 
 .group-beyooooonds {
     background-color: rgba(36, 152, 73, 0.1);
-    /* 薄く */
     border-left: 3px solid #249849;
 }
 
 .group-ocha {
     background-color: rgba(243, 152, 0, 0.1);
-    /* 薄く */
     border-left: 3px solid #F39800;
 }
 
 .group-rosy {
     background-color: rgba(255, 214, 41, 0.1);
-    /* 薄く */
     border-left: 3px solid #FFD629;
-}
-
-.group-trainee {
-    background-color: rgba(51, 214, 173, 0.1);
-    /* 薄く */
-    border-left: 3px solid #33D6AD;
 }
 
 
@@ -304,21 +289,27 @@ body {
 
 @media (max-width: 768px) {
     .round-nav-button {
-        width: 64px;
-        height: 64px;
+        width: 50px;
+        height: 50px;
         top: 10px;
         right: 10px;
     }
     .round-nav-button svg {
-        width: 26px;
-        height: 26px;
+        width: 22px;
+        height: 22px;
     }
     .round-nav-button span {
-        font-size: 9px;
+        font-size: 8px;
     }
     #schedule-controls {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    #month-selector {
+        max-width: 150px;
+    }
+    .control-buttons {
+        margin-left: auto;
     }
     #schedule-table th,
     #schedule-table td {

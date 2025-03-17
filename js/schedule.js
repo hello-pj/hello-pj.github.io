@@ -2,14 +2,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     // グループ情報の定義
     const groups = [
+        { id: 'hello', name: "HELLO! PROJECT", color: "#035F9F" },
         { id: 'morning', name: "モーニング娘。'25", color: "#E80112" },
         { id: 'angerme', name: "アンジュルム", color: "#0091D2" },
         { id: 'juice', name: "Juice=Juice", color: "#611A85" },
         { id: 'tsubaki', name: "つばきファクトリー", color: "#F29EC2" },
         { id: 'beyooooonds', name: "BEYOOOOONDS", color: "#249849" },
         { id: 'ocha', name: "OCHA NORMA", color: "#F39800" },
-        { id: 'rosy', name: "ロージークロニクル", color: "#FFD629" },
-        { id: 'trainee', name: "ハロプロ研修生", color: "#33D6AD" }
+        { id: 'rosy', name: "ロージークロニクル", color: "#FFD629" }
     ];
 
     let allEvents = []; // すべてのイベントデータを保持
