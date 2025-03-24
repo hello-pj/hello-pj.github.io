@@ -45,9 +45,33 @@ function addBasicSchemaMarkup() {
         }
     };
 
+    // WebSite構造化データ
+    const websiteSchema = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "ハロプロイベントカレンダー",
+        "url": "https://hello-pj.github.io/",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://hello-pj.github.io/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    };
+
+    // Organization構造化データ
+    const organizationSchema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "ハロプロイベントカレンダー",
+        "url": "https://hello-pj.github.io/",
+        "logo": "https://hello-pj.github.io/icons/icon-192x192.png"
+    };
+
     // スキーママークアップをページに追加
     addSchemaToHead(webpageSchema, 'webpage-schema');
     addSchemaToHead(eventSeriesSchema, 'eventseries-schema');
+    addSchemaToHead(websiteSchema, 'website-schema');
+    addSchemaToHead(organizationSchema, 'organization-schema');
 }
 
 // イベントスキーママークアップを生成する関数

@@ -392,12 +392,13 @@
         </div>
     </div>
 
-    <!-- ServiceWorker登録スクリプト - キャッシュバスター追加 -->
+    <!-- スクリプト読み込み - キャッシュバスター追加 -->
     <script>
         document.write('<script src="/pwa-register.js' + window.cacheBuster + '"><\/script>');
         document.write('<script src="/install-banner.js' + window.cacheBuster + '"><\/script>');
         document.write('<script src="/js/ad-rotation.js' + window.cacheBuster + '"><\/script>');
     </script>
+    <script src="/js/schema-markup.js"></script>
 </body>
 
 </html>
