@@ -20,7 +20,7 @@ function addBasicSchemaMarkup() {
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": "ハロプロイベントカレンダー | グループ別最新ライブ・コンサート情報",
-        "description": "モーニング娘。'25、アンジュルム、Juice=Juice、つばきファクトリー、BEYOOOOONDS、OCHA NORMAなどハロー！プロジェクトの最新ライブ・コンサートスケジュールを一覧表示。",
+        "description": "モーニング娘。'26、アンジュルム、Juice=Juice、つばきファクトリー、BEYOOOOONDS、OCHA NORMAなどハロー！プロジェクトの最新ライブ・コンサートスケジュールを一覧表示。",
         "publisher": {
             "@type": "Organization",
             "name": "ハロプロイベントカレンダー",

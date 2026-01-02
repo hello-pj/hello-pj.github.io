@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // グループ情報の定義
     const groups = [
         { id: 'hello', name: "HELLO! PROJECT", color: "#035F9F" },
-        { id: 'morning', name: "モーニング娘。'25", color: "#E80112" },
+        { id: 'morning', name: "モーニング娘。'26", color: "#E80112" },
         { id: 'angerme', name: "アンジュルム", color: "#0091D2" },
         { id: 'juice', name: "Juice=Juice", color: "#611A85" },
         { id: 'tsubaki', name: "つばきファクトリー", color: "#F29EC2" },

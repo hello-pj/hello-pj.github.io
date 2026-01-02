@@ -22,14 +22,14 @@ function addMembersPageSchema() {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
         "name": "メンバー一覧 | ハロプロメンバー検索・情報",
-        "description": "モーニング娘。'25、アンジュルム、Juice=Juice、つばきファクトリー、BEYOOOOONDS、OCHA NORMAなどハロー！プロジェクト所属メンバーの詳細情報。プロフィール、誕生日、血液型、出身地など。グループ別・条件別に検索可能。",
+        "description": "モーニング娘。'26、アンジュルム、Juice=Juice、つばきファクトリー、BEYOOOOONDS、OCHA NORMAなどハロー！プロジェクト所属メンバーの詳細情報。プロフィール、誕生日、血液型、出身地など。グループ別・条件別に検索可能。",
         "url": "https://hello-pj.github.io/members",
         "mainEntity": {
             "@type": "ItemList",
             "itemListElement": [{
                     "@type": "ListItem",
                     "position": 1,
-                    "name": "モーニング娘。'25",
+                    "name": "モーニング娘。'26",
                     "url": "https://hello-pj.github.io/groups/morningmusume.html"
                 },
                 {
@@ -232,7 +232,7 @@ function addMemberSchema(member) {
 // グループ名をパス用の英語表記に変換（members.jsの関数と同じロジック）
 function convertGroupNameToPath(groupName) {
     const groupMap = {
-        "モーニング娘。'25": "morningmusume",
+        "モーニング娘。'26": "morningmusume",
         "アンジュルム": "angerme",
         "Juice=Juice": "juicejuice",
         "つばきファクトリー": "tsubakifactory",

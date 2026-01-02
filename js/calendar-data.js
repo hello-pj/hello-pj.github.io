@@ -3,7 +3,7 @@ var CalendarData = (function() {
     // Group colors for different Hello Project groups
     var groupColors = {
         "HELLO! PROJECT": "#035F9F",
-        "モーニング娘。'25": "#E80112",
+        "モーニング娘。'26": "#E80112",
         "アンジュルム": "#0091D2",
         "Juice=Juice": "#611A85",
         "つばきファクトリー": "#F29EC2",
@@ -16,7 +16,7 @@ var CalendarData = (function() {
     // Group images with WebP support
     var groupImages = {
         "HELLO! PROJECT": "img/hello_project_image.jpg",
-        "モーニング娘。'25": "img/morning_musume_image.jpg",
+        "モーニング娘。'26": "img/morning_musume_image.jpg",
         "アンジュルム": "img/angerme_image.jpg",
         "Juice=Juice": "img/juice_juice_image.jpg",
         "つばきファクトリー": "img/tsubaki_factory_image.jpg",

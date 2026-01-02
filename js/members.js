@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // グループ情報（グループ名とカラー）
     const groupInfo = {
-        "モーニング娘。'25": "#E80112",
+        "モーニング娘。'26": "#E80112",
         "アンジュルム": "#0091D2",
         "Juice=Juice": "#611A85",
         "つばきファクトリー": "#F29EC2",
@@ -356,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // グループ名をパス用の英語表記に変換
     function convertGroupNameToPath(groupName) {
         const groupMap = {
-            "モーニング娘。'25": "morningmusume",
+            "モーニング娘。'26": "morningmusume",
             "アンジュルム": "angerme",
             "Juice=Juice": "juicejuice",
             "つばきファクトリー": "tsubakifactory",

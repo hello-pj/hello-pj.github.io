@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 "name": "どのグループの情報が掲載されていますか？",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "モーニング娘。'25、アンジュルム、Juice=Juice、つばきファクトリー、BEYOOOOONDS、OCHA NORMA、ロージークロニクル、ハロプロ研修生など、ハロー！プロジェクト所属の全グループの情報を掲載しています。グループごとにフィルタリングして表示することも可能です。"
+                    "text": "モーニング娘。'26、アンジュルム、Juice=Juice、つばきファクトリー、BEYOOOOONDS、OCHA NORMA、ロージークロニクル、ハロプロ研修生など、ハロー！プロジェクト所属の全グループの情報を掲載しています。グループごとにフィルタリングして表示することも可能です。"
                 }
             },
             {

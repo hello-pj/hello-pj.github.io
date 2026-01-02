@@ -3,7 +3,7 @@
 // X投稿用のグループ名変換マッピング
 const xGroupNameMapping = {
     "HELLO! PROJECT": "HelloProject",
-    "モーニング娘。'25": "モーニング娘25",
+    "モーニング娘。'26": "モーニング娘25",
     "アンジュルム": "アンジュルム",
     "Juice=Juice": "juicejuice",
     "つばきファクトリー": "つばきファクトリー",
