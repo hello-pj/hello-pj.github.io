@@ -92,6 +92,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 events: events.filter(function(event) {
                     return CalendarData.activeGroups.has(event.group);
                 }),
+                // 月表示の日付から「日」を除去して数字のみ表示
+                dayCellContent: function(arg) {
+                    return arg.date.getDate().toString();
+                },
                 // 土日と祝日用のクラス名を追加
                 dayCellClassNames: function(arg) {
                     const classes = [];
