@@ -860,3 +860,26 @@ body {
     background-color: #ddd !important;
     color: #666;
 }
+
+
+/* 日付番号を中央寄せ */
+
+.fc-daygrid-day-top {
+    justify-content: center;
+}
+
+
+/* 今日の日付を目立たせるスタイル */
+
+.fc-day-today .fc-daygrid-day-number {
+    background-color: #ff8c00;
+    color: white !important;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    line-height: 1;
+}
